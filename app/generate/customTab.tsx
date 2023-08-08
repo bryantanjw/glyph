@@ -1,7 +1,4 @@
 import {
-  Image,
-  Stack,
-  VStack,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -23,178 +20,187 @@ import {
   Text,
   Icon,
   useColorModeValue as mode,
+  ScaleFade,
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 
+const InputFields = [
+  {
+    id: "prompt",
+    labelText: "prompt",
+    helperText: "The prompt to guide QR Code generation.",
+    type: "text",
+    inputProps: {
+      type: "text",
+      className:
+        "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6",
+    },
+    sliderProps: {},
+  },
+  {
+    id: "negative_prompt",
+    labelText: "negative_prompt",
+    helperText: "The negative prompt to guide QR Code generation.",
+    type: "text",
+    inputProps: {
+      type: "text",
+      className:
+        "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6",
+    },
+    sliderProps: {},
+  },
+  {
+    id: "url",
+    labelText: "url",
+    helperText: "The URL your QR Code will point to.",
+    type: "text",
+    inputProps: {
+      type: "text",
+      className:
+        "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6",
+    },
+    sliderProps: {},
+  },
+];
+
+const AdvancedFields = [
+  {
+    id: "num_inference_steps",
+    labelText: "num_inference_steps",
+    helperText: "Number of diffusion steps (minimum: 20; maximum: 100)",
+    type: "slider",
+    inputProps: { width: "25%", mr: 2, defaultValue: 15, min: 10, max: 20 },
+    sliderProps: { ariaLabel: "slider-ex-1", defaultValue: 30 },
+  },
+  {
+    id: "guidance_scale",
+    labelText: "guidance_scale",
+    helperText:
+      "Scale for classifier-free guidance (minimum: 0.1; maximum: 30)",
+    type: "slider",
+    inputProps: { width: "25%", mr: 2, defaultValue: 15, min: 10, max: 20 },
+    sliderProps: { ariaLabel: "slider-ex-1", defaultValue: 30 },
+  },
+  {
+    id: "batch_size",
+    labelText: "batch_size",
+    helperText: "Batch size for this prediction (minimum: 1; maximum: 4)",
+    type: "slider",
+    inputProps: { width: "25%", mr: 2, defaultValue: 15, min: 10, max: 20 },
+    sliderProps: { ariaLabel: "slider-ex-1", defaultValue: 30 },
+  },
+  {
+    id: "strength",
+    labelText: "strength",
+    helperText:
+      "Indicates how much to transform the masked portion of the reference `image`. Must be between 0 and 1. (maximum: 1)",
+    type: "slider",
+    inputProps: { width: "25%", mr: 2, defaultValue: 15, min: 10, max: 20 },
+    sliderProps: { ariaLabel: "slider-ex-1", defaultValue: 30 },
+  },
+  {
+    id: "controlnet_conditioning_scale",
+    labelText: "controlnet_conditioning_scale",
+    helperText:
+      "The outputs of the controlnet are multiplied by `controlnet_conditioning_scale` before they are added to the residual in the original unet. (minimum: 1; maximum: 2)",
+    type: "slider",
+    inputProps: { width: "25%", mr: 2, defaultValue: 15, min: 10, max: 20 },
+    sliderProps: { ariaLabel: "slider-ex-1", defaultValue: 30 },
+  },
+  {
+    id: "seed",
+    labelText: "seed",
+    helperText: "Seed (0 = random, maximum: 2147483647)",
+    type: "text",
+    inputProps: {
+      type: "number",
+      className:
+        "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6",
+    },
+  },
+];
+
+const InputField = ({
+  labelText,
+  helperText,
+  type,
+  inputProps,
+  sliderProps,
+}) => (
+  <>
+    <FormLabel mt={4}>
+      <Code>{labelText}</Code>
+    </FormLabel>
+    {type === "text" && <Input {...inputProps} />}
+    {type === "slider" && (
+      <HStack>
+        <NumberInput {...inputProps}>
+          <NumberInputField className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6" />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+        <Slider {...sliderProps}>
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb />
+        </Slider>
+      </HStack>
+    )}
+    <FormHelperText>{helperText}</FormHelperText>
+  </>
+);
+
 export default function CustomTab() {
   const { isOpen, onToggle } = useDisclosure();
+  const delay = 0.06;
 
   return (
     <FormControl>
-      <FormLabel mt={4}>
-        <Code>prompt</Code>
-      </FormLabel>
-      <Input
-        type="text"
-        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6"
-      />
-      <FormHelperText>The prompt to guide QR Code generation.</FormHelperText>
-      <FormLabel mt={8}>
-        <Code>negative_prompt</Code>
-      </FormLabel>
-      <Input
-        type="text"
-        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6"
-      />
-      <FormHelperText>
-        The negative prompt to guide QR Code generation.
-      </FormHelperText>
+      {InputFields.map((field, index) => (
+        <ScaleFade initialScale={0.9} in={true} delay={index * delay}>
+          <InputField
+            key={field.id}
+            labelText={field.labelText}
+            helperText={field.helperText}
+            type={field.type}
+            inputProps={field.inputProps}
+            sliderProps={field.sliderProps}
+          />
+        </ScaleFade>
+      ))}
 
-      <FormLabel mt={8}>
-        <Code>url</Code>
-      </FormLabel>
-      <Input
-        type="text"
-        className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6"
-      />
-      <FormHelperText>The URL your QR Code will point to.</FormHelperText>
-
-      <HStack
-        justifyContent={"space-between"}
-        mt={8}
-        cursor={"pointer"}
-        onClick={onToggle}
-      >
-        <Text textDecoration={"underline"}>Advanced options</Text>
-        <Icon
-          as={ChevronRightIcon}
-          transition={"all .25s ease-in-out"}
-          transform={isOpen ? "rotate(90deg)" : "rotate(0deg)"}
-        />
-      </HStack>
+      <ScaleFade initialScale={0.9} in={true} delay={delay * 4}>
+        <HStack
+          justifyContent={"space-between"}
+          mt={8}
+          cursor={"pointer"}
+          onClick={onToggle}
+        >
+          <Text textDecoration={"underline"}>Advanced options</Text>
+          <Icon
+            as={ChevronRightIcon}
+            transition={"all .1s ease-in-out"}
+            transform={isOpen ? "rotate(90deg)" : "rotate(0deg)"}
+          />
+        </HStack>
+      </ScaleFade>
 
       <Collapse in={isOpen} animateOpacity>
-        <FormLabel mt={4}>
-          <Code>num_inference_steps</Code>
-        </FormLabel>
-        <HStack>
-          <NumberInput width={"25%"} mr={2} defaultValue={15} min={10} max={20}>
-            <NumberInputField className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Slider aria-label="slider-ex-1" defaultValue={30}>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-        </HStack>
-        <FormHelperText>
-          Number of diffusion steps (minimum: 20; maximum: 100)
-        </FormHelperText>
-
-        <FormLabel mt={8}>
-          <Code>guidance_scale</Code>
-        </FormLabel>
-        <HStack>
-          <NumberInput width={"25%"} mr={2} defaultValue={15} min={10} max={20}>
-            <NumberInputField className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Slider aria-label="slider-ex-1" defaultValue={30}>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-        </HStack>
-        <FormHelperText>
-          Scale for classifier-free guidance (minimum: 0.1; maximum: 30)
-        </FormHelperText>
-
-        <FormLabel mt={8}>
-          <Code>batch_size</Code>
-        </FormLabel>
-        <HStack>
-          <NumberInput width={"25%"} mr={2} defaultValue={15} min={10} max={20}>
-            <NumberInputField className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Slider aria-label="slider-ex-1" defaultValue={30}>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-        </HStack>
-        <FormHelperText>
-          Batch size for this prediction (minimum: 1; maximum: 4)
-        </FormHelperText>
-
-        <FormLabel mt={8}>
-          <Code>strength</Code>
-        </FormLabel>
-        <HStack>
-          <NumberInput width={"25%"} mr={2} defaultValue={15} min={10} max={20}>
-            <NumberInputField className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Slider aria-label="slider-ex-1" defaultValue={30}>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-        </HStack>
-        <FormHelperText>
-          Indicates how much to transform the masked portion of the reference
-          `image`. Must be between 0 and 1. (maximum: 1)
-        </FormHelperText>
-
-        <FormLabel mt={8}>
-          <Code>controlnet_conditioning_scale</Code>
-        </FormLabel>
-        <HStack>
-          <NumberInput width={"25%"} mr={2} defaultValue={15} min={10} max={20}>
-            <NumberInputField className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Slider aria-label="slider-ex-1" defaultValue={30}>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-        </HStack>
-        <FormHelperText>
-          The outputs of the controlnet are multiplied by
-          `controlnet_conditioning_scale` before they are added to the residual
-          in the original unet. (minimum: 1; maximum: 2)
-        </FormHelperText>
-
-        <FormLabel mt={8}>
-          <Code>seed</Code>
-        </FormLabel>
-        <Input
-          type="number"
-          className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6"
-        />
-        <FormHelperText>Seed (0 = random, maximum: 2147483647)</FormHelperText>
+        {AdvancedFields.map((field, index) => (
+          <ScaleFade initialScale={0.9} in={isOpen} delay={index * delay}>
+            <InputField
+              key={field.id}
+              labelText={field.labelText}
+              helperText={field.helperText}
+              type={field.type}
+              inputProps={field.inputProps}
+              sliderProps={field.sliderProps}
+            />
+          </ScaleFade>
+        ))}
       </Collapse>
     </FormControl>
   );
