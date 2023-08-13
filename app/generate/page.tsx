@@ -1,190 +1,322 @@
-"use client";
-import { useState } from "react";
+import { Metadata } from "next";
+import Image from "next/image";
+import { CounterClockwiseClockIcon } from "@radix-ui/react-icons";
+
+import { Button } from "@/components/ui/button";
 import {
-  Image,
-  Stack,
-  VStack,
-  FormControl,
-  FormLabel,
-  Heading,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanels,
-  TabPanel,
-  Switch,
-  useColorModeValue as mode,
-} from "@chakra-ui/react";
-import GenerateButton from "./generateButton";
-import CustomTab from "./customTab";
-import AutoTab from "./autoTab";
-import TopNavBar from "@/components/TopNavBar";
-import { GradientBg } from "@/components/GradientBg";
-import { themeType } from "@/utils/dropdownTypes";
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 
-import { tabStyle } from "@/styles/TabToggleStyles";
+import { CodeViewer } from "./components/code-viewer";
+import { MaxLengthSelector } from "./components/maxlength-selector";
+import { ModelSelector } from "./components/model-selector";
+import { PresetActions } from "./components/preset-actions";
+import { PresetSelector } from "./components/preset-selector";
+import { PresetShare } from "./components/preset-share";
+import { TemperatureSelector } from "./components/temperature-selector";
+import { TopPSelector } from "./components/top-p-selector";
+import { models, types } from "./data/models";
+import { presets } from "./data/presets";
 
-export default function Form() {
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [status, setStatus] = useState("");
-  const [isSubmitting, setSubmitting] = useState(false);
-  const [tabIndex, setTabIndex] = useState<number>(0);
-  const [theme, setTheme] = useState<themeType | null>(null);
+export const metadata: Metadata = {
+  title: "Glyph",
+  description: "Create Stylish AI-Generated QR Codes.",
+};
 
-  // State management for Replicate prediction
-  const [prediction, setPrediction] = useState(null);
-  const [error, setError] = useState(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    setSubmitting(true);
-    const res = await fetch("/predictions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // body: JSON.stringify({ theme }),
-    });
-
-    let prediction = await res.json();
-    if (res.status !== 200) {
-      setError(prediction.detail);
-    } else {
-      setPrediction(prediction);
-      setIsSuccess(true);
-      console.log("prediction", prediction);
-    }
-    setTimeout(() => {
-      setSubmitting(false);
-    }, 1300);
-  };
-
+export default function PlaygroundPage() {
   return (
-    <div className="isolate bg-white px-6 py-8 lg:px-8 min-h-screen">
-      <GradientBg />
-      <TopNavBar />
-
-      <div className="mx-auto mt-14 max-w-2xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Glyph
-        </h2>
-        <p className="mt-2 text-lg leading-8 text-gray-600">
-          Create Stylish AI-Generated QR Codes with Stable Diffusion.
-        </p>
+    <>
+      <div className="md:hidden">
+        <Image
+          src="/examples/playground-light.png"
+          width={1280}
+          height={916}
+          alt="Playground"
+          className="block dark:hidden"
+        />
+        <Image
+          src="/examples/playground-dark.png"
+          width={1280}
+          height={916}
+          alt="Playground"
+          className="hidden dark:block"
+        />
       </div>
-      <Stack mt={12} direction={{ base: "column", md: "row" }}>
-        <VStack p={4} ml={10} flex={1} alignItems={"stretch"}>
-          <Heading
-            mb={5}
-            size={"lg"}
-            fontWeight={"normal"}
-            textColor={"gray.700"}
-          >
-            Input
-          </Heading>
-
-          <Tabs pt={4} index={tabIndex} variant={"unstyled"} isLazy>
-            <FormControl
-              display={"flex"}
-              width={{ base: "full", md: "fit-content" }}
-              justifyContent={{ base: "center", md: "flex-start" }}
-            >
-              <TabList
-                transition={"all 0.3s ease"}
-                textColor={mode("gray.500", "gray.500")}
-                display={"inline-flex"}
-                backdropFilter={{ base: "", md: "blur(10px)" }}
-                alignItems={"center"}
-                border={mode(
-                  "solid 1px rgba(0,0,0,0.1)",
-                  "solid 1px rgba(255, 255, 255, 0.07)"
-                )}
-                rounded={"12px"}
-                bg={mode("rgba(255,255,255,0.6)", "rgba(32, 34, 46, 0.5)")}
-                boxShadow={"0px 2px 8px -1px #0000001a"}
-                _hover={{
-                  borderColor: mode(
-                    "rgba(0,0,0,0.15)",
-                    "rgba(255, 255, 255, 0.15)"
-                  ),
-                }}
-              >
-                <Tab mr={-2} sx={tabStyle} onClick={() => setTabIndex(0)}>
-                  Auto
-                </Tab>
-                <FormLabel htmlFor="tab" />
-                <Switch
-                  id="tab"
-                  variant={"glow"}
-                  size={"md"}
-                  isChecked={tabIndex === 1}
-                  onChange={() => setTabIndex(tabIndex ? 0 : 1)}
-                />
-                <Tab sx={tabStyle} onClick={() => setTabIndex(1)}>
-                  Custom
-                </Tab>
-              </TabList>
-            </FormControl>
-
-            <TabPanels>
-              <TabPanel key={1} px={0}>
-                <AutoTab theme={theme} setTheme={setTheme} />
-              </TabPanel>
-
-              <TabPanel key={2} px={0}>
-                <CustomTab />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-
-          <GenerateButton
-            handleSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            isSuccess={isSuccess}
-            status={status}
-            isDisabled={!theme}
-          />
-        </VStack>
-        <Stack flex={1} p={4}>
-          <Heading
-            mb={5}
-            size={"lg"}
-            fontWeight={"normal"}
-            textColor={"gray.700"}
-          >
-            Output
-          </Heading>
-
-          {error && <div>{error}</div>}
-
-          {/* {prediction && (
-            <div>
-              {prediction.output && (
-                <div>
-                  <Image
-                    objectFit={"contain"}
-                    src={
-                      "https://pbxt.replicate.delivery/Z2z9g1AjIa5tPltcp7K3UlB2vJCLq6FPmDBRXKU0tAoEderIA/output-0.png"
-                    }
-                    alt="output"
-                    sizes="100vw"
-                  />
-                </div>
-              )}
-              <p>status: {prediction.status}</p>
+      <div className="hidden h-full flex-col md:flex">
+        <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
+          <h2 className="text-lg font-semibold">Glyph</h2>
+          <div className="ml-auto flex w-full space-x-2 sm:justify-end">
+            <div className="hidden space-x-2 md:flex">
+              <CodeViewer />
+              <PresetShare />
             </div>
-          )} */}
-          <Image
-            objectFit={"contain"}
-            src={
-              "https://pbxt.replicate.delivery/Z2z9g1AjIa5tPltcp7K3UlB2vJCLq6FPmDBRXKU0tAoEderIA/output-0.png"
-            }
-            alt="output"
-            boxSize="fit-content"
-          />
-        </Stack>
-      </Stack>
-    </div>
+            <PresetActions />
+          </div>
+        </div>
+        <Separator />
+        <Tabs defaultValue="complete" className="flex-1">
+          <div className="container h-full py-6">
+            <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_200px]">
+              <div className="hidden flex-col space-y-4 sm:flex md:order-2">
+                <div className="grid gap-2">
+                  <HoverCard openDelay={200}>
+                    <HoverCardTrigger asChild>
+                      <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Mode
+                      </span>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-[320px] text-sm" side="left">
+                      Choose the interface that best suits your task. You can
+                      provide: a simple prompt to complete, starting and ending
+                      text to insert a completion within, or some text with
+                      instructions to edit it.
+                    </HoverCardContent>
+                  </HoverCard>
+                  <TabsList className="grid grid-cols-3">
+                    <TabsTrigger value="complete">
+                      <span className="sr-only">Complete</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        className="h-5 w-5"
+                      >
+                        <rect
+                          x="4"
+                          y="3"
+                          width="12"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="4"
+                          y="7"
+                          width="12"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="4"
+                          y="11"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="4"
+                          y="15"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="8.5"
+                          y="11"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="8.5"
+                          y="15"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="13"
+                          y="11"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                      </svg>
+                    </TabsTrigger>
+                    <TabsTrigger value="insert">
+                      <span className="sr-only">Insert</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        className="h-5 w-5"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M14.491 7.769a.888.888 0 0 1 .287.648.888.888 0 0 1-.287.648l-3.916 3.667a1.013 1.013 0 0 1-.692.268c-.26 0-.509-.097-.692-.268L5.275 9.065A.886.886 0 0 1 5 8.42a.889.889 0 0 1 .287-.64c.181-.17.427-.267.683-.269.257-.002.504.09.69.258L8.903 9.87V3.917c0-.243.103-.477.287-.649.183-.171.432-.268.692-.268.26 0 .509.097.692.268a.888.888 0 0 1 .287.649V9.87l2.245-2.102c.183-.172.432-.269.692-.269.26 0 .508.097.692.269Z"
+                          fill="currentColor"
+                        ></path>
+                        <rect
+                          x="4"
+                          y="15"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="8.5"
+                          y="15"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="13"
+                          y="15"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                      </svg>
+                    </TabsTrigger>
+                    <TabsTrigger value="edit">
+                      <span className="sr-only">Edit</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        className="h-5 w-5"
+                      >
+                        <rect
+                          x="4"
+                          y="3"
+                          width="12"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="4"
+                          y="7"
+                          width="12"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="4"
+                          y="11"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="4"
+                          y="15"
+                          width="4"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <rect
+                          x="8.5"
+                          y="11"
+                          width="3"
+                          height="2"
+                          rx="1"
+                          fill="currentColor"
+                        ></rect>
+                        <path
+                          d="M17.154 11.346a1.182 1.182 0 0 0-1.671 0L11 15.829V17.5h1.671l4.483-4.483a1.182 1.182 0 0 0 0-1.671Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                <ModelSelector types={types} models={models} />
+                <TemperatureSelector defaultValue={[0.56]} />
+                <MaxLengthSelector defaultValue={[256]} />
+                <TopPSelector defaultValue={[0.9]} />
+              </div>
+              <div className="md:order-1">
+                <TabsContent value="complete" className="mt-0 border-0 p-0">
+                  <div className="flex h-full flex-col space-y-4">
+                    <Textarea
+                      placeholder="Write a tagline for an ice cream shop"
+                      className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
+                    />
+                    <div className="flex items-center space-x-2">
+                      <Button>Submit</Button>
+                      <Button variant="secondary">
+                        <span className="sr-only">Show history</span>
+                        <CounterClockwiseClockIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="insert" className="mt-0 border-0 p-0">
+                  <div className="flex flex-col space-y-4">
+                    <div className="grid h-full grid-rows-2 gap-6 lg:grid-cols-2 lg:grid-rows-1">
+                      <Textarea
+                        placeholder="We're writing to [inset]. Congrats from OpenAI!"
+                        className="h-full min-h-[300px] lg:min-h-[700px] xl:min-h-[700px]"
+                      />
+                      <div className="rounded-md border bg-muted"></div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button>Submit</Button>
+                      <Button variant="secondary">
+                        <span className="sr-only">Show history</span>
+                        <CounterClockwiseClockIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="edit" className="mt-0 border-0 p-0">
+                  <div className="flex flex-col space-y-4">
+                    <div className="grid h-full gap-6 lg:grid-cols-2">
+                      <div className="flex flex-col space-y-4">
+                        <div className="flex flex-1 flex-col space-y-2">
+                          <Label htmlFor="input">Input</Label>
+                          <PresetSelector presets={presets} />
+                          <Textarea
+                            id="input"
+                            placeholder="We is going to the market."
+                            className="flex-1 lg:min-h-[580px]"
+                          />
+                        </div>
+                        <div className="flex flex-col space-y-2">
+                          <Label htmlFor="instructions">Instructions</Label>
+                          <Textarea
+                            id="instructions"
+                            placeholder="Fix the grammar."
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-[21px] min-h-[400px] rounded-md border bg-muted lg:min-h-[700px]" />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button>Submit</Button>
+                      <Button variant="secondary">
+                        <span className="sr-only">Show history</span>
+                        <CounterClockwiseClockIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+              </div>
+            </div>
+          </div>
+        </Tabs>
+      </div>
+    </>
   );
 }
