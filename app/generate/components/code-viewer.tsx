@@ -12,11 +12,11 @@ export function CodeViewer() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">View code</Button>
+        <Button variant="secondary">Pricing</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>View code</DialogTitle>
+          <DialogTitle>Pricing</DialogTitle>
           <DialogDescription>
             You can use the following code to start integrating your current
             prompt and settings into your application.
