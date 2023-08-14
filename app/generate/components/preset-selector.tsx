@@ -24,11 +24,16 @@ import { Preset } from "../data/presets";
 
 interface PresetSelectorProps extends PopoverProps {
   presets: Preset[];
+  onSelect: (preset: Preset) => void;
+  selectedPreset: Preset | null;
 }
 
-export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
+export function PresetSelector({
+  presets,
+  selectedPreset,
+  ...props
+}: PresetSelectorProps) {
   const [open, setOpen] = React.useState(false);
-  const [selectedPreset, setSelectedPreset] = React.useState<Preset>();
   const router = useRouter();
 
   return (
@@ -45,7 +50,7 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="PopoverContent w-[300px] p-0" align="start">
         <Command>
           <CommandInput placeholder="Search presets..." />
           <CommandEmpty>No presets found.</CommandEmpty>
@@ -54,7 +59,7 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
               <CommandItem
                 key={preset.id}
                 onSelect={() => {
-                  setSelectedPreset(preset);
+                  props.onSelect(preset);
                   setOpen(false);
                 }}
               >
