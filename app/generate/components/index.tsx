@@ -2,13 +2,16 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { CounterClockwiseClockIcon } from "@radix-ui/react-icons";
+import { CounterClockwiseClockIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
+import { UserNav } from "./user-nav";
 import { CodeViewer } from "./code-viewer";
 import { MaxLengthSelector } from "./maxlength-selector";
 import { ModelSelector } from "./model-selector";
@@ -20,11 +23,34 @@ import { TopPSelector } from "./top-p-selector";
 import { models, types } from "../data/models";
 import { Preset, presets } from "../data/presets";
 
+const slideInFromRight = {
+  hidden: { x: 100, opacity: 0, display: "none" },
+  visible: {
+    x: 0,
+    opacity: 1,
+    display: "flex",
+    transition: {
+      delay: 0.25,
+    },
+  },
+};
+
+const gridVariants = {
+  hidden: { width: "100%" },
+  visible: {
+    width: "80%",
+    transition: {
+      duration: 0.245,
+    },
+  },
+};
+
 export default function PlaygroundPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [status, setStatus] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<Preset>();
+  const [isCustom, setIsCustom] = useState(false);
 
   // Inputs
   const [prompt, setPrompt] = useState<string | undefined>(undefined);
@@ -37,24 +63,30 @@ export default function PlaygroundPage() {
     e.preventDefault();
     await new Promise((resolve) => setTimeout(resolve, 200));
     setSubmitting(true);
-    const res = await fetch("/predictions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // body: JSON.stringify({ preset }),
-    });
+    // const res = await fetch("/api/predictions", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   // body: JSON.stringify({ preset }),
+    // });
 
-    let prediction = await res.json();
-    if (res.status !== 200) {
-      setError(prediction.detail);
-    } else {
-      setPrediction(prediction);
-      setIsSuccess(true);
-      console.log("prediction", prediction);
-    }
+    // let prediction = await res.json();
+    // if (res.status !== 200) {
+    //   setError(prediction.detail);
+    // } else {
+    //   setPrediction(prediction);
+    //   setIsSuccess(true);
+    //   console.log("prediction", prediction);
+    // }
     setTimeout(() => {
       setSubmitting(false);
+      setIsSuccess(true);
+
+      // After 2 seconds of setting isSuccess to true, set it to false
+      setTimeout(() => {
+        setIsSuccess(false);
+      }, 2000);
     }, 1300);
   };
 
@@ -62,24 +94,47 @@ export default function PlaygroundPage() {
     <div className="h-full flex-col md:flex">
       <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
         <h2 className="text-lg font-semibold">Glyph</h2>
-        <div className="ml-auto flex w-full space-x-2 sm:justify-end">
-          <div className="hidden space-x-2 md:flex">
-            <CodeViewer />
-            <PresetShare />
+        <div className="ml-auto flex w-full space-x-3 sm:justify-end items-center">
+          <div className="hidden space-x-5 md:flex items-center">
+            <div className="flex items-center space-x-2">
+              <Switch
+                name="show"
+                id="show"
+                defaultChecked={false}
+                onCheckedChange={() => setIsCustom((prev) => !prev)}
+              />
+              <Label className="font-normal" htmlFor="show">
+                Custom
+              </Label>
+            </div>
+            <div className="space-x-2">
+              <CodeViewer />
+              <PresetShare />
+            </div>
           </div>
-          <PresetActions />
+          <UserNav />
         </div>
       </div>
       <Separator />
       <div className="container h-full py-6 flex-1">
-        <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_200px]">
-          <div className="hidden flex-col space-y-4 sm:flex md:order-2">
+        <div className="flex h-full items-stretch gap-6">
+          <motion.div
+            initial="hidden"
+            animate={isCustom ? "visible" : "hidden"}
+            variants={slideInFromRight}
+            className="flex-col w-[200px] space-y-4 sm:flex md:order-2"
+          >
             <ModelSelector types={types} models={models} />
             <TemperatureSelector defaultValue={[0.56]} />
             <MaxLengthSelector defaultValue={[256]} />
             <TopPSelector defaultValue={[0.9]} />
-          </div>
-          <div className="md:order-1">
+          </motion.div>
+          <motion.div
+            className="md:order-1"
+            initial="hidden"
+            animate={isCustom ? "visible" : "hidden"}
+            variants={gridVariants}
+          >
             <div className="mt-0 border-0 p-0">
               <div className="flex flex-col space-y-4">
                 <div className="grid h-full gap-6 lg:grid-cols-2">
@@ -99,7 +154,7 @@ export default function PlaygroundPage() {
                         placeholder={
                           "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
                         }
-                        className="flex-1 lg:min-h-[300px]"
+                        className="flex-1 min-h-[150px] lg:min-h-[300px]"
                         value={prompt ?? selectedPreset?.prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                       />
@@ -132,7 +187,58 @@ export default function PlaygroundPage() {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button>Submit</Button>
+                  {isSuccess ? (
+                    <Button
+                      className="min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                      style={{
+                        boxShadow:
+                          "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mx-auto"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <motion.path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.5 }}
+                        />
+                      </svg>
+                    </Button>
+                  ) : (
+                    <div className="flex flex-row gap-2">
+                      <Button
+                        onClick={handleSubmit}
+                        disabled={isSubmitting}
+                        className="min-w-[140px] duration-150 transition-all hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-100 disabled:cursor-not-allowed"
+                      >
+                        {isSubmitting ? (
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <div className="flex items-center justify-center gap-x-2">
+                            <span>Generate</span>
+                            <Image
+                              style={{
+                                filter: "invert(1)",
+                              }}
+                              width={18}
+                              height={18}
+                              src={"/sparkling.png"}
+                              alt={"Generate"}
+                            />
+                          </div>
+                        )}
+                      </Button>
+                    </div>
+                  )}
                   <Button variant="secondary">
                     <span className="sr-only">Show history</span>
                     <CounterClockwiseClockIcon className="h-4 w-4" />
@@ -140,7 +246,7 @@ export default function PlaygroundPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
