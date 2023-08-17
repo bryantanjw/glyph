@@ -226,8 +226,7 @@ export interface Database {
         | "incomplete"
         | "incomplete_expired"
         | "past_due"
-        | "unpaid"
-        | "paused";
+        | "unpaid";
     };
     CompositeTypes: {
       [_ in never]: never;
