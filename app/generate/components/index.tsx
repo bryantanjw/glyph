@@ -122,7 +122,7 @@ export default function PlaygroundPage() {
             initial="hidden"
             animate={isCustom ? "visible" : "hidden"}
             variants={slideInFromRight}
-            className="flex-col flex space-y-4 sm:flex md:order-2"
+            className="flex-col flex space-y-4 w-[250px] sm:flex md:order-2"
           >
             <ModelSelector types={types} models={models} />
             <TemperatureSelector defaultValue={[0.56]} />
