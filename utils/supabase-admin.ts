@@ -1,5 +1,5 @@
-import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import Stripe from "stripe";
 
 import { toDateTime } from "./helpers";
 import { stripe } from "./stripe";
@@ -130,7 +130,8 @@ const manageSubscriptionStatusChange = async (
       id: subscription.id,
       user_id: uuid,
       metadata: subscription.metadata,
-      status: subscription.status,
+      status:
+        subscription.status as Database["public"]["Enums"]["subscription_status"],
       price_id: subscription.items.data[0].price.id,
       //TODO check quantity on subscription
       // @ts-ignore
