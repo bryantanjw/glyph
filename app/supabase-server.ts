@@ -5,9 +5,10 @@ import { cache } from "react";
 
 export const dynamic = "force-dynamic";
 
-export const createServerSupabaseClient = cache(() =>
-  createServerComponentClient<Database>({ cookies })
-);
+export const createServerSupabaseClient = cache(() => {
+  const cookieStore = cookies();
+  return createServerComponentClient<Database>({ cookies: () => cookieStore });
+});
 
 export async function getSession() {
   const supabase = createServerSupabaseClient();

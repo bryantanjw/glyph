@@ -213,7 +213,7 @@ export default function PlaygroundPage() {
                               className="filter invert dark:filter-none"
                               width={18}
                               height={18}
-                              src={"/sparkling.png"}
+                              src={"/sparkling-icon.png"}
                               alt={"Generate"}
                             />
                           </div>
