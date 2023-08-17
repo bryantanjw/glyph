@@ -1,14 +1,15 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Session, User } from "@supabase/supabase-js";
 
 import { Button } from "@/components/ui/button";
 
-import { Database } from "@/types_db";
 import { postData } from "@/utils/helpers";
 import { getStripe } from "@/utils/stripe-client";
-import { Session, User } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
+import { Database } from "@/types_db";
 
 type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 type Product = Database["public"]["Tables"]["products"]["Row"];
@@ -140,7 +141,6 @@ export default function Pricing({
                       </p>
                       <p className="mt-4 text-zinc-300">{price.description}</p>
                       <Button
-                        variant="slim"
                         type="button"
                         disabled={false}
                         loading={priceIdLoading === price.id}
@@ -240,7 +240,6 @@ export default function Pricing({
                     </span>
                   </p>
                   <Button
-                    variant="slim"
                     type="button"
                     disabled={!session}
                     loading={priceIdLoading === price.id}

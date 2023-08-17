@@ -10,12 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { SuccessIcon } from "@/app/generate/components/success-icon";
 
 import { UserNav } from "./user-nav";
 import { CodeViewer } from "./code-viewer";
 import { MaxLengthSelector } from "./maxlength-selector";
 import { ModelSelector } from "./model-selector";
-import { PresetActions } from "./preset-actions";
 import { PresetSelector } from "./preset-selector";
 import { PresetShare } from "./preset-share";
 import { TemperatureSelector } from "./temperature-selector";
@@ -30,7 +30,7 @@ const slideInFromRight = {
     opacity: 1,
     display: "flex",
     transition: {
-      delay: 0.25,
+      delay: 0.2,
     },
   },
 };
@@ -40,7 +40,7 @@ const gridVariants = {
   visible: {
     width: "80%",
     transition: {
-      duration: 0.245,
+      duration: 0.25,
     },
   },
 };
@@ -86,15 +86,15 @@ export default function PlaygroundPage() {
       // After 2 seconds of setting isSuccess to true, set it to false
       setTimeout(() => {
         setIsSuccess(false);
-      }, 2000);
+      }, 4000);
     }, 1300);
   };
 
   return (
     <div className="h-full flex-col md:flex">
-      <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
+      <div className="container flex items-center justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
         <h2 className="text-lg font-semibold">Glyph</h2>
-        <div className="ml-auto flex w-full space-x-3 sm:justify-end items-center">
+        <div className="ml-auto flex space-x-3 sm:justify items-center">
           <div className="hidden space-x-5 md:flex items-center">
             <div className="flex items-center space-x-2">
               <Switch
@@ -122,7 +122,7 @@ export default function PlaygroundPage() {
             initial="hidden"
             animate={isCustom ? "visible" : "hidden"}
             variants={slideInFromRight}
-            className="flex-col w-[200px] space-y-4 sm:flex md:order-2"
+            className="flex-col flex space-y-4 sm:flex md:order-2"
           >
             <ModelSelector types={types} models={models} />
             <TemperatureSelector defaultValue={[0.56]} />
@@ -195,30 +195,14 @@ export default function PlaygroundPage() {
                           "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mx-auto"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <motion.path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 0.5 }}
-                        />
-                      </svg>
+                      <SuccessIcon />
                     </Button>
                   ) : (
                     <div className="flex flex-row gap-2">
                       <Button
                         onClick={handleSubmit}
                         disabled={isSubmitting}
-                        className="min-w-[140px] duration-150 transition-all hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-100 disabled:cursor-not-allowed"
+                        className="min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -226,9 +210,7 @@ export default function PlaygroundPage() {
                           <div className="flex items-center justify-center gap-x-2">
                             <span>Generate</span>
                             <Image
-                              style={{
-                                filter: "invert(1)",
-                              }}
+                              className="filter invert dark:filter-none"
                               width={18}
                               height={18}
                               src={"/sparkling.png"}
@@ -239,10 +221,10 @@ export default function PlaygroundPage() {
                       </Button>
                     </div>
                   )}
-                  <Button variant="secondary">
+                  {/* <Button variant="secondary">
                     <span className="sr-only">Show history</span>
                     <CounterClockwiseClockIcon className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </div>
