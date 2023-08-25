@@ -2,7 +2,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { Toaster } from "@/components/ui/toaster";
+
 import { ThemeProvider } from "./theme-provider";
+import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +24,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
+          <TailwindIndicator />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
