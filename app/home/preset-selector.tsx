@@ -13,13 +13,13 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Preset } from "../data/presets";
 
@@ -52,10 +52,10 @@ export function PresetSelector({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="PopoverContent w-[300px] p-0" align="start">
-        <Command>
-          <CommandInput placeholder="Search presets..." />
-          <CommandEmpty>No presets found.</CommandEmpty>
-          <ScrollArea className="h-[200px]">
+        <Command loop>
+          <CommandList className="h-[var(--cmdk-list-height)] max-h-[210px]">
+            <CommandInput placeholder="Search presets..." />
+            <CommandEmpty>No presets found.</CommandEmpty>
             <CommandGroup heading="Examples">
               {presets.map((preset) => (
                 <CommandItem
@@ -77,7 +77,7 @@ export function PresetSelector({
                 </CommandItem>
               ))}
             </CommandGroup>
-          </ScrollArea>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>

@@ -12,7 +12,7 @@ export function CodeViewer() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">Pricing</Button>
+        <Button variant="ghost">Pricing</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>

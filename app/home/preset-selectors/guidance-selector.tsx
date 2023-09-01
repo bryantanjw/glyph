@@ -11,12 +11,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-interface TopPSelectorProps {
+interface GuidanceSelectorProps {
   defaultValue: SliderProps["defaultValue"];
 }
 
-export function TopPSelector({ defaultValue }: TopPSelectorProps) {
-  const [value, setValue] = React.useState(defaultValue);
+export function GuidanceSelector({ defaultValue }: GuidanceSelectorProps) {
+  const [value, setValue] = React.useState([10]);
 
   return (
     <div className="grid gap-2 pt-2">
@@ -24,19 +24,21 @@ export function TopPSelector({ defaultValue }: TopPSelectorProps) {
         <HoverCardTrigger asChild>
           <div className="grid gap-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="top-p">Top P</Label>
+              <Label htmlFor="Guidance" className="leading-[1.5]">
+                Guidance
+              </Label>
               <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
                 {value}
               </span>
             </div>
             <Slider
-              id="top-p"
-              max={1}
+              id="guidance"
+              max={30}
               defaultValue={value}
-              step={0.1}
+              step={0.2}
               onValueChange={setValue}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
-              aria-label="Top P"
+              aria-label="Guidance"
             />
           </div>
         </HoverCardTrigger>
@@ -45,8 +47,8 @@ export function TopPSelector({ defaultValue }: TopPSelectorProps) {
           className="w-[260px] text-sm"
           side="left"
         >
-          Control diversity via nucleus sampling: 0.5 means half of all
-          likelihood-weighted options are considered.
+          The extent to which the prompt should guide the output (minimum: 0.1;
+          maximum: 30).
         </HoverCardContent>
       </HoverCard>
     </div>

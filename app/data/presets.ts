@@ -44,6 +44,12 @@ export const presets: Preset[] = [
   },
   {
     id: "4641ef41-1c0f-421d-b4b2-70fe431081f3",
+    name: "Futuristic",
+    prompt:
+      "aerial view, a futuristic research complex in a bright foggy jungle, hard lighting",
+  },
+  {
+    id: "1234abcd-5678-efgh-9012-ijkl34567890",
     name: "Minimalist",
     prompt:
       "interior of luxury condominium with minimalist furniture and lush house plants and abstract wall paintings | modern architecture by makoto shinkai, ilya kuvshinov, lois van baarle, rossdraws and frank lloyd wright",

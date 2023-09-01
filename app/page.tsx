@@ -25,20 +25,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { SuccessIcon } from "@/app/home/success-icon";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 import { UserNav } from "@/app/home/user-nav";
 import { CodeViewer } from "@/app/home/code-viewer";
-import { MaxLengthSelector } from "@/app/home/maxlength-selector";
-import { ModelSelector } from "@/app/home/model-selector";
 import { PresetSelector } from "@/app/home/preset-selector";
 import { PresetShare } from "@/app/home/preset-share";
-import { TemperatureSelector } from "@/app/home/temperature-selector";
-import { TopPSelector } from "@/app/home/top-p-selector";
+import { BrightnessConditioningSelector } from "@/app/home/preset-selectors/brightness-conditioning-selector";
+import { ModelSelector } from "@/app/home/preset-selectors/model-selector";
+import { InferenceStepsSelector } from "@/app/home/preset-selectors/inference-steps-selector";
+import { TileConditioningSelector } from "@/app/home/preset-selectors/tile-conditioning-selector";
+import { GuidanceSelector } from "@/app/home/preset-selectors/guidance-selector";
+import { NegativePromptField } from "@/app/home/preset-selectors/negative-prompt-field";
 
 import { models, types } from "./data/models";
 import { Preset, presets } from "./data/presets";
-import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 
 const slideInFromRight = {
   hidden: { x: 100, opacity: 0, display: "none" },
@@ -55,7 +57,7 @@ const slideInFromRight = {
 const gridVariants = {
   hidden: { width: "100%" },
   visible: {
-    width: "80%",
+    width: "75%",
     transition: {
       duration: 0.25,
     },
@@ -137,7 +139,7 @@ export default function PlaygroundPage() {
     //   console.log("prediction", prediction);
     // }
 
-    // Simulate progress to 100 in the span of the timeout
+    // Simulate generation //
     setProgress(0);
     const interval = setInterval(() => {
       setProgress((prevProgress) => {
@@ -186,8 +188,8 @@ export default function PlaygroundPage() {
               <CodeViewer />
               <PresetShare />
             </div>
+            <UserNav />
           </div>
-          <UserNav />
         </div>
       </div>
       <Separator />
@@ -195,85 +197,72 @@ export default function PlaygroundPage() {
       <div className="container h-full py-6 flex-1">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex h-full items-stretch gap-6">
+            <div className="flex h-full items-stretch gap-6 xl:gap-0">
               <motion.div
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={slideInFromRight}
-                className="flex-col flex space-y-4 w-[180px] sm:flex md:order-2"
+                className="flex-col flex-grow flex space-y-5 md:order-2"
               >
                 <ModelSelector types={types} models={models} />
-                <TemperatureSelector defaultValue={[0.56]} />
-                <MaxLengthSelector defaultValue={[256]} />
-                <TopPSelector defaultValue={[0.9]} />
+                <NegativePromptField />
+                <InferenceStepsSelector defaultValue={[0.56]} />
+                <BrightnessConditioningSelector defaultValue={[256]} />
+                <TileConditioningSelector defaultValue={[0.9]} />
+                <GuidanceSelector defaultValue={[0.9]} />
               </motion.div>
               <motion.div
-                className="md:order-1"
+                className="md:order-1 mt-0 border-0 p-0"
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={gridVariants}
               >
-                <div className="mt-0 border-0 p-0">
-                  <div className="flex flex-col space-y-4 lg:max-w-[900px] mx-auto">
-                    <div className="grid h-full gap-6 lg:grid-cols-2">
-                      <div className="flex flex-col space-y-4">
-                        <div className="flex flex-col space-y-2">
-                          <div className="flex justify-between">
-                            <div>
-                              <Label htmlFor="input">Input</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Switch
-                                name="show"
-                                id="show"
-                                defaultChecked={false}
-                                onCheckedChange={() =>
-                                  setIsCustom((prev) => !prev)
-                                }
-                              />
-                              <Label className="font-normal" htmlFor="show">
-                                Custom
-                              </Label>
-                            </div>
+                <div className="flex flex-col space-y-4 lg:max-w-[900px] mx-auto">
+                  <div className="grid h-full gap-6 lg:grid-cols-2">
+                    <div className="flex flex-col space-y-4">
+                      <div className="flex flex-col space-y-2">
+                        <div className="flex justify-between">
+                          <div>
+                            <Label htmlFor="input">Input</Label>
                           </div>
-
-                          <PresetSelector
-                            presets={presets}
-                            onSelect={(preset) => {
-                              setSelectedPreset(preset);
-                              setPrompt(preset.prompt);
-                              form.setValue("prompt", preset.prompt);
-                            }}
-                            selectedPreset={selectedPreset}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="prompt"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Textarea
-                                    placeholder={
-                                      "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
-                                    }
-                                    className="flex-1 min-h-[150px] lg:min-h-[200px]"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              name="show"
+                              id="show"
+                              defaultChecked={isCustom}
+                              onCheckedChange={() =>
+                                setIsCustom((prev) => !prev)
+                              }
+                            />
+                            <Label
+                              className="font-normal cursor-pointer"
+                              htmlFor="show"
+                            >
+                              Custom
+                            </Label>
+                          </div>
                         </div>
+
+                        <PresetSelector
+                          presets={presets}
+                          onSelect={(preset) => {
+                            setSelectedPreset(preset);
+                            setPrompt(preset.prompt);
+                            form.setValue("prompt", preset.prompt);
+                          }}
+                          selectedPreset={selectedPreset}
+                        />
                         <FormField
                           control={form.control}
-                          name="url"
+                          name="prompt"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Website</FormLabel>
                               <FormControl>
-                                <Input
-                                  placeholder="https://www.glyph.so"
+                                <Textarea
+                                  placeholder={
+                                    "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
+                                  }
+                                  className="flex-1 min-h-[150px] lg:min-h-[200px]"
                                   {...field}
                                 />
                               </FormControl>
@@ -282,67 +271,88 @@ export default function PlaygroundPage() {
                           )}
                         />
                       </div>
-                      <div className="mt-[21px] min-h-[300px] rounded-md border bg-muted relative">
+                      <FormField
+                        control={form.control}
+                        name="url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Website</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="https://www.glyph.so"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="mt-[21px] min-h-[300px] rounded-md border bg-muted relative">
+                      {isSubmitting && (
                         <Progress
                           className="absolute w-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                           value={progress}
                         />
-                        {prediction && (
-                          <div>
-                            {prediction.output && (
-                              <Image
-                                alt="QR Code"
-                                src={
-                                  prediction.output[
-                                    prediction.output.length - 1
-                                  ]
-                                }
-                                layout="fill"
-                                objectFit="contain"
-                                className="p-8"
-                              />
-                            )}
-                            <p>status: {prediction.status}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {isSuccess ? (
-                        <Button
-                          className="min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
-                          style={{
-                            boxShadow:
-                              "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          <SuccessIcon />
-                        </Button>
-                      ) : (
-                        <div className="flex flex-row gap-2">
-                          <Button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
-                          >
-                            {isSubmitting ? (
-                              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                              <div className="flex items-center justify-center gap-x-2">
-                                <span>Generate</span>
-                                <Image
-                                  className="filter invert dark:filter-none"
-                                  width={18}
-                                  height={18}
-                                  src={"/sparkling-icon.png"}
-                                  alt={"Generate"}
-                                />
-                              </div>
-                            )}
-                          </Button>
+                      )}
+                      {prediction && (
+                        <div>
+                          {prediction.output && (
+                            <Image
+                              alt="QR Code"
+                              src={
+                                prediction.output[prediction.output.length - 1]
+                              }
+                              layout="fill"
+                              objectFit="contain"
+                              className="p-8"
+                            />
+                          )}
+                          <p>status: {prediction.status}</p>
                         </div>
                       )}
                     </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {isSuccess ? (
+                      <Button
+                        className="min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                        style={{
+                          boxShadow:
+                            "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
+                        }}
+                      >
+                        <SuccessIcon />
+                      </Button>
+                    ) : (
+                      <div className="flex flex-row gap-2">
+                        <Button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
+                        >
+                          {isSubmitting ? (
+                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <motion.div
+                              className="flex items-center justify-center gap-x-2"
+                              initial={{ opacity: 0, y: 50 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <span>Generate</span>
+                              <Image
+                                className="filter invert dark:filter-none"
+                                width={18}
+                                height={18}
+                                src={"/sparkling-icon.png"}
+                                alt={"Generate"}
+                              />
+                            </motion.div>
+                          )}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

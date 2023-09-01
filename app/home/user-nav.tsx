@@ -63,7 +63,10 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-2">
-          <DropdownMenuItem className="text-muted-foreground">
+          <DropdownMenuItem
+            onClick={toggleTheme}
+            className="text-muted-foreground"
+          >
             Theme
             <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
           </DropdownMenuItem>

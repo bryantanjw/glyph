@@ -27,7 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { Model, ModelType } from "../data/models";
+import { Model, ModelType } from "@/app/data/models";
 
 interface ModelSelectorProps extends PopoverProps {
   types: readonly ModelType[];
@@ -93,7 +93,7 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
               </div>
             </HoverCardContent>
             <Command loop>
-              <CommandList className="h-[var(--cmdk-list-height)] max-h-[400px]">
+              <CommandList className="max-h-[400px]">
                 <CommandInput placeholder="Search Models..." />
                 <CommandEmpty>No Models found.</CommandEmpty>
                 <HoverCardTrigger />
