@@ -32,12 +32,25 @@ import { Model, ModelType } from "@/app/data/models";
 interface ModelSelectorProps extends PopoverProps {
   types: readonly ModelType[];
   models: Model[];
+  onModelChange: (model: Model) => void;
 }
 
-export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
+export function ModelSelector({
+  models,
+  types,
+  onModelChange,
+  ...props
+}: ModelSelectorProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedModel, setSelectedModel] = React.useState<Model>(models[0]);
   const [peekedModel, setPeekedModel] = React.useState<Model>(models[0]);
+
+  // Update the selected model both locally and in the parent component
+  const handleModelSelect = (model: Model) => {
+    setSelectedModel(model);
+    onModelChange(model);
+    setOpen(false);
+  };
 
   return (
     <div className="grid gap-2">
@@ -107,10 +120,7 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
                           model={model}
                           isSelected={selectedModel?.id === model.id}
                           onPeek={(model) => setPeekedModel(model)}
-                          onSelect={() => {
-                            setSelectedModel(model);
-                            setOpen(false);
-                          }}
+                          onSelect={() => handleModelSelect(model)}
                         />
                       ))}
                   </CommandGroup>

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/popover";
 
 import { Preset } from "../data/presets";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PresetSelectorProps extends PopoverProps {
   presets: Preset[];
@@ -53,30 +54,32 @@ export function PresetSelector({
       </PopoverTrigger>
       <PopoverContent className="PopoverContent w-[300px] p-0" align="start">
         <Command loop>
-          <CommandList className="h-[var(--cmdk-list-height)] max-h-[210px]">
+          <CommandList>
             <CommandInput placeholder="Search presets..." />
             <CommandEmpty>No presets found.</CommandEmpty>
-            <CommandGroup heading="Examples">
-              {presets.map((preset) => (
-                <CommandItem
-                  key={preset.id}
-                  onSelect={() => {
-                    props.onSelect(preset);
-                    setOpen(false);
-                  }}
-                >
-                  {preset.name}
-                  <CheckIcon
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      selectedPreset?.id === preset.id
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <ScrollArea className="h-[170px]">
+              <CommandGroup heading="Examples">
+                {presets.map((preset) => (
+                  <CommandItem
+                    key={preset.id}
+                    onSelect={() => {
+                      props.onSelect(preset);
+                      setOpen(false);
+                    }}
+                  >
+                    {preset.name}
+                    <CheckIcon
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        selectedPreset?.id === preset.id
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </ScrollArea>
           </CommandList>
         </Command>
       </PopoverContent>

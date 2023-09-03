@@ -9,23 +9,19 @@ import {
 } from "@/components/ui/hover-card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
-export function NegativePromptField() {
+export function SeedField() {
   return (
     <div className="grid gap-2 pt-2">
       <HoverCard openDelay={200}>
         <HoverCardTrigger asChild>
           <div className="grid gap-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="Negative Prompt" className="leading-[1.5]">
-                Negative Prompt
+              <Label htmlFor="Seed" className="leading-[1.5]">
+                Seed
               </Label>
             </div>
-            <Textarea
-              readOnly
-              value={"ugly, disfigured, low quality, blurry, nsfw"}
-            />
+            <Input type="number" value={5} readOnly />
           </div>
         </HoverCardTrigger>
         <HoverCardContent
@@ -33,9 +29,12 @@ export function NegativePromptField() {
           className="w-[260px] text-sm"
           side="left"
         >
-          A feature that allows the model to understand what it should not
-          generate. It&apos;s a way to guide the model&apos;s output away from
-          certain theme.
+          A parameter that introduces a degree of randomness or entropy into the
+          model&apos;s output. <br />
+          <br />
+          This ensures a diverse range of outputs from the model, preventing it
+          from consistently generating similar themes. It serves as a mechanism
+          to control the unpredictability of the model&apos;s output.
         </HoverCardContent>
       </HoverCard>
     </div>

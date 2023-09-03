@@ -11,36 +11,36 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-interface TileConditioningSelectorProps {
+interface BrightnessConditioningSelectorProps {
   defaultValue: SliderProps["defaultValue"];
 }
 
-export function TileConditioningSelector({
+export function BrightnessConditioningSelector({
   defaultValue,
-}: TileConditioningSelectorProps) {
+}: BrightnessConditioningSelectorProps) {
   const [value, setValue] = React.useState([0.45]);
 
   return (
     <div className="grid gap-2 pt-2">
       <HoverCard openDelay={200}>
         <HoverCardTrigger asChild>
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             <div className="flex items-center justify-between">
-              <Label htmlFor="tileConditioning" className="leading-[1.5]">
-                Tile Conditioning
+              <Label htmlFor="brightnessConditioning" className="leading-[1.5]">
+                Brightness Conditioning
               </Label>
               <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
                 {value}
               </span>
             </div>
             <Slider
-              id="tileConditioning"
+              id="brightnessConditioning"
               max={1}
               defaultValue={value}
               step={0.01}
               onValueChange={setValue}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
-              aria-label="Tile Conditioning"
+              aria-label="Brightness Conditioning"
             />
           </div>
         </HoverCardTrigger>
@@ -49,7 +49,7 @@ export function TileConditioningSelector({
           className="w-[260px] text-sm"
           side="left"
         >
-          Adjust the properties of a tile, e.g., a grid or map.
+          Adjust the brightness of the image.
         </HoverCardContent>
       </HoverCard>
     </div>

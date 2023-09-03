@@ -16,13 +16,13 @@ interface GuidanceSelectorProps {
 }
 
 export function GuidanceSelector({ defaultValue }: GuidanceSelectorProps) {
-  const [value, setValue] = React.useState([10]);
+  const [value, setValue] = React.useState(defaultValue);
 
   return (
     <div className="grid gap-2 pt-2">
       <HoverCard openDelay={200}>
         <HoverCardTrigger asChild>
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             <div className="flex items-center justify-between">
               <Label htmlFor="Guidance" className="leading-[1.5]">
                 Guidance

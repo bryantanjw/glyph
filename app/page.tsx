@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -27,21 +27,26 @@ import { Progress } from "@/components/ui/progress";
 import { SuccessIcon } from "@/app/home/success-icon";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { UserNav } from "@/app/home/user-nav";
 import { CodeViewer } from "@/app/home/code-viewer";
 import { PresetSelector } from "@/app/home/preset-selector";
 import { PresetShare } from "@/app/home/preset-share";
-import { BrightnessConditioningSelector } from "@/app/home/preset-selectors/brightness-conditioning-selector";
+import { BrightnessConditioningSelector } from "./home/preset-selectors/tonyadastra/brightness-conditioning-selector";
 import { ModelSelector } from "@/app/home/preset-selectors/model-selector";
 import { InferenceStepsSelector } from "@/app/home/preset-selectors/inference-steps-selector";
-import { TileConditioningSelector } from "@/app/home/preset-selectors/tile-conditioning-selector";
+import { TileConditioningSelector } from "@/app/home/preset-selectors/tonyadastra/tile-conditioning-selector";
+import { SeedField } from "./home/preset-selectors/seed-field";
+import { StrengthSelector } from "./home/preset-selectors/nateraw/strength-selector";
 import { GuidanceSelector } from "@/app/home/preset-selectors/guidance-selector";
+import { ControlNetConditioningSelector } from "./home/preset-selectors/nateraw/controlnet-conditioning-selector";
 import { NegativePromptField } from "@/app/home/preset-selectors/negative-prompt-field";
 
-import { models, types } from "./data/models";
+import { Model, models, types } from "./data/models";
 import { Preset, presets } from "./data/presets";
 
+// START: Animation //
 const slideInFromRight = {
   hidden: { x: 100, opacity: 0, display: "none" },
   visible: {
@@ -64,6 +69,20 @@ const gridVariants = {
   },
 };
 
+const AnimatedSelectorDiv = ({ children, key }) => (
+  <motion.div
+    key={key}
+    className="space-y-4"
+    initial={{ opacity: 0, x: -100 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: 100 }}
+    transition={{ duration: 0.2 }}
+  >
+    {children}
+  </motion.div>
+);
+// END: Animation //
+
 const formSchema = z.object({
   prompt: z.string().min(1, {
     message: "Prompt is empty.",
@@ -75,19 +94,22 @@ const formSchema = z.object({
 
 export default function PlaygroundPage() {
   const { toast } = useToast();
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [status, setStatus] = useState("");
-  const [isSubmitting, setSubmitting] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [selectedPreset, setSelectedPreset] = useState<Preset>();
-  const [isCustom, setIsCustom] = useState(false);
 
   // Inputs
+  const [selectedPreset, setSelectedPreset] = useState<Preset>();
+  const [isCustom, setIsCustom] = useState(false);
   const [prompt, setPrompt] = useState<string | undefined>(undefined);
+  const [selectedModel, setSelectedModel] = useState<Model | null>(models[0]);
 
   // State management for Replicate prediction
   const [prediction, setPrediction] = useState(null);
   const [error, setError] = useState(null);
+
+  // Form states
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [status, setStatus] = useState("");
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   // Form definition
   const form = useForm<z.infer<typeof formSchema>>({
@@ -202,14 +224,37 @@ export default function PlaygroundPage() {
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={slideInFromRight}
-                className="flex-col flex-grow flex space-y-5 md:order-2"
+                className="flex-col flex space-y-3 lg:max-w-[360px] md:order-2"
               >
-                <ModelSelector types={types} models={models} />
-                <NegativePromptField />
-                <InferenceStepsSelector defaultValue={[0.56]} />
-                <BrightnessConditioningSelector defaultValue={[256]} />
-                <TileConditioningSelector defaultValue={[0.9]} />
-                <GuidanceSelector defaultValue={[0.9]} />
+                <ModelSelector
+                  types={types}
+                  models={models}
+                  onModelChange={setSelectedModel}
+                />
+                <ScrollArea className="h-[500px]">
+                  <div className="space-y-4">
+                    <NegativePromptField />
+                    <InferenceStepsSelector defaultValue={[80]} />
+                    <GuidanceSelector defaultValue={[12]} />
+                  </div>
+
+                  {/* Vary selectors based on model selected */}
+                  <AnimatePresence mode="wait">
+                    {selectedModel?.name === "qrcode-sd" && (
+                      <AnimatedSelectorDiv key="qrcode-sd">
+                        <StrengthSelector defaultValue={[0.9]} />
+                        <ControlNetConditioningSelector defaultValue={[1.5]} />
+                        <SeedField />
+                      </AnimatedSelectorDiv>
+                    )}
+                    {selectedModel?.name === "qart" && (
+                      <AnimatedSelectorDiv key="qart">
+                        <TileConditioningSelector defaultValue={[0.45]} />
+                        <BrightnessConditioningSelector defaultValue={[1]} />
+                      </AnimatedSelectorDiv>
+                    )}
+                  </AnimatePresence>
+                </ScrollArea>
               </motion.div>
               <motion.div
                 className="md:order-1 mt-0 border-0 p-0"

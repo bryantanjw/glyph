@@ -11,14 +11,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-interface InferenceStepsSelectorProps {
+interface TileConditioningSelectorProps {
   defaultValue: SliderProps["defaultValue"];
 }
 
-export function InferenceStepsSelector({
+export function TileConditioningSelector({
   defaultValue,
-}: InferenceStepsSelectorProps) {
-  const [value, setValue] = React.useState([80]);
+}: TileConditioningSelectorProps) {
+  const [value, setValue] = React.useState(defaultValue);
 
   return (
     <div className="grid gap-2 pt-2">
@@ -26,21 +26,21 @@ export function InferenceStepsSelector({
         <HoverCardTrigger asChild>
           <div className="grid gap-3">
             <div className="flex items-center justify-between">
-              <Label htmlFor="inferenceSteps" className="leading-[1.5]">
-                Inference Steps
+              <Label htmlFor="tileConditioning" className="leading-[1.5]">
+                Tile Conditioning
               </Label>
               <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
                 {value}
               </span>
             </div>
             <Slider
-              id="inferenceSteps"
-              max={100}
+              id="tileConditioning"
+              max={1}
               defaultValue={value}
-              step={2}
+              step={0.01}
               onValueChange={setValue}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
-              aria-label="Inference Steps"
+              aria-label="Tile Conditioning"
             />
           </div>
         </HoverCardTrigger>
@@ -49,10 +49,7 @@ export function InferenceStepsSelector({
           className="w-[260px] text-sm"
           side="left"
         >
-          Number of denoising steps (minimum: 1; maximum: 500).
-          <br /> <br /> Decrease to have the initial composition follows the QR
-          code more. You will only see the QR code if you reduce it too much.
-          The range of steps varies by model.
+          Adjust the properties of the tile/grid.
         </HoverCardContent>
       </HoverCard>
     </div>
