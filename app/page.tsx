@@ -40,6 +40,7 @@ import { GuidanceSelector } from "@/app/home/preset-selectors/guidance-selector"
 import { ControlNetConditioningSelector } from "./home/preset-selectors/nateraw/controlnet-conditioning-selector";
 import { NegativePromptField } from "@/app/home/preset-selectors/negative-prompt-field";
 
+import { formSchema } from "@/schemas/formSchemas";
 import { Model, models, types } from "./data/models";
 import { Preset, presets } from "./data/presets";
 
@@ -79,28 +80,6 @@ const AnimatedSelectorDiv = ({ children, id }) => (
   </motion.div>
 );
 // END: Animation //
-
-export const formSchema = z.object({
-  // selectedPreset: z
-  //   .object({
-  //     name: z.string(),
-  //     prompt: z.string(),
-  //   })
-  //   .optional(),
-  prompt: z.string().min(1, {
-    message: "Prompt is empty.",
-  }),
-  url: z.string().min(1, {
-    message: "Website URL is empty.",
-  }),
-  // Inputs for nateraw/qrcode-sd
-  negativePrompt: z.string().optional(),
-  inferenceStep: z.number().optional(),
-  guidance: z.number().optional(),
-  strength: z.number().optional(),
-  controlNetConditioning: z.number().optional(),
-  seed: z.number().optional(),
-});
 
 export default function PlaygroundPage() {
   const { toast } = useToast();

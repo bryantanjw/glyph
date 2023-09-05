@@ -12,7 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-import { formSchema } from "@/app/page";
+import { formSchema } from "@/schemas/formSchemas";
 import { useSliderChange } from "@/hooks/use-slider-change";
 
 interface StrengthSelectorProps {
