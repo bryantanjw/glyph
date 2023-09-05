@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     seed,
   } = req;
 
-  console.log("req", req);
+  console.log("req body", req);
 
   // POST request to Replicate to start the image restoration generation process
   console.log("Start /predictions POST request");
@@ -90,7 +90,6 @@ export async function POST(request: Request) {
   let predictions: string | null = null;
   while (!predictions) {
     // Loop in 1s intervals until the alt text is ready
-    console.log("Polling for result...");
     let finalResponse = await fetch(endpointUrl, {
       method: "GET",
       headers: {
@@ -99,13 +98,14 @@ export async function POST(request: Request) {
       },
     });
     let jsonFinalResponse = await finalResponse.json();
+    console.log("jsonFinalResponse", jsonFinalResponse);
 
     if (jsonFinalResponse.status === "succeeded") {
       predictions = jsonFinalResponse;
     } else if (jsonFinalResponse.status === "failed") {
       break;
     } else {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
 

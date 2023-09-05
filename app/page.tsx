@@ -158,7 +158,7 @@ export default function PlaygroundPage() {
     }
     setSubmitting(false);
 
-    // START: Simulate generation //
+    // UNCOMMENT to simulate generation //
     // setSubmitting(true);
     // setPrediction(null);
     // setProgress(0);
@@ -199,10 +199,10 @@ export default function PlaygroundPage() {
     //     ),
     //   });
 
-    //   // After 2 seconds of setting isSuccess to true, set it to false
-    //   setTimeout(() => {
-    //     setIsSuccess(false);
-    //   }, 4000);
+    // After 2 seconds of setting isSuccess to true, set it to false
+    setTimeout(() => {
+      setIsSuccess(false);
+    }, 4000);
     // }, 1300);
     // END: Simulate generation //
   }
