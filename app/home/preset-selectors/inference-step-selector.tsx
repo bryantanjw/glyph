@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { SliderProps } from "@radix-ui/react-slider";
+import * as z from "zod";
+import { UseFormReturn } from "react-hook-form";
 
 import {
   HoverCard,
@@ -11,14 +12,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-interface InferenceStepsSelectorProps {
-  defaultValue: SliderProps["defaultValue"];
+import { formSchema } from "@/app/page";
+import { useSliderChange } from "@/hooks/use-slider-change";
+
+interface InferenceStepSelectorProps {
+  form: UseFormReturn<z.infer<typeof formSchema>>;
 }
 
-export function InferenceStepsSelector({
-  defaultValue,
-}: InferenceStepsSelectorProps) {
-  const [value, setValue] = React.useState([80]);
+export function InferenceStepSelector({ form }: InferenceStepSelectorProps) {
+  const { value, handleSliderChange } = useSliderChange(form, "inferenceStep");
 
   return (
     <div className="grid gap-2 pt-2">
@@ -26,21 +28,21 @@ export function InferenceStepsSelector({
         <HoverCardTrigger asChild>
           <div className="grid gap-3">
             <div className="flex items-center justify-between">
-              <Label htmlFor="inferenceSteps" className="leading-[1.5]">
-                Inference Steps
+              <Label htmlFor="inferenceStep" className="leading-[1.5]">
+                Inference Step
               </Label>
               <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
                 {value}
               </span>
             </div>
             <Slider
-              id="inferenceSteps"
+              id="inferenceStep"
               max={100}
-              defaultValue={value}
+              defaultValue={[value]}
               step={2}
-              onValueChange={setValue}
+              onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
-              aria-label="Inference Steps"
+              aria-label="Inference Step"
             />
           </div>
         </HoverCardTrigger>
@@ -49,7 +51,7 @@ export function InferenceStepsSelector({
           className="w-[260px] text-sm"
           side="left"
         >
-          Number of denoising steps (minimum: 1; maximum: 500).
+          Number of denoising steps (minimum: 1; maximum: 100).
           <br /> <br /> Decrease to have the initial composition follows the QR
           code more. You will only see the QR code if you reduce it too much.
           The range of steps varies by model.

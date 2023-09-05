@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import * as z from "zod";
+import { UseFormReturn } from "react-hook-form";
 
 import {
   HoverCard,
@@ -8,10 +10,24 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export function NegativePromptField() {
+import { formSchema } from "@/app/page";
+
+interface NegativePromptFieldProps {
+  form: UseFormReturn<z.infer<typeof formSchema>>;
+}
+
+export function NegativePromptField({ form }: NegativePromptFieldProps) {
+  const { watch, setValue } = form;
+  const negativePrompt = watch("negativePrompt");
+
+  const handleNegativePromptChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setValue("negativePrompt", event.target.value);
+  };
+
   return (
     <div className="grid gap-2 pt-2">
       <HoverCard openDelay={200}>
@@ -23,8 +39,9 @@ export function NegativePromptField() {
               </Label>
             </div>
             <Textarea
-              readOnly
-              value={"ugly, disfigured, low quality, blurry, nsfw"}
+              {...form.register("negativePrompt")}
+              onChange={handleNegativePromptChange}
+              value={negativePrompt}
             />
           </div>
         </HoverCardTrigger>

@@ -82,12 +82,7 @@ export function ModelSelector({
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
           <HoverCard>
-            <HoverCardContent
-              side="left"
-              align="start"
-              forceMount
-              className="min-h-[280px]"
-            >
+            <HoverCardContent side="left" align="start" forceMount>
               <div className="grid gap-2">
                 <h4 className="font-medium leading-none">{peekedModel.name}</h4>
                 <div className="text-sm text-muted-foreground">

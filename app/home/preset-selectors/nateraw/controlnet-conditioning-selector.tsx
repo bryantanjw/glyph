@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { SliderProps } from "@radix-ui/react-slider";
+import * as z from "zod";
+import { UseFormReturn } from "react-hook-form";
 
 import {
   HoverCard,
@@ -11,14 +12,20 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
+import { formSchema } from "@/app/page";
+import { useSliderChange } from "@/hooks/use-slider-change";
+
 interface ControlNetConditioningSelectorProps {
-  defaultValue: SliderProps["defaultValue"];
+  form: UseFormReturn<z.infer<typeof formSchema>>;
 }
 
 export function ControlNetConditioningSelector({
-  defaultValue,
+  form,
 }: ControlNetConditioningSelectorProps) {
-  const [value, setValue] = React.useState(defaultValue);
+  const { value, handleSliderChange } = useSliderChange(
+    form,
+    "controlNetConditioning"
+  );
 
   return (
     <div className="grid gap-2 pt-2">
@@ -37,9 +44,9 @@ export function ControlNetConditioningSelector({
               id="ControlNetConditioning"
               max={2}
               min={1}
-              defaultValue={value}
+              defaultValue={[value]}
               step={0.01}
-              onValueChange={setValue}
+              onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
               aria-label="ControlNet Conditioning"
             />

@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { SliderProps } from "@radix-ui/react-slider";
+import * as z from "zod";
+import { UseFormReturn } from "react-hook-form";
 
 import {
   HoverCard,
@@ -11,12 +12,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
+import { formSchema } from "@/app/page";
+import { useSliderChange } from "@/hooks/use-slider-change";
+
 interface StrengthSelectorProps {
-  defaultValue: SliderProps["defaultValue"];
+  form: UseFormReturn<z.infer<typeof formSchema>>;
 }
 
-export function StrengthSelector({ defaultValue }: StrengthSelectorProps) {
-  const [value, setValue] = React.useState([12]);
+export function StrengthSelector({ form }: StrengthSelectorProps) {
+  const { value, handleSliderChange } = useSliderChange(form, "strength");
 
   return (
     <div className="grid gap-2 pt-2">
@@ -34,9 +38,9 @@ export function StrengthSelector({ defaultValue }: StrengthSelectorProps) {
             <Slider
               id="strength"
               max={30}
-              defaultValue={value}
+              defaultValue={[value]}
               step={0.2}
-              onValueChange={setValue}
+              onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
               aria-label="Strength"
             />

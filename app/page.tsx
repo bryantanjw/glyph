@@ -16,7 +16,6 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,15 +26,13 @@ import { Progress } from "@/components/ui/progress";
 import { SuccessIcon } from "@/app/home/success-icon";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { UserNav } from "@/app/home/user-nav";
-import { CodeViewer } from "@/app/home/code-viewer";
+import { Navbar } from "./home/navbar";
 import { PresetSelector } from "@/app/home/preset-selector";
-import { PresetShare } from "@/app/home/preset-share";
 import { BrightnessConditioningSelector } from "./home/preset-selectors/tonyadastra/brightness-conditioning-selector";
 import { ModelSelector } from "@/app/home/preset-selectors/model-selector";
-import { InferenceStepsSelector } from "@/app/home/preset-selectors/inference-steps-selector";
+import { InferenceStepSelector } from "@/app/home/preset-selectors/inference-step-selector";
 import { TileConditioningSelector } from "@/app/home/preset-selectors/tonyadastra/tile-conditioning-selector";
 import { SeedField } from "./home/preset-selectors/seed-field";
 import { StrengthSelector } from "./home/preset-selectors/nateraw/strength-selector";
@@ -48,7 +45,7 @@ import { Preset, presets } from "./data/presets";
 
 // START: Animation //
 const slideInFromRight = {
-  hidden: { x: 100, opacity: 0, display: "none" },
+  hidden: { x: 50, opacity: 0, display: "none" },
   visible: {
     x: 0,
     opacity: 1,
@@ -64,14 +61,14 @@ const gridVariants = {
   visible: {
     width: "75%",
     transition: {
-      duration: 0.25,
+      duration: 0.2,
     },
   },
 };
 
-const AnimatedSelectorDiv = ({ children, key }) => (
+const AnimatedSelectorDiv = ({ children, id }) => (
   <motion.div
-    key={key}
+    key={id}
     className="space-y-4"
     initial={{ opacity: 0, x: -100 }}
     animate={{ opacity: 1, x: 0 }}
@@ -83,23 +80,35 @@ const AnimatedSelectorDiv = ({ children, key }) => (
 );
 // END: Animation //
 
-const formSchema = z.object({
+export const formSchema = z.object({
+  // selectedPreset: z
+  //   .object({
+  //     name: z.string(),
+  //     prompt: z.string(),
+  //   })
+  //   .optional(),
   prompt: z.string().min(1, {
     message: "Prompt is empty.",
   }),
   url: z.string().min(1, {
     message: "Website URL is empty.",
   }),
+  // Inputs for nateraw/qrcode-sd
+  negativePrompt: z.string().optional(),
+  inferenceStep: z.number().optional(),
+  guidance: z.number().optional(),
+  strength: z.number().optional(),
+  controlNetConditioning: z.number().optional(),
+  seed: z.number().optional(),
 });
 
 export default function PlaygroundPage() {
   const { toast } = useToast();
 
-  // Inputs
   const [selectedPreset, setSelectedPreset] = useState<Preset>();
   const [isCustom, setIsCustom] = useState(false);
-  const [prompt, setPrompt] = useState<string | undefined>(undefined);
   const [selectedModel, setSelectedModel] = useState<Model | null>(models[0]);
+  const [prompt, setPrompt] = useState<string | undefined>(undefined);
 
   // State management for Replicate prediction
   const [prediction, setPrediction] = useState(null);
@@ -107,7 +116,6 @@ export default function PlaygroundPage() {
 
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
-  const [status, setStatus] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -115,68 +123,43 @@ export default function PlaygroundPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      // selectedPreset: presets.find((preset) => preset.name === "Futuristic"),
       prompt,
       url: "",
+      negativePrompt: "ugly, disfigured, low quality, blurry, nsfw",
+      inferenceStep: 80,
+      guidance: 12,
+      strength: 0.85,
+      controlNetConditioning: 1.2,
+      seed: 5,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    setPrediction(null);
     setSubmitting(true);
-    // const res = await fetch("/api/predictions", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   // body: JSON.stringify({ preset }),
-    // });
+    console.log("values", values);
 
-    // let prediction = await res.json();
-    // if (res.status !== 200) {
-    //   setError(prediction.detail);
-    //   toast({
-    //     variant: "destructive",
-    //     title: "Uh oh! Something went wrong.",
-    //     description: "prediction.detail",
-    //     action: <ToastAction altText="Try again">Try again</ToastAction>,
-    //   });
-    // } else {
-    //   setPrediction(prediction);
-    //   setIsSuccess(true);
-    //   toast({
-    //     title: "QR Code generated!",
-    //     description: "Your image is ready for download.",
-    //     action: (
-    //       <ToastAction
-    //         altText="Download image"
-    //         onClick={() => {
-    //           // Add your download logic here
-    //           console.log("Downloading image...");
-    //         }}
-    //       >
-    //         Download image
-    //       </ToastAction>
-    //     ),
-    //   });
-    //   console.log("prediction", prediction);
-    // }
+    const res = await fetch("/api/predictions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
 
-    // Simulate generation //
-    setProgress(0);
-    const interval = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prevProgress + 1;
+    let prediction = await res.json();
+    if (res.status !== 200) {
+      setError(prediction.detail);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "prediction.detail",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
-    }, 13);
-
-    setTimeout(() => {
-      setSubmitting(false);
+    } else {
+      setPrediction(prediction);
       setIsSuccess(true);
-
       toast({
         title: "QR Code generated!",
         description: "Your image is ready for download.",
@@ -184,7 +167,7 @@ export default function PlaygroundPage() {
           <ToastAction
             altText="Download image"
             onClick={() => {
-              // Add your download logic here
+              // TODO: Add download logic here
               console.log("Downloading image...");
             }}
           >
@@ -192,12 +175,57 @@ export default function PlaygroundPage() {
           </ToastAction>
         ),
       });
+      console.log("prediction", prediction);
+    }
+    setSubmitting(false);
 
-      // After 2 seconds of setting isSuccess to true, set it to false
-      setTimeout(() => {
-        setIsSuccess(false);
-      }, 4000);
-    }, 1300);
+    // START: Simulate generation //
+    // setSubmitting(true);
+    // setPrediction(null);
+    // setProgress(0);
+
+    // console.log("values", values);
+    // const interval = setInterval(() => {
+    //   setProgress((prevProgress) => {
+    //     if (prevProgress >= 100) {
+    //       clearInterval(interval);
+    //       return 100;
+    //     }
+    //     return prevProgress + 1;
+    //   });
+    // }, 13);
+
+    // setTimeout(() => {
+    //   setSubmitting(false);
+    //   setIsSuccess(true);
+    //   setPrediction({
+    //     output: [
+    //       "https://pbxt.replicate.delivery/Z2z9g1AjIa5tPltcp7K3UlB2vJCLq6FPmDBRXKU0tAoEderIA/output-0.png",
+    //     ],
+    //     status: "success",
+    //   });
+
+    //   toast({
+    //     title: "QR code generated!",
+    //     description: "Your image is ready for download.",
+    //     action: (
+    //       <ToastAction
+    //         altText="Download image"
+    //         onClick={() => {
+    //           console.log("Downloading image...");
+    //         }}
+    //       >
+    //         Download image
+    //       </ToastAction>
+    //     ),
+    //   });
+
+    //   // After 2 seconds of setting isSuccess to true, set it to false
+    //   setTimeout(() => {
+    //     setIsSuccess(false);
+    //   }, 4000);
+    // }, 1300);
+    // END: Simulate generation //
   }
 
   return (
@@ -207,8 +235,7 @@ export default function PlaygroundPage() {
         <div className="ml-auto flex space-x-3 sm:justify items-center">
           <div className="hidden space-x-5 md:flex items-center">
             <div className="space-x-2">
-              <CodeViewer />
-              <PresetShare />
+              <Navbar />
             </div>
             <UserNav />
           </div>
@@ -219,42 +246,40 @@ export default function PlaygroundPage() {
       <div className="container h-full py-6 flex-1">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex h-full items-stretch gap-6 xl:gap-0">
+            <div className="flex h-full items-stretch gap-8 2xl:gap-0">
               <motion.div
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={slideInFromRight}
-                className="flex-col flex space-y-3 lg:max-w-[360px] md:order-2"
+                className="flex-col flex-grow flex space-y-3 md:max-w-[240px] md:order-2"
               >
                 <ModelSelector
                   types={types}
                   models={models}
                   onModelChange={setSelectedModel}
                 />
-                <ScrollArea className="h-[500px]">
-                  <div className="space-y-4">
-                    <NegativePromptField />
-                    <InferenceStepsSelector defaultValue={[80]} />
-                    <GuidanceSelector defaultValue={[12]} />
-                  </div>
+                <div className="space-y-2">
+                  <NegativePromptField form={form} />
+                  <InferenceStepSelector form={form} />
+                  <GuidanceSelector form={form} />
+                </div>
 
-                  {/* Vary selectors based on model selected */}
-                  <AnimatePresence mode="wait">
-                    {selectedModel?.name === "qrcode-sd" && (
-                      <AnimatedSelectorDiv key="qrcode-sd">
-                        <StrengthSelector defaultValue={[0.9]} />
-                        <ControlNetConditioningSelector defaultValue={[1.5]} />
-                        <SeedField />
-                      </AnimatedSelectorDiv>
-                    )}
-                    {selectedModel?.name === "qart" && (
-                      <AnimatedSelectorDiv key="qart">
-                        <TileConditioningSelector defaultValue={[0.45]} />
-                        <BrightnessConditioningSelector defaultValue={[1]} />
-                      </AnimatedSelectorDiv>
-                    )}
-                  </AnimatePresence>
-                </ScrollArea>
+                {/* Vary selectors based on model selected */}
+                <AnimatePresence mode="wait">
+                  {selectedModel?.name === "qrcode-sd" && (
+                    <AnimatedSelectorDiv id="qrcode-sd">
+                      <StrengthSelector form={form} />
+                      <ControlNetConditioningSelector form={form} />
+                      <SeedField form={form} />
+                    </AnimatedSelectorDiv>
+                  )}
+                  {selectedModel?.name === "qart" && (
+                    <AnimatedSelectorDiv id="qart">
+                      <TileConditioningSelector defaultValue={[0.45]} />
+                      <BrightnessConditioningSelector defaultValue={[1]} />
+                    </AnimatedSelectorDiv>
+                  )}
+                </AnimatePresence>
               </motion.div>
               <motion.div
                 className="md:order-1 mt-0 border-0 p-0"
@@ -263,7 +288,7 @@ export default function PlaygroundPage() {
                 variants={gridVariants}
               >
                 <div className="flex flex-col space-y-4 lg:max-w-[900px] mx-auto">
-                  <div className="grid h-full gap-6 lg:grid-cols-2">
+                  <div className="grid h-full gap-9 lg:grid-cols-[1fr_360px]">
                     <div className="flex flex-col space-y-4">
                       <div className="flex flex-col space-y-2">
                         <div className="flex justify-between">
@@ -333,30 +358,30 @@ export default function PlaygroundPage() {
                         )}
                       />
                     </div>
-                    <div className="mt-[21px] min-h-[300px] rounded-md border bg-muted relative">
-                      {isSubmitting && (
-                        <Progress
-                          className="absolute w-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                          value={progress}
+
+                    {prediction && prediction.output ? (
+                      <motion.div
+                        initial={{ scale: 0.7, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <Image
+                          alt="QR Code"
+                          src={prediction.output[prediction.output.length - 1]}
+                          width={360}
+                          height={360}
                         />
-                      )}
-                      {prediction && (
-                        <div>
-                          {prediction.output && (
-                            <Image
-                              alt="QR Code"
-                              src={
-                                prediction.output[prediction.output.length - 1]
-                              }
-                              layout="fill"
-                              objectFit="contain"
-                              className="p-8"
-                            />
-                          )}
-                          <p>status: {prediction.status}</p>
-                        </div>
-                      )}
-                    </div>
+                      </motion.div>
+                    ) : (
+                      <div className="min-h-[360px] max-w-[360px] rounded-md border bg-muted relative">
+                        {isSubmitting && (
+                          <Progress
+                            className="absolute w-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                            value={progress}
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center space-x-2">
                     {isSuccess ? (
@@ -381,9 +406,9 @@ export default function PlaygroundPage() {
                           ) : (
                             <motion.div
                               className="flex items-center justify-center gap-x-2"
-                              initial={{ opacity: 0, y: 50 }}
+                              initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.2 }}
+                              transition={{ duration: 0.25 }}
                             >
                               <span>Generate</span>
                               <Image

@@ -38,7 +38,20 @@ export async function POST(request: Request) {
     }
   }
 
-  // const { theme, prompt } = await request.json();
+  const req = await request.json(); // Parse the request body once
+
+  const {
+    prompt,
+    url,
+    negativePrompt,
+    inferenceStep,
+    guidance,
+    strength,
+    controlnetConditioning,
+    seed,
+  } = req;
+
+  console.log("req", req);
 
   // POST request to Replicate to start the image restoration generation process
   console.log("Start /predictions POST request");
@@ -52,26 +65,28 @@ export async function POST(request: Request) {
       version:
         "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
       input: {
-        prompt:
-          "interior of luxury condominium with minimalist furniture and lush house plants and abstract wall paintings | modern architecture by makoto shinkai, ilya kuvshinov, lois van baarle, rossdraws and frank lloyd wright",
-        qr_code_content: "https://pascal.fi",
-        negative_prompt: "ugly, disfigured, low quality, blurry, nsfw",
-        num_inference_steps: 50,
-        guidance_scale: 7.5,
-        seed: 42,
+        prompt,
+        qr_code_content: url,
+        negative_prompt: negativePrompt,
+        num_inference_steps: inferenceStep,
+        guidance_scale: guidance,
+        seed,
+        strength,
+        controlnet_conditioning_scale: controlnetConditioning,
         batch_size: 1,
-        strength: 0.9,
-        controlnet_conditioning_scale: 1.5,
       },
     }),
   });
 
+  if (!startResponse.ok) {
+    throw new Error(`HTTP error! status: ${startResponse.status}`);
+  }
   let jsonStartResponse = await startResponse.json();
   console.log("jsonStartResponse", jsonStartResponse);
 
   let endpointUrl = jsonStartResponse.urls.get;
 
-  // GET request to get the status of the image restoration process & return the result when it's ready
+  // // GET request to get the status of the image restoration process & return the result when it's ready
   let predictions: string | null = null;
   while (!predictions) {
     // Loop in 1s intervals until the alt text is ready

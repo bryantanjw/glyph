@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import * as z from "zod";
+import { Controller, UseFormReturn } from "react-hook-form";
 
 import {
   HoverCard,
@@ -9,8 +11,26 @@ import {
 } from "@/components/ui/hover-card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { FormControl, FormItem, FormMessage } from "@/components/ui/form";
 
-export function SeedField() {
+import { formSchema } from "@/app/page";
+
+interface SeedFieldProps {
+  form: UseFormReturn<z.infer<typeof formSchema>>;
+}
+
+export function SeedField({ form }: SeedFieldProps) {
+  const {
+    control,
+    formState: { errors },
+  } = form;
+
+  React.useEffect(() => {
+    if (errors.seed) {
+      console.log(errors.seed.message);
+    }
+  }, [errors.seed]);
+
   return (
     <div className="grid gap-2 pt-2">
       <HoverCard openDelay={200}>
@@ -21,7 +41,22 @@ export function SeedField() {
                 Seed
               </Label>
             </div>
-            <Input type="number" value={5} readOnly />
+            <Controller
+              name="seed"
+              control={control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage>{errors.seed?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
           </div>
         </HoverCardTrigger>
         <HoverCardContent
