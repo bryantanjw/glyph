@@ -91,7 +91,7 @@ export default function PlaygroundPage() {
 
   // State management for Replicate prediction
   const [prediction, setPrediction] = useState(null);
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
@@ -119,92 +119,118 @@ export default function PlaygroundPage() {
     setSubmitting(true);
     console.log("values", values);
 
-    const res = await fetch("/api/predictions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
+    // Make initial request to Lambda function to create a prediction
+    const res = await fetch(
+      "https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }
+    );
 
-    let prediction = await res.json();
-    if (res.status !== 200) {
-      setError(prediction.detail);
+    const response = await res.json();
+    console.log("response", response);
+
+    if (res.status !== 200 || response.status === "error") {
+      setSubmitting(false);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "prediction.detail",
+        description: response.message || "Unknown error",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
-    } else {
-      setPrediction(prediction);
-      setIsSuccess(true);
-      toast({
-        title: "QR Code generated!",
-        description: "Your image is ready for download.",
-        action: (
-          <ToastAction
-            altText="Download image"
-            onClick={() => {
-              // TODO: Add download logic here
-              console.log("Downloading image...");
-            }}
-          >
-            Download image
-          </ToastAction>
-        ),
-      });
-      console.log("prediction", prediction);
+      return; // Exit the function
     }
-    setSubmitting(false);
 
-    // UNCOMMENT to simulate generation //
-    // setSubmitting(true);
-    // setPrediction(null);
-    // setProgress(0);
+    // Extract the prediction ID from the returned URL for polling
+    const predictionId = response.url.split("/").pop();
 
-    // console.log("values", values);
-    // const interval = setInterval(() => {
-    //   setProgress((prevProgress) => {
-    //     if (prevProgress >= 100) {
-    //       clearInterval(interval);
-    //       return 100;
-    //     }
-    //     return prevProgress + 1;
-    //   });
-    // }, 13);
+    // Promise that rejects after 50 seconds
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Timeout after 50 seconds")), 50000);
+    });
 
-    // setTimeout(() => {
-    //   setSubmitting(false);
-    //   setIsSuccess(true);
-    //   setPrediction({
-    //     output: [
-    //       "https://pbxt.replicate.delivery/Z2z9g1AjIa5tPltcp7K3UlB2vJCLq6FPmDBRXKU0tAoEderIA/output-0.png",
-    //     ],
-    //     status: "success",
-    //   });
+    // Poll the API Gateway endpoint for the status using the prediction ID
+    let predictions = null;
+    let startTime = Date.now();
 
-    //   toast({
-    //     title: "QR code generated!",
-    //     description: "Your image is ready for download.",
-    //     action: (
-    //       <ToastAction
-    //         altText="Download image"
-    //         onClick={() => {
-    //           console.log("Downloading image...");
-    //         }}
-    //       >
-    //         Download image
-    //       </ToastAction>
-    //     ),
-    //   });
+    while (!predictions) {
+      // Check if 50 seconds have passed
+      if (Date.now() - startTime >= 50000) {
+        throw new Error("Timeout after 50 seconds");
+      }
+
+      const pollPromise = fetch(
+        `https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions/${predictionId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Token " + process.env.REPLICATE_API_KEY,
+          },
+        }
+      );
+
+      let pollRes;
+      try {
+        pollRes = await Promise.race([pollPromise, timeoutPromise]);
+      } catch (error) {
+        // Handle timeout error
+        setSubmitting(false);
+        toast({
+          variant: "destructive",
+          title: "Timeout!",
+          description: "The request took too long. Please try again later.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+        return; // Exit the function
+      }
+
+      let pollResponse = await pollRes.json();
+      console.log("pollResponse", pollResponse);
+
+      if (pollResponse.status === "succeeded") {
+        predictions = pollResponse;
+        setPrediction(predictions);
+        setIsSuccess(true);
+        setSubmitting(false);
+        toast({
+          title: "QR Code generated!",
+          description: "Your image is ready for download.",
+          action: (
+            <ToastAction
+              altText="Download image"
+              onClick={() => {
+                // TODO: Add download logic here
+                console.log("Downloading image...");
+              }}
+            >
+              Download image
+            </ToastAction>
+          ),
+        });
+      } else if (pollResponse.status === "failed") {
+        setErrorMessage("Failed to generate image.");
+        setSubmitting(false);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: pollResponse.message || "Image generation failed.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+        break;
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+    }
 
     // After 2 seconds of setting isSuccess to true, set it to false
     setTimeout(() => {
       setIsSuccess(false);
-    }, 4000);
-    // }, 1300);
-    // END: Simulate generation //
+    }, 2000);
   }
 
   return (
@@ -412,3 +438,53 @@ export default function PlaygroundPage() {
     </div>
   );
 }
+
+// UNCOMMENT to simulate generation //
+// async function simulateSubmit(values: z.infer<typeof formSchema>) {
+//   setSubmitting(true);
+//   setPrediction(null);
+//   setProgress(0);
+
+//   console.log("values", values);
+//   const interval = setInterval(() => {
+//     setProgress((prevProgress) => {
+//       if (prevProgress >= 100) {
+//         clearInterval(interval);
+//         return 100;
+//       }
+//       return prevProgress + 1;
+//     });
+//   }, 13);
+
+//   setTimeout(() => {
+//     setSubmitting(false);
+//     setIsSuccess(true);
+//     setPrediction({
+//       output: [
+//         "https://pbxt.replicate.delivery/Z2z9g1AjIa5tPltcp7K3UlB2vJCLq6FPmDBRXKU0tAoEderIA/output-0.png",
+//       ],
+//       status: "success",
+//     });
+
+//     toast({
+//       title: "QR code generated!",
+//       description: "Your image is ready for download.",
+//       action: (
+//         <ToastAction
+//           altText="Download image"
+//           onClick={() => {
+//             console.log("Downloading image...");
+//           }}
+//         >
+//           Download image
+//         </ToastAction>
+//       ),
+//     });
+
+//     // After 2 seconds of setting isSuccess to true, set it to false
+//     setTimeout(() => {
+//       setIsSuccess(false);
+//     }, 4000);
+//   }, 1300);
+// }
+// END: Simulate generation //

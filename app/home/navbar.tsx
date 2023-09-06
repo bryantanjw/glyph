@@ -45,6 +45,9 @@ export function Navbar() {
               <ListItem href="/pricing" title="Pricing">
                 How to install dependencies and structure your app.
               </ListItem>
+              <ListItem href="/pricing" title="Refer a friend">
+                How to install dependencies and structure your app.
+              </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
