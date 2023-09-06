@@ -148,22 +148,10 @@ export default function PlaygroundPage() {
     // Extract the prediction ID from the returned URL for polling
     const predictionId = response.url.split("/").pop();
 
-    // Promise that rejects after 50 seconds
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Timeout after 50 seconds")), 50000);
-    });
-
     // Poll the API Gateway endpoint for the status using the prediction ID
     let predictions = null;
-    let startTime = Date.now();
-
     while (!predictions) {
-      // Check if 50 seconds have passed
-      if (Date.now() - startTime >= 50000) {
-        throw new Error("Timeout after 50 seconds");
-      }
-
-      const pollPromise = fetch(
+      let pollRes = await fetch(
         `https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions/${predictionId}`,
         {
           method: "GET",
@@ -173,22 +161,6 @@ export default function PlaygroundPage() {
           },
         }
       );
-
-      let pollRes;
-      try {
-        pollRes = await Promise.race([pollPromise, timeoutPromise]);
-      } catch (error) {
-        // Handle timeout error
-        setSubmitting(false);
-        toast({
-          variant: "destructive",
-          title: "Timeout!",
-          description: "The request took too long. Please try again later.",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
-        return; // Exit the function
-      }
-
       let pollResponse = await pollRes.json();
       console.log("pollResponse", pollResponse);
 
