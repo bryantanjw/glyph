@@ -140,7 +140,6 @@ export default function PlaygroundPage() {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: response.message || "Unknown error",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       return; // Exit the function
     }
@@ -191,7 +190,11 @@ export default function PlaygroundPage() {
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description: pollResponse.message || "Image generation failed.",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
+          action: (
+            <ToastAction altText="Try again" onClick={retrySubmit}>
+              Try again
+            </ToastAction>
+          ),
         });
         break;
       } else {
@@ -204,6 +207,10 @@ export default function PlaygroundPage() {
       setIsSuccess(false);
     }, 2000);
   }
+
+  const retrySubmit = () => {
+    form.handleSubmit(onSubmit)();
+  };
 
   return (
     <div className="h-full flex-col md:flex">
