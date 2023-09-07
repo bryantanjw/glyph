@@ -345,6 +345,7 @@ export default function PlaygroundPage() {
 
                     {prediction && prediction.output ? (
                       <motion.div
+                        className="bg-muted rounded-md border hover:bg-transparent hover:border-0 duration-150 ease-in-out"
                         initial={{ scale: 0.7, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.15 }}
@@ -354,6 +355,7 @@ export default function PlaygroundPage() {
                           src={prediction.output[prediction.output.length - 1]}
                           width={360}
                           height={360}
+                          className="p-3 hover:p-0 transition-all duration-150 ease-in-out"
                         />
                       </motion.div>
                     ) : (
