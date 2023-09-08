@@ -287,7 +287,7 @@ export default function PlaygroundPage() {
                   )}
                 </AnimatePresence>
                 <Button
-                  className="md:hidden"
+                  className="md:hidden p-5"
                   onClick={(event) => {
                     event.preventDefault();
                     setIsCustom((prev) => !prev);
