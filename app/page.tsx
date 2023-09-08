@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { Cross2Icon, ReloadIcon } from "@radix-ui/react-icons";
 import { AnimatePresence, motion } from "framer-motion";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +27,6 @@ import { SuccessIcon } from "@/app/home/success-icon";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
-import { UserNav } from "@/app/home/user-nav";
 import { Navbar } from "./home/navbar";
 import { PresetSelector } from "@/app/home/preset-selector";
 import { BrightnessConditioningSelector } from "./home/preset-selectors/tonyadastra/brightness-conditioning-selector";
@@ -214,18 +213,7 @@ export default function PlaygroundPage() {
 
   return (
     <div className="h-full flex-col md:flex">
-      <div className="container flex items-center justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
-        <h2 className="text-lg font-semibold">Glyph</h2>
-        <div className="ml-auto flex space-x-3 sm:justify items-center">
-          <div className="hidden space-x-5 md:flex items-center">
-            <div className="space-x-2">
-              <Navbar />
-            </div>
-            <UserNav />
-          </div>
-        </div>
-      </div>
-      <Separator />
+      <Navbar />
 
       <div className="container h-full py-6 flex-1">
         <Form {...form}>
@@ -235,8 +223,15 @@ export default function PlaygroundPage() {
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={slideInFromRight}
-                className="flex-col flex-grow flex space-y-3 md:max-w-[240px] md:order-2"
+                className="flex-col flex-grow flex space-y-3 md:max-w-[240px] md:order-2 relative"
               >
+                <div
+                  className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
+                  onClick={() => setIsCustom((prev) => !prev)}
+                >
+                  <Cross2Icon className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+                </div>
                 <ModelSelector
                   types={types}
                   models={models}
@@ -272,7 +267,7 @@ export default function PlaygroundPage() {
                 variants={gridVariants}
               >
                 <div className="flex flex-col space-y-4 lg:max-w-[900px] mx-auto">
-                  <div className="grid h-full gap-9 lg:grid-cols-[1fr_360px]">
+                  <div className="grid h-full gap-5 md:gap-9 lg:grid-cols-[1fr_360px]">
                     <div className="flex flex-col space-y-4">
                       <div className="flex flex-col space-y-2">
                         <div className="flex justify-between">
@@ -345,7 +340,7 @@ export default function PlaygroundPage() {
 
                     {prediction && prediction.output ? (
                       <motion.div
-                        className="bg-muted rounded-md border hover:bg-transparent hover:border-0 duration-150 ease-in-out"
+                        className="bg-muted rounded-md border md:hover:bg-transparent md:hover:border-0 duration-150 ease-in-out mx-auto"
                         initial={{ scale: 0.7, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.15 }}
@@ -359,7 +354,7 @@ export default function PlaygroundPage() {
                         />
                       </motion.div>
                     ) : (
-                      <div className="min-h-[360px] max-w-[360px] rounded-md border bg-muted relative">
+                      <div className="min-h-[500px] min-w-[320px] md:min-h-[360px] md:min-w-[360px] max-w-[450px] rounded-md border bg-muted relative mx-auto">
                         {isSubmitting && (
                           <Progress
                             className="absolute w-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -369,10 +364,10 @@ export default function PlaygroundPage() {
                       </div>
                     )}
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex flex-col md:flex-row items-center space-x-2">
                     {isSuccess ? (
                       <Button
-                        className="min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                        className="w-full md:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
                         style={{
                           boxShadow:
                             "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
@@ -381,33 +376,31 @@ export default function PlaygroundPage() {
                         <SuccessIcon />
                       </Button>
                     ) : (
-                      <div className="flex flex-row gap-2">
-                        <Button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
-                        >
-                          {isSubmitting ? (
-                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                          ) : (
-                            <motion.div
-                              className="flex items-center justify-center gap-x-2"
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.25 }}
-                            >
-                              <span>Generate</span>
-                              <Image
-                                className="filter invert dark:filter-none"
-                                width={18}
-                                height={18}
-                                src={"/sparkling-icon.png"}
-                                alt={"Generate"}
-                              />
-                            </motion.div>
-                          )}
-                        </Button>
-                      </div>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full md:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
+                      >
+                        {isSubmitting ? (
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <motion.div
+                            className="flex items-center justify-center gap-x-2"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.25 }}
+                          >
+                            <span>Generate</span>
+                            <Image
+                              className="filter invert dark:filter-none"
+                              width={18}
+                              height={18}
+                              src={"/sparkling-icon.png"}
+                              alt={"Generate"}
+                            />
+                          </motion.div>
+                        )}
+                      </Button>
                     )}
                   </div>
                 </div>
