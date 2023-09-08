@@ -45,11 +45,7 @@ export function NegativePromptField({ form }: NegativePromptFieldProps) {
             />
           </div>
         </HoverCardTrigger>
-        <HoverCardContent
-          align="start"
-          className="w-[260px] text-sm"
-          side="left"
-        >
+        <HoverCardContent align="start" className="w-[260px] text-sm">
           A feature that allows the model to understand what it should not
           generate. It&apos;s a way to guide the model&apos;s output away from
           certain theme.

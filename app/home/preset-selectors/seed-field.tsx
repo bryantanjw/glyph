@@ -59,11 +59,7 @@ export function SeedField({ form }: SeedFieldProps) {
             />
           </div>
         </HoverCardTrigger>
-        <HoverCardContent
-          align="start"
-          className="w-[260px] text-sm"
-          side="left"
-        >
+        <HoverCardContent align="start" className="w-[260px] text-sm">
           A parameter that introduces a degree of randomness or entropy into the
           model&apos;s output. <br />
           <br />

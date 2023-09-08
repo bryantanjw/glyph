@@ -44,11 +44,7 @@ export function TileConditioningSelector({
             />
           </div>
         </HoverCardTrigger>
-        <HoverCardContent
-          align="start"
-          className="w-[260px] text-sm"
-          side="left"
-        >
+        <HoverCardContent align="start" className="w-[260px] text-sm">
           Adjust the properties of the tile/grid.
         </HoverCardContent>
       </HoverCard>

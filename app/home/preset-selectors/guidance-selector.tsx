@@ -46,11 +46,7 @@ export function GuidanceSelector({ form }: GuidanceSelectorProps) {
             />
           </div>
         </HoverCardTrigger>
-        <HoverCardContent
-          align="start"
-          className="w-[260px] text-sm"
-          side="left"
-        >
+        <HoverCardContent align="start" className="w-[260px] text-sm">
           The extent to which the prompt should guide the output (minimum: 0.1;
           maximum: 30).
         </HoverCardContent>

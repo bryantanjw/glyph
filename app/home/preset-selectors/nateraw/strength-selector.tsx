@@ -46,11 +46,7 @@ export function StrengthSelector({ form }: StrengthSelectorProps) {
             />
           </div>
         </HoverCardTrigger>
-        <HoverCardContent
-          align="start"
-          className="w-[260px] text-sm"
-          side="left"
-        >
+        <HoverCardContent align="start" className="w-[260px] text-sm">
           Indicator for how much to transform the masked portion of the
           reference `image`. Must be between 0 and 1. (maximum: 1)
         </HoverCardContent>

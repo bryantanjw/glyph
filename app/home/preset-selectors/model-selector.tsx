@@ -58,11 +58,7 @@ export function ModelSelector({
         <HoverCardTrigger asChild>
           <Label htmlFor="model">Model</Label>
         </HoverCardTrigger>
-        <HoverCardContent
-          align="start"
-          className="w-[260px] text-sm"
-          side="left"
-        >
+        <HoverCardContent align="start" className="w-[260px] text-sm">
           The model which will generate the completion. Some models are suitable
           for natural language tasks, others specialize in code. Learn more.
         </HoverCardContent>
@@ -82,7 +78,7 @@ export function ModelSelector({
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
           <HoverCard>
-            <HoverCardContent side="left" align="start" forceMount>
+            <HoverCardContent align="start" forceMount>
               <div className="grid gap-2">
                 <h4 className="font-medium leading-none">{peekedModel.name}</h4>
                 <div className="text-sm text-muted-foreground">

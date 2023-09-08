@@ -46,11 +46,7 @@ export function InferenceStepSelector({ form }: InferenceStepSelectorProps) {
             />
           </div>
         </HoverCardTrigger>
-        <HoverCardContent
-          align="start"
-          className="w-[260px] text-sm"
-          side="left"
-        >
+        <HoverCardContent align="start" className="w-[260px] text-sm">
           Number of denoising steps (minimum: 1; maximum: 100).
           <br /> <br /> Decrease to have the initial composition follows the QR
           code more. You will only see the QR code if you reduce it too much.

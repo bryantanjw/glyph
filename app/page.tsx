@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Cross2Icon, ReloadIcon } from "@radix-ui/react-icons";
 import { AnimatePresence, motion } from "framer-motion";
@@ -42,7 +42,6 @@ import { formSchema } from "@/schemas/formSchemas";
 import { Model, models, types } from "./data/models";
 import { Preset, presets } from "./data/presets";
 
-// START: Animation //
 const AnimatedSelectorDiv = ({ children, id }) => (
   <motion.div
     key={id}
@@ -55,11 +54,10 @@ const AnimatedSelectorDiv = ({ children, id }) => (
     {children}
   </motion.div>
 );
-// END: Animation //
 
 export default function PlaygroundPage() {
   const { toast } = useToast();
-  const isSmallScreen = window.matchMedia("(max-width: 768px)").matches;
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const [selectedPreset, setSelectedPreset] = useState<Preset>();
   const [isCustom, setIsCustom] = useState(false);
@@ -120,6 +118,25 @@ export default function PlaygroundPage() {
       },
     },
   };
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth <= 768);
+    };
+
+    // Check screen size on mount and update isSmallScreen state
+    checkScreenSize();
+
+    // Update isSmallScreen state when the window is resized
+    window.addEventListener("resize", checkScreenSize);
+
+    // Clean up event listener on unmount
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  useEffect(() => {
+    console.log("isCustom", isCustom);
+  }, [isCustom]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setPrediction(null);
@@ -235,7 +252,9 @@ export default function PlaygroundPage() {
               >
                 <div
                   className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                  onClick={() => setIsCustom((prev) => !prev)}
+                  onClick={() => {
+                    setIsCustom(false);
+                  }}
                 >
                   <Cross2Icon className="h-4 w-4" />
                   <span className="sr-only">Close</span>
@@ -268,9 +287,10 @@ export default function PlaygroundPage() {
                   )}
                 </AnimatePresence>
                 <Button
+                  className="md:hidden"
                   onClick={(event) => {
                     event.preventDefault();
-                    setIsCustom(false);
+                    setIsCustom((prev) => !prev);
                   }}
                 >
                   Save
@@ -294,7 +314,7 @@ export default function PlaygroundPage() {
                             <Switch
                               name="show"
                               id="show"
-                              defaultChecked={isCustom}
+                              checked={isCustom}
                               onCheckedChange={() =>
                                 setIsCustom((prev) => !prev)
                               }
