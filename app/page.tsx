@@ -10,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -44,28 +43,6 @@ import { Model, models, types } from "./data/models";
 import { Preset, presets } from "./data/presets";
 
 // START: Animation //
-const slideInFromRight = {
-  hidden: { x: 50, opacity: 0, display: "none" },
-  visible: {
-    x: 0,
-    opacity: 1,
-    display: "flex",
-    transition: {
-      delay: 0.2,
-    },
-  },
-};
-
-const gridVariants = {
-  hidden: { width: "100%" },
-  visible: {
-    width: "75%",
-    transition: {
-      duration: 0.2,
-    },
-  },
-};
-
 const AnimatedSelectorDiv = ({ children, id }) => (
   <motion.div
     key={id}
@@ -82,6 +59,7 @@ const AnimatedSelectorDiv = ({ children, id }) => (
 
 export default function PlaygroundPage() {
   const { toast } = useToast();
+  const isSmallScreen = window.matchMedia("(max-width: 768px)").matches;
 
   const [selectedPreset, setSelectedPreset] = useState<Preset>();
   const [isCustom, setIsCustom] = useState(false);
@@ -112,6 +90,36 @@ export default function PlaygroundPage() {
       seed: 5,
     },
   });
+
+  const slideInFromRight = {
+    hidden: {
+      x: 50,
+      opacity: 0,
+      display: "none",
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      display: "flex",
+      transition: {
+        delay: isSmallScreen ? 0 : 0.2,
+      },
+    },
+  };
+
+  const gridVariants = {
+    hidden: {
+      width: "100%",
+      display: isSmallScreen ? "block" : "normal",
+    },
+    visible: {
+      width: isSmallScreen ? "100%" : "75%",
+      display: isSmallScreen ? "none" : "normal",
+      transition: {
+        duration: 0.2,
+      },
+    },
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setPrediction(null);
@@ -223,7 +231,7 @@ export default function PlaygroundPage() {
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={slideInFromRight}
-                className="flex-col flex-grow flex space-y-3 md:max-w-[240px] md:order-2 relative"
+                className="flex-col flex-grow flex space-y-3 md:max-w-[240px] order-2 relative"
               >
                 <div
                   className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
@@ -259,14 +267,22 @@ export default function PlaygroundPage() {
                     </AnimatedSelectorDiv>
                   )}
                 </AnimatePresence>
+                <Button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setIsCustom(false);
+                  }}
+                >
+                  Save
+                </Button>
               </motion.div>
               <motion.div
-                className="md:order-1 mt-0 border-0 p-0"
+                className="order-1 mt-0 border-0 p-0"
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={gridVariants}
               >
-                <div className="flex flex-col space-y-4 lg:max-w-[900px] mx-auto">
+                <div className="md:flex md:flex-col space-y-4 lg:max-w-[900px] mx-auto">
                   <div className="grid h-full gap-5 md:gap-9 lg:grid-cols-[1fr_360px]">
                     <div className="flex flex-col space-y-4">
                       <div className="flex flex-col space-y-2">
@@ -354,7 +370,7 @@ export default function PlaygroundPage() {
                         />
                       </motion.div>
                     ) : (
-                      <div className="min-h-[500px] min-w-[320px] md:min-h-[360px] md:min-w-[360px] max-w-[450px] rounded-md border bg-muted relative mx-auto">
+                      <div className="min-h-[300px] min-w-[320px] md:min-h-[360px] md:min-w-[360px] max-w-[450px] rounded-md border bg-muted relative mx-auto">
                         {isSubmitting && (
                           <Progress
                             className="absolute w-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"

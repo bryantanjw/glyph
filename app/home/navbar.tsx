@@ -37,10 +37,10 @@ export function Navbar() {
                           >
                             <NotionLogoIcon className="h-6 w-6" />
                             <div className="mb-2 mt-4 text-lg font-medium">
-                              shadcn/ui
+                              Refer a friend
                             </div>
                             <p className="text-sm leading-tight text-muted-foreground">
-                              Beautifully designed components.
+                              Earn 5 credits for referral.
                             </p>
                           </a>
                         </NavigationMenuLink>
@@ -50,9 +50,6 @@ export function Navbar() {
                         CSS.
                       </ListItem>
                       <ListItem href="/pricing" title="Pricing">
-                        How to install dependencies and structure your app.
-                      </ListItem>
-                      <ListItem href="/pricing" title="Refer a friend">
                         How to install dependencies and structure your app.
                       </ListItem>
                     </ul>
