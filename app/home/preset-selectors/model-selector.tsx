@@ -76,9 +76,13 @@ export function ModelSelector({
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="end" className="w-[250px] p-0">
+        <PopoverContent align="end" className="PopoverContent md:w-[290px] p-0">
           <HoverCard>
-            <HoverCardContent align="start" forceMount>
+            <HoverCardContent
+              className="hidden md:block"
+              align="start"
+              forceMount
+            >
               <div className="grid gap-2">
                 <h4 className="font-medium leading-none">{peekedModel.name}</h4>
                 <div className="text-sm text-muted-foreground">
