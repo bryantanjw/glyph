@@ -66,5 +66,7 @@ export const getActiveProductsWithPrices = async () => {
   if (error) {
     console.log(error.message);
   }
+  console.log("data", data); // Log the data
+
   return data ?? [];
 };

@@ -69,7 +69,7 @@ export default function PlaygroundPage() {
   const [prediction, setPrediction] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState("Starting");
+  const [status, setStatus] = useState("Starting...");
 
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
@@ -186,9 +186,9 @@ export default function PlaygroundPage() {
       const { status, logs } = pollResponse;
 
       if (status === "processing") {
-        setStatus("Generating");
+        setStatus("Generating...");
       } else {
-        setStatus(status.charAt(0).toUpperCase() + status.slice(1));
+        setStatus(status.charAt(0).toUpperCase() + status.slice(1) + "...");
       }
       const progress = extractProgress(logs);
       if (progress !== null) {

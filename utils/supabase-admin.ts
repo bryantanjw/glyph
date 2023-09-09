@@ -25,6 +25,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     metadata: product.metadata,
   };
 
+  console.log("upsertProductRecord");
   const { error } = await supabaseAdmin.from("products").upsert([productData]);
   if (error) throw error;
   console.log(`Product inserted/updated: ${product.id}`);
