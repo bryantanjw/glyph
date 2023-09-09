@@ -91,7 +91,7 @@ export default function Pricing({
             </a>
             .
           </p>
-        </div>  
+        </div>
       </section>
     );
 

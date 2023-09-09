@@ -41,6 +41,7 @@ import { NegativePromptField } from "@/app/home/preset-selectors/negative-prompt
 import { formSchema } from "@/schemas/formSchemas";
 import { Model, models, types } from "./data/models";
 import { Preset, presets } from "./data/presets";
+import { extractProgress } from "@/utils/helpers";
 
 const AnimatedSelectorDiv = ({ children, id }) => (
   <motion.div
@@ -67,11 +68,12 @@ export default function PlaygroundPage() {
   // State management for Replicate prediction
   const [prediction, setPrediction] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState("Starting");
 
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   // Form definition
   const form = useForm<z.infer<typeof formSchema>>({
@@ -134,14 +136,9 @@ export default function PlaygroundPage() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  useEffect(() => {
-    console.log("isCustom", isCustom);
-  }, [isCustom]);
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setPrediction(null);
     setSubmitting(true);
-    console.log("values", values);
 
     // Make initial request to Lambda function to create a prediction
     const res = await fetch(
@@ -186,6 +183,17 @@ export default function PlaygroundPage() {
       );
       let pollResponse = await pollRes.json();
       console.log("pollResponse", pollResponse);
+      const { status, logs } = pollResponse;
+
+      if (status === "processing") {
+        setStatus("Generating");
+      } else {
+        setStatus(status.charAt(0).toUpperCase() + status.slice(1));
+      }
+      const progress = extractProgress(logs);
+      if (progress !== null) {
+        setProgress(progress);
+      }
 
       if (pollResponse.status === "succeeded") {
         predictions = pollResponse;
@@ -250,16 +258,16 @@ export default function PlaygroundPage() {
                 variants={slideInFromRight}
                 className="flex-col flex-grow flex space-y-3 md:max-w-[240px] order-2 relative"
               >
+                <div
+                  className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
+                  onClick={() => {
+                    setIsCustom(false);
+                  }}
+                >
+                  <Cross2Icon className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+                </div>
                 <div className="mb-2">
-                  <div
-                    className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                    onClick={() => {
-                      setIsCustom(false);
-                    }}
-                  >
-                    <Cross2Icon className="h-5 w-5" />
-                    <span className="sr-only">Close</span>
-                  </div>
                   <ModelSelector
                     types={types}
                     models={models}
@@ -394,10 +402,12 @@ export default function PlaygroundPage() {
                     ) : (
                       <div className="min-h-[300px] min-w-[320px] md:min-h-[360px] md:min-w-[360px] max-w-[450px] rounded-md border bg-muted relative mx-auto">
                         {isSubmitting && (
-                          <Progress
-                            className="absolute w-1/2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                            value={progress}
-                          />
+                          <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
+                            <Label className="text-muted-foreground font-normal">
+                              {status}
+                            </Label>
+                            <Progress className="w-1/2" value={progress} />
+                          </div>
                         )}
                       </div>
                     )}
@@ -405,7 +415,7 @@ export default function PlaygroundPage() {
                   <div className="flex flex-col lg:flex-row items-center space-x-2">
                     {isSuccess ? (
                       <Button
-                        className="w-full lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                        className="w-full h-10 lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
                         style={{
                           boxShadow:
                             "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",

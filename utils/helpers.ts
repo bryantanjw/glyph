@@ -44,3 +44,23 @@ export const toDateTime = (secs: number) => {
   t.setSeconds(secs);
   return t;
 };
+
+export const extractProgress = (log: string): number | null => {
+  if (typeof log === "string" && log) {
+    const lines = log.split("\n");
+
+    // Reverse the array and find the first line that contains a percentage
+    const lastProgressLine = lines.reverse().find((line) => line.includes("%"));
+
+    if (lastProgressLine) {
+      // Extract the percentage from the line
+      const percentageMatch = lastProgressLine.match(/(\d+)%/);
+      if (percentageMatch) {
+        return parseInt(percentageMatch[1], 10);
+      }
+    }
+  }
+
+  // Return null if no percentage was found
+  return null;
+};
