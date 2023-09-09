@@ -40,7 +40,7 @@ export function Navbar() {
                               Refer a friend
                             </div>
                             <p className="text-sm leading-tight text-muted-foreground">
-                              Earn 5 credits for referral.
+                              Earn 10 credits for each referral.
                             </p>
                           </a>
                         </NavigationMenuLink>

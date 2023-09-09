@@ -243,51 +243,53 @@ export default function PlaygroundPage() {
       <div className="container h-full py-6 flex-1">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex h-full items-stretch gap-8 2xl:gap-0">
+            <div className="flex h-full items-stretch gap-8 xl:gap-4 2xl:gap-0">
               <motion.div
                 initial="hidden"
                 animate={isCustom ? "visible" : "hidden"}
                 variants={slideInFromRight}
                 className="flex-col flex-grow flex space-y-3 md:max-w-[240px] order-2 relative"
               >
-                <div
-                  className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                  onClick={() => {
-                    setIsCustom(false);
-                  }}
-                >
-                  <Cross2Icon className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
-                </div>
-                <ModelSelector
-                  types={types}
-                  models={models}
-                  onModelChange={setSelectedModel}
-                />
-                <div className="space-y-2">
-                  <NegativePromptField form={form} />
-                  <InferenceStepSelector form={form} />
-                  <GuidanceSelector form={form} />
-                </div>
+                <div className="mb-2">
+                  <div
+                    className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
+                    onClick={() => {
+                      setIsCustom(false);
+                    }}
+                  >
+                    <Cross2Icon className="h-5 w-5" />
+                    <span className="sr-only">Close</span>
+                  </div>
+                  <ModelSelector
+                    types={types}
+                    models={models}
+                    onModelChange={setSelectedModel}
+                  />
+                  <div className="space-y-2 mb-2">
+                    <NegativePromptField form={form} />
+                    <InferenceStepSelector form={form} />
+                    <GuidanceSelector form={form} />
+                  </div>
 
-                {/* Vary selectors based on model selected */}
-                <AnimatePresence mode="wait">
-                  {selectedModel?.name === "qrcode-sd" && (
-                    <AnimatedSelectorDiv id="qrcode-sd">
-                      <StrengthSelector form={form} />
-                      <ControlNetConditioningSelector form={form} />
-                      <SeedField form={form} />
-                    </AnimatedSelectorDiv>
-                  )}
-                  {selectedModel?.name === "qart" && (
-                    <AnimatedSelectorDiv id="qart">
-                      <TileConditioningSelector defaultValue={[0.45]} />
-                      <BrightnessConditioningSelector defaultValue={[1]} />
-                    </AnimatedSelectorDiv>
-                  )}
-                </AnimatePresence>
+                  {/* Vary selectors based on model selected */}
+                  <AnimatePresence mode="wait">
+                    {selectedModel?.name === "qrcode-sd" && (
+                      <AnimatedSelectorDiv id="qrcode-sd">
+                        <StrengthSelector form={form} />
+                        <ControlNetConditioningSelector form={form} />
+                        <SeedField form={form} />
+                      </AnimatedSelectorDiv>
+                    )}
+                    {selectedModel?.name === "qart" && (
+                      <AnimatedSelectorDiv id="qart">
+                        <TileConditioningSelector defaultValue={[0.45]} />
+                        <BrightnessConditioningSelector defaultValue={[1]} />
+                      </AnimatedSelectorDiv>
+                    )}
+                  </AnimatePresence>
+                </div>
                 <Button
-                  className="md:hidden p-5"
+                  className="md:hidden h-10"
                   onClick={(event) => {
                     event.preventDefault();
                     setIsCustom((prev) => !prev);
@@ -400,10 +402,10 @@ export default function PlaygroundPage() {
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-col md:flex-row items-center space-x-2">
+                  <div className="flex flex-col lg:flex-row items-center space-x-2">
                     {isSuccess ? (
                       <Button
-                        className="w-full md:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                        className="w-full lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
                         style={{
                           boxShadow:
                             "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
@@ -415,7 +417,7 @@ export default function PlaygroundPage() {
                       <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full md:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
+                        className="w-full h-10 lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
