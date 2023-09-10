@@ -97,7 +97,7 @@ export default function Pricing({
     <div className="overflow-hidden">
       <Navbar page="pricing" />
       <div
-        className="pt-52 px-10 lg:px-24 pb-12 lg:pb-0"
+        className="pt-32 md:pt-48 px-10 lg:px-24 pb-12 lg:pb-0"
         style={{
           backgroundImage:
             "radial-gradient(ellipse 85% 120% at center bottom, rgb(29, 78, 216) 0%, rgb(30, 64, 175) 30%, rgb(15 23 42) 60%)",
@@ -113,7 +113,7 @@ export default function Pricing({
           </p>
         </div>
 
-        <div className="flex justify-center min-w-[80px] max-w-[14rem] m-auto py-8 mt-8">
+        <div className="flex justify-center min-w-[80px] max-w-[14rem] m-auto pb-0 md:py-8 mt-12">
           <div className="relative flex w-full p-1 rounded-full bg-gray-500 bg-opacity-20 backdrop-blur">
             <span
               className="absolute inset-0 m-1 pointer-events-none"

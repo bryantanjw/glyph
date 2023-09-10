@@ -43,7 +43,8 @@ export function Navbar({ page }: NavbarProps) {
     <div
       className={cn(
         "fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 lg:px-8 sm:flex-row h-14 backdrop-blur-md border-b border-b-opacity-50 bg-transparent",
-        isWhiteSectionInView ? "text-black" : "text-white border-slate-700"
+        page === "pricing" ? "text-white border-slate-800" : "text-black",
+        isWhiteSectionInView && "text-black border-slate-200"
       )}
     >
       {" "}
