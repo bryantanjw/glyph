@@ -15,6 +15,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "pbxt.replicate.delivery",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
     ],
   },
 };

@@ -19,14 +19,18 @@ import { UserNav } from "./user-nav";
 export function Navbar() {
   return (
     <div className="sticky top-0 z-50 container flex items-center justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16 backdrop-blur border-b">
-      <h2 className="text-lg font-semibold">Glyph</h2>
+      <Link href={"/"} className="text-lg font-semibold">
+        Glyph
+      </Link>
       <div className="ml-auto flex space-x-3 sm:justify items-center">
         <div className="hidden space-x-5 md:flex items-center">
           <div className="space-x-2">
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+                  <NavigationMenuTrigger className="bg-transparent">
+                    Getting started
+                  </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                       <li className="row-span-3">
@@ -58,7 +62,10 @@ export function Navbar() {
                 <NavigationMenuItem>
                   <Link href="/gallery" legacyBehavior passHref>
                     <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent"
+                      )}
                     >
                       Gallery
                     </NavigationMenuLink>

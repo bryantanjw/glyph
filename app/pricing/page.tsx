@@ -1,3 +1,4 @@
+import { Navbar } from "../home/navbar";
 import Pricing from "./components/pricing";
 import {
   getSession,
