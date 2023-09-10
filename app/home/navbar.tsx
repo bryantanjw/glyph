@@ -16,9 +16,37 @@ import {
 } from "@/components/ui/navigation-menu";
 import { UserNav } from "./user-nav";
 
-export function Navbar() {
+interface NavbarProps {
+  page?: string;
+}
+
+export function Navbar({ page }: NavbarProps) {
+  const [isWhiteSectionInView, setIsWhiteSectionInView] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const whiteSection = document.getElementById("whiteSection");
+      if (whiteSection) {
+        const rect = whiteSection.getBoundingClientRect();
+        setIsWhiteSectionInView(rect.top <= 50 && rect.bottom >= 50);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="sticky top-0 z-50 container flex items-center justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16 backdrop-blur border-b">
+    <div
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 lg:px-8 sm:flex-row h-14 backdrop-blur-md border-b border-b-opacity-50 bg-transparent",
+        isWhiteSectionInView ? "text-black" : "text-white border-slate-700"
+      )}
+    >
+      {" "}
       <Link href={"/"} className="text-lg font-semibold">
         Glyph
       </Link>
@@ -28,7 +56,14 @@ export function Navbar() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent">
+                  <NavigationMenuTrigger
+                    className={cn(
+                      "bg-transparent data-[state=open]:bg-slate-100",
+                      page === "pricing" &&
+                        !isWhiteSectionInView &&
+                        "hover:bg-slate-800 data-[state=open]:bg-slate-800"
+                    )}
+                  >
                     Getting started
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -64,7 +99,10 @@ export function Navbar() {
                     <NavigationMenuLink
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "bg-transparent"
+                        "bg-transparent hover:bg-slate-100",
+                        page === "pricing" &&
+                          !isWhiteSectionInView &&
+                          "hover:bg-slate-800"
                       )}
                     >
                       Gallery

@@ -27,6 +27,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
 import { ThemeProvider } from "./theme-provider";
+import { Navbar } from "./home/navbar";
 import { PresetSelector } from "@/app/home/preset-selector";
 import { BrightnessConditioningSelector } from "./home/preset-selectors/tonyadastra/brightness-conditioning-selector";
 import { ModelSelector } from "@/app/home/preset-selectors/model-selector";
@@ -246,7 +247,8 @@ export default function PlaygroundPage() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <div className="h-full flex-col md:flex">
+      <Navbar />
+      <div className="h-full flex-col md:flex pt-20">
         <div className="container h-full py-6 flex-1">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>

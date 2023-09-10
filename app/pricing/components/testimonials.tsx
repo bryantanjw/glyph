@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function Testimonials() {
   return (
-    <div className="max-w-6xl py-12">
+    <div className="max-w-6xl py-12 mx-auto sm:py-24 sm:px-10 lg:px-8">
       <div className="py-24 mx-auto max-w-7xl">
         <h2 className="text-center text-lg font-semibold leading-8">
           Trusted by the world’s most innovative teams
@@ -64,12 +64,12 @@ export function Testimonials() {
         <ul className="space-y-4">
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a
                 href="https://twitter.com/kanyewest"
                 className="cursor-pointer"
               >
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1276461929934942210/cqNhNk6v_400x400.jpg"
@@ -90,19 +90,19 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a href="https://twitter.com/tim_cook" className="cursor-pointer">
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1535420431766671360/Pwq-1eJc_400x400.jpg"
                       className="bg-center bg-cover border rounded-full"
-                      alt="Tim Cook"
+                      alt="Cook Pu"
                       width={40}
                       height={40}
                     />
                     <div>
-                      <h3 className="text-lg font-semibold">Tim Cook</h3>
+                      <h3 className="text-lg font-semibold">Cook Pu</h3>
                       <p className="text-md">CEO of Apple</p>
                     </div>
                   </div>
@@ -117,12 +117,12 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a
                 href="https://twitter.com/kanyewest"
                 className="cursor-pointer"
               >
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1276461929934942210/cqNhNk6v_400x400.jpg"
@@ -143,19 +143,19 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a href="https://twitter.com/tim_cook" className="cursor-pointer">
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1535420431766671360/Pwq-1eJc_400x400.jpg"
                       className="bg-center bg-cover border rounded-full"
-                      alt="Tim Cook"
+                      alt="Cook Pu"
                       width={40}
                       height={40}
                     />
                     <div>
-                      <h3 className="text-lg font-semibold">Tim Cook</h3>
+                      <h3 className="text-lg font-semibold">Cook Pu</h3>
                       <p className="text-md">CEO of Apple</p>
                     </div>
                   </div>
@@ -173,9 +173,9 @@ export function Testimonials() {
         <ul className="hidden space-y-4 sm:block">
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a href="https://twitter.com/paraga" className="cursor-pointer">
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1375285353146327052/y6jeByyD_400x400.jpg"
@@ -201,19 +201,19 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a href="https://twitter.com/tim_cook" className="cursor-pointer">
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1535420431766671360/Pwq-1eJc_400x400.jpg"
                       className="bg-center bg-cover border rounded-full"
-                      alt="Tim Cook"
+                      alt="Cook Pu"
                       width={40}
                       height={40}
                     />
                     <div>
-                      <h3 className="text-lg font-semibold">Tim Cook</h3>
+                      <h3 className="text-lg font-semibold">Cook Pu</h3>
                       <p className="text-md">CEO of Apple</p>
                     </div>
                   </div>
@@ -228,9 +228,9 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a href="https://twitter.com/paraga" className="cursor-pointer">
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1375285353146327052/y6jeByyD_400x400.jpg"
@@ -256,19 +256,19 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a href="https://twitter.com/tim_cook" className="cursor-pointer">
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1535420431766671360/Pwq-1eJc_400x400.jpg"
                       className="bg-center bg-cover border rounded-full"
-                      alt="Tim Cook"
+                      alt="Cook Pu"
                       width={40}
                       height={40}
                     />
                     <div>
-                      <h3 className="text-lg font-semibold">Tim Cook</h3>
+                      <h3 className="text-lg font-semibold">Cook Pu</h3>
                       <p className="text-md">CEO of Apple</p>
                     </div>
                   </div>
@@ -286,12 +286,12 @@ export function Testimonials() {
         <ul className="hidden space-y-4 lg:block">
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a
                 href="https://twitter.com/satyanadella"
                 className="cursor-pointer"
               >
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1221837516816306177/_Ld4un5A_400x400.jpg"
@@ -317,12 +317,12 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a
                 href="https://twitter.com/dan_schulman"
                 className="cursor-pointer"
               >
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/516916920482672641/3jCeLgFb_400x400.jpeg"
@@ -346,12 +346,12 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a
                 href="https://twitter.com/satyanadella"
                 className="cursor-pointer"
               >
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/1221837516816306177/_Ld4un5A_400x400.jpg"
@@ -377,12 +377,12 @@ export function Testimonials() {
           </li>
           <li className="text-sm leading-6">
             <div className="relative group">
-              <div className="absolute transition rounded-lg opacity-25 -inset-1 dark:bg-transparent dark:from-transparent bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
+              <div className="absolute transition rounded-lg opacity-25 -inset-1 bg-gradient-to-r from-purple-100 to-pink-100 blur duration-400 group-hover:opacity-100 group-hover:duration-200"></div>
               <a
                 href="https://twitter.com/dan_schulman"
                 className="cursor-pointer"
               >
-                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white dark:bg-slate-800 ring-1 ring-gray-900/5 dark:border hover:border-gray-600 transition duration-400">
+                <div className="relative p-6 space-y-6 leading-none rounded-lg bg-white ring-1 ring-gray-900/5 hover:border-gray-600 transition duration-400">
                   <div className="flex items-center space-x-4">
                     <Image
                       src="https://pbs.twimg.com/profile_images/516916920482672641/3jCeLgFb_400x400.jpeg"
