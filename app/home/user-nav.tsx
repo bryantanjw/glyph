@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -14,7 +16,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { useSupabase } from "@/app/supabase-provider";
+
 export function UserNav() {
+  const router = useRouter();
+  const { supabase } = useSupabase();
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -24,13 +30,8 @@ export function UserNav() {
         toggleTheme();
       }
     }
-
-    // Add the event listener
     window.addEventListener("keydown", handleKeydown);
-
-    // Remove the event listener on component unmount
     return () => window.removeEventListener("keydown", handleKeydown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
   const toggleTheme = () => {
@@ -39,7 +40,6 @@ export function UserNav() {
     } else {
       setTheme("dark");
     }
-    // Add logic for 'system' theme if needed
   };
 
   return (
@@ -63,14 +63,27 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-2">
+          <DropdownMenuItem className="text-muted-foreground cursor-pointer">
+            <Link href="/account">Manage account</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={toggleTheme}
-            className="text-muted-foreground"
+            className="text-muted-foreground cursor-pointer"
           >
             Toggle theme
             <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem className="text-muted-foreground">
+          <DropdownMenuItem
+            onClick={async () => {
+              const { error } = await supabase.auth.signOut();
+              if (error) {
+                console.error("Error signing out:", error.message);
+                return;
+              }
+              router.push("/signin");
+            }}
+            className="text-muted-foreground cursor-pointer"
+          >
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

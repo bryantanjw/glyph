@@ -76,6 +76,14 @@
 }
 
 @layer components {
+  .pricing-bg {
+    background-image: radial-gradient(at right bottom, rgb(99 102 241) 0%, rgb(30, 64, 175) 10%, rgb(15 23 42) 60%);
+  }
+  @media (min-width: 1024px) { /* Tailwind's lg breakpoint */
+    .pricing-bg {
+      background-image: radial-gradient(ellipse 85% 120% at center bottom, rgb(99 102 241) 0%, rgb(30, 64, 175) 30%, rgb(15 23 42) 60%);
+    }
+  }
   .pricing-switch {
     background-image: radial-gradient(ellipse 85% 120% at center bottom, rgb(255,255,255,0.2) 0%, rgb(22,33,52) 45%);
   }

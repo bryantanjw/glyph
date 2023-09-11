@@ -16,7 +16,6 @@ import { postData } from "@/utils/helpers";
 import { getStripe } from "@/utils/stripe-client";
 import { cn } from "@/lib/utils";
 import { Database } from "@/types_db";
-import { Switch } from "@/components/ui/switch";
 
 type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 type Product = Database["public"]["Tables"]["products"]["Row"];
@@ -46,9 +45,7 @@ export default function Pricing({
   products,
   subscription,
 }: Props) {
-  console.log("products", products);
   const router = useRouter();
-  const whiteSectionRef = React.useRef(null);
   const [billingInterval, setBillingInterval] = useState<BillingInterval>(null);
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
 
@@ -99,13 +96,7 @@ export default function Pricing({
   return (
     <div className="overflow-hidden">
       <Navbar page="pricing" />
-      <div
-        className="pt-32 md:pt-48 px-10 lg:px-12 pb-12 lg:pb-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 85% 120% at center bottom, rgb(29, 78, 216) 0%, rgb(30, 64, 175) 30%, rgb(15 23 42) 60%)",
-        }}
-      >
+      <div className="pricing-bg pt-32 md:pt-48 px-10 lg:px-16 pb-12 lg:pb-0">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-bold sm:text-center sm:text-6xl text-white">
             Pricing Plans
@@ -138,7 +129,7 @@ export default function Pricing({
               onClick={() => setBillingInterval(null)}
               aria-pressed={billingInterval === null}
             >
-              On demand
+              On-demand
             </button>
 
             <SwitchPrimitives.Root
@@ -172,7 +163,7 @@ export default function Pricing({
           </div>
         </div>
 
-        <div className="space-y-4 lg:space-y-0 sm:grid sm:grid-cols-2 lg:mx-auto xl:max-w-none xl:mx-0 lg:grid-cols-3 items-center mt-9 gap-3 lg:gap-0">
+        <div className="space-y-4 lg:space-y-0 sm:grid sm:grid-cols-2 xl:max-w-none lg:grid-cols-3 items-center mt-9 gap-3 lg:gap-0">
           {products.map((product, index) => {
             const price = product?.prices?.find(
               (price) => price.interval === billingInterval
@@ -193,16 +184,13 @@ export default function Pricing({
               <div
                 key={product.id}
                 className={cn(
-                  `relative flex flex-col h-full p-10 border shadow-2xl mb-8
+                  `relative flex flex-col h-full p-10 border shadow-2xl
                ${
                  isPremier
-                   ? "z-10 lg:top-2 h-[105%] lg:h-[115%] border-black border-opacity-20 bg-white rounded-2xl"
-                   : "z-0 bg-slate-800 bg-opacity-80 border-slate-600 border-opacity-60 rounded-2xl lg:rounded-t-2xl lg:rounded-b-none lg:mb-0"
+                   ? "z-10 lg:top-2 lg:h-[115%] border-black border-opacity-20 bg-white rounded-2xl"
+                   : "z-0 bg-slate-800 bg-opacity-70 border-slate-600 border-opacity-60 rounded-2xl lg:rounded-t-2xl lg:rounded-b-none lg:mb-0"
                }`,
                   {
-                    "border border-pink-500": subscription
-                      ? product.name === subscription?.prices?.products?.name
-                      : "",
                     "lg:pr-20 lg:-mr-8": index === 0,
                     "lg:pl-16 lg:-ml-6": index === 2,
                   }

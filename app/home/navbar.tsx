@@ -42,7 +42,7 @@ export function Navbar({ page }: NavbarProps) {
   return (
     <div
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 lg:px-8 sm:flex-row h-14 backdrop-blur-md border-b border-b-opacity-50 bg-transparent",
+        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 lg:px-8 sm:flex-row h-14 backdrop-blur-md border-b border-b-opacity-50 bg-transparent dark:text-white",
         page === "pricing" ? "text-white border-slate-800" : "text-black",
         isWhiteSectionInView && "text-black border-slate-200"
       )}
@@ -59,7 +59,7 @@ export function Navbar({ page }: NavbarProps) {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
                     className={cn(
-                      "bg-transparent data-[state=open]:bg-slate-100",
+                      "bg-transparent data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800",
                       page === "pricing" &&
                         !isWhiteSectionInView &&
                         "hover:bg-slate-800 data-[state=open]:bg-slate-800"
@@ -96,19 +96,18 @@ export function Navbar({ page }: NavbarProps) {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <Link href="/gallery" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "bg-transparent hover:bg-slate-100",
-                        page === "pricing" &&
-                          !isWhiteSectionInView &&
-                          "hover:bg-slate-800"
-                      )}
-                    >
-                      Gallery
-                    </NavigationMenuLink>
-                  </Link>
+                  <NavigationMenuLink
+                    href="/gallery"
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "bg-transparent focus:bg-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 ",
+                      page === "pricing" &&
+                        !isWhiteSectionInView &&
+                        "hover:bg-slate-800 focus:bg-slate-800"
+                    )}
+                  >
+                    Gallery
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
