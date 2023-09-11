@@ -75,6 +75,17 @@
   }
 }
 
+@layer components {
+  .pricing-switch {
+    background-image: radial-gradient(ellipse 85% 120% at center bottom, rgb(255,255,255,0.2) 0%, rgb(22,33,52) 45%);
+  }
+  @media (min-width: 1024px) { /* Tailwind's lg breakpoint */
+    .pricing-switch {
+      background-image: radial-gradient(ellipse 85% 120% at center bottom, rgb(255,255,255,0.2) 0%, rgb(26,41,80) 50%);
+    }
+  }
+}
+
 .PopoverContent {
   width: var(--radix-popover-trigger-width);
 }

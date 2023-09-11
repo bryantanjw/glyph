@@ -60,12 +60,10 @@ export const getActiveProductsWithPrices = async () => {
     .select("*, prices(*)")
     .eq("active", true)
     .eq("prices.active", true)
-    .order("unit_amount", { foreignTable: "prices" });
+    .order("id");
 
   if (error) {
     console.log(error.message);
   }
-  console.log("data", data); // Log the data
-
   return data ?? [];
 };

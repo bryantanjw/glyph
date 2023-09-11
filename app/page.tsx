@@ -248,7 +248,7 @@ export default function PlaygroundPage() {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <Navbar />
-      <div className="h-full flex-col md:flex pt-20">
+      <div className="h-full flex-col md:flex pt-14 md:pt-20">
         <div className="container h-full py-6 flex-1">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
