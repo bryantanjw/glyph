@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function Testimonials() {
   return (
-    <div className="max-w-6xl py-12 mx-auto sm:py-24 sm:px-10 lg:px-8">
+    <div className="max-w-6xl py-12 mx-auto sm:py-24 px-10 lg:px-20">
       <div className="py-24 mx-auto max-w-7xl">
         <h2 className="text-center text-lg font-semibold leading-8">
           Trusted by the world’s most innovative teams

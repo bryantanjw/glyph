@@ -20,9 +20,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-import { Preset } from "../data/presets";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { Preset } from "@/app/data/presets";
 
 interface PresetSelectorProps extends PopoverProps {
   presets: Preset[];

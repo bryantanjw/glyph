@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
@@ -15,12 +17,20 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/components/ui/use-toast";
+import { User } from "@supabase/supabase-js";
 
-import { useSupabase } from "@/app/supabase-provider";
+import { useSupabase } from "../app/supabase-provider";
+import { PersonIcon } from "@radix-ui/react-icons";
 
-export function UserNav() {
-  const router = useRouter();
+interface Props {
+  user: User | null | undefined;
+}
+
+export function UserNav({ user }: Props) {
   const { supabase } = useSupabase();
+  const router = useRouter();
+  const { toast } = useToast();
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -47,16 +57,21 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="#" alt="@bryantanjw" />
-            <AvatarFallback>SC</AvatarFallback>
+            <AvatarImage
+              src={user.user_metadata.avatar_url ?? "/avatar-icon.png"}
+              alt={user.email}
+            />
+            <AvatarFallback>
+              <PersonIcon />
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 space-y-3" align="end" forceMount>
         <DropdownMenuLabel className="font-normal mt-1">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium">bryantanjw01@gmail.com</p>
-            <p className="text-xs leading-none text-muted-foreground">
+          <div className="flex flex-col space-y-2">
+            <p className="text-sm font-medium">{user.email}</p>
+            <p className="text-sm leading-none text-muted-foreground">
               3 credits
             </p>
           </div>
@@ -78,6 +93,11 @@ export function UserNav() {
               const { error } = await supabase.auth.signOut();
               if (error) {
                 console.error("Error signing out:", error.message);
+                toast({
+                  variant: "destructive",
+                  title: "Uh oh! Something went wrong.",
+                  description: error.message || "Failed to sign out.",
+                });
                 return;
               }
               router.push("/signin");

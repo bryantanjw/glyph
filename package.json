@@ -60,7 +60,7 @@
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
     "postcss": "8.4.27",
-    "supabase": "^1.86.1",
+    "supabase": "^1.93.0",
     "typescript": "5.1.6"
   }
 }

@@ -5,6 +5,8 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { NotionLogoIcon } from "@radix-ui/react-icons";
+import { Session, User } from "@supabase/supabase-js";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -18,9 +20,11 @@ import { UserNav } from "./user-nav";
 
 interface NavbarProps {
   page?: string;
+  user: User | null | undefined;
 }
 
-export function Navbar({ page }: NavbarProps) {
+export function Navbar({ page, user }: NavbarProps) {
+  console.log("user", user);
   const [isWhiteSectionInView, setIsWhiteSectionInView] = React.useState(false);
 
   React.useEffect(() => {
@@ -95,12 +99,13 @@ export function Navbar({ page }: NavbarProps) {
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
+
                 <NavigationMenuItem>
                   <NavigationMenuLink
                     href="/gallery"
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "bg-transparent focus:bg-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 ",
+                      "bg-transparent focus:bg-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 mr-5  ",
                       page === "pricing" &&
                         !isWhiteSectionInView &&
                         "hover:bg-slate-800 focus:bg-slate-800"
@@ -109,10 +114,43 @@ export function Navbar({ page }: NavbarProps) {
                     Gallery
                   </NavigationMenuLink>
                 </NavigationMenuItem>
+
+                {user ? (
+                  <UserNav user={user} />
+                ) : (
+                  <NavigationMenuItem>
+                    <NavigationMenuLink
+                      href="/signin"
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "group",
+                        "bg-transparent focus:bg-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800",
+                        page === "pricing" &&
+                          !isWhiteSectionInView &&
+                          "hover:bg-slate-800 focus:bg-slate-800"
+                      )}
+                    >
+                      <span>Log In</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="ml-4 h-3 w-3 opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all"
+                      >
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                )}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          <UserNav />
         </div>
       </div>
     </div>

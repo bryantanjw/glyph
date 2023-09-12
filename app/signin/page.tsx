@@ -2,8 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+
+import { cn } from "@/lib/utils";
 import { UserAuthForm } from "./components/user-auth-form";
 
 import { getSession } from "@/app/supabase-server";
@@ -17,7 +18,7 @@ export default async function AuthenticationPage() {
   const session = await getSession();
 
   if (session) {
-    return redirect("/account");
+    return redirect("/");
   }
 
   return (
@@ -26,7 +27,7 @@ export default async function AuthenticationPage() {
         href="/pricing"
         className={cn(
           buttonVariants({ variant: "ghost" }),
-          "absolute right-4 top-4 md:right-8 md:top-8"
+          "absolute right-4 top-4 md:right-8 md:top-8 z-50"
         )}
       >
         Pricing
@@ -66,7 +67,7 @@ export default async function AuthenticationPage() {
         <div className="lg:p-8 flex justify-center items-center h-screen relative">
           <UserAuthForm />
 
-          <p className="px-8 text-center text-xs text-muted-foreground absolute bottom-10 w-full">
+          <p className="px-2 md:px-8 text-center text-xs text-muted-foreground absolute bottom-10 w-full">
             By continuing, you agree to our{" "}
             <Link
               href="/terms"
