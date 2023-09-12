@@ -101,7 +101,7 @@ export function Navbar({ page, user }: NavbarProps) {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuLink
+                  <Link
                     href="/gallery"
                     className={cn(
                       navigationMenuTriggerStyle(),
@@ -112,7 +112,7 @@ export function Navbar({ page, user }: NavbarProps) {
                     )}
                   >
                     Gallery
-                  </NavigationMenuLink>
+                  </Link>
                 </NavigationMenuItem>
 
                 {user ? (
