@@ -323,7 +323,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         ) : (
           <FadeInUp key="signIn">
             <p className="px-8 text-center text-sm text-muted-foreground w-full">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <span
                 onClick={setIsSignUp.bind(null, true)}
                 className="underline underline-offset-2 hover:text-muted-foreground text-black cursor-pointer"
