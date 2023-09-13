@@ -142,7 +142,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `${location.origin}/auth/callback`,
+        redirectTo:
+          process.env.NEXT_PUBLIC_SITE_URL ??
+          `${location.origin}/auth/callback`,
       },
     });
 
