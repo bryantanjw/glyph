@@ -39,7 +39,7 @@ function Card() {
     <motion.div
       ref={targetRef}
       style={{ opacity, scale }}
-      className="relative z-10 flex flex-col items-center w-[90%] mx-auto mt-16 p-8 bg-white rounded-lg shadow-lg before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,_100px)_var(--y,_100px),_blue_0%,_transparent_100%)] before:opacity-40"
+      className="z-10 flex flex-col items-center w-[90%] mx-auto mt-16 p-8 bg-white rounded-lg shadow-lg before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,_100px)_var(--y,_100px),_blue_0%,_transparent_100%)] before:opacity-40"
     >
       <p className="mb-2 text-xl font-light">
         <span className="font-medium">Projects</span> Beta

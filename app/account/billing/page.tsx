@@ -1,7 +1,13 @@
 import { Separator } from "@/components/ui/separator";
 import BillingForm from "./billing-form";
+import { getSession, getSubscription } from "@/app/supabase-server";
 
-export default function SettingsBillingPage() {
+export default async function SettingsBillingPage() {
+  const [session, subscription] = await Promise.all([
+    getSession(),
+    getSubscription(),
+  ]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +17,7 @@ export default function SettingsBillingPage() {
         </p>
       </div>
       <Separator />
-      <BillingForm />
+      <BillingForm session={session} subscription={subscription} />
     </div>
   );
 }
