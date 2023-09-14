@@ -21,10 +21,10 @@ import { UserNav } from "./user-nav";
 interface NavbarProps {
   page?: string;
   user: User | null | undefined;
+  userDetails?: any;
 }
 
-export function Navbar({ page, user }: NavbarProps) {
-  console.log("user", user);
+export function Navbar({ page, user, userDetails }: NavbarProps) {
   const [isWhiteSectionInView, setIsWhiteSectionInView] = React.useState(false);
 
   React.useEffect(() => {
@@ -116,7 +116,7 @@ export function Navbar({ page, user }: NavbarProps) {
                 </NavigationMenuItem>
 
                 {user ? (
-                  <UserNav user={user} />
+                  <UserNav user={user} userDetails={userDetails} />
                 ) : (
                   <NavigationMenuItem>
                     <NavigationMenuLink

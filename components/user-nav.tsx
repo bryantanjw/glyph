@@ -25,9 +25,11 @@ import { PersonIcon } from "@radix-ui/react-icons";
 
 interface Props {
   user: User | null | undefined;
+  userDetails?: any;
 }
 
-export function UserNav({ user }: Props) {
+export function UserNav({ user, userDetails }: Props) {
+  console.log("userDetails: ", userDetails);
   const { supabase } = useSupabase();
   const router = useRouter();
   const { toast } = useToast();
@@ -59,7 +61,7 @@ export function UserNav({ user }: Props) {
           <Avatar className="h-8 w-8">
             <AvatarImage
               src={user.user_metadata.avatar_url ?? "/avatar-icon.png"}
-              alt={user.email}
+              alt={userDetails?.full_name ?? user.email}
             />
             <AvatarFallback>
               <PersonIcon />
@@ -70,7 +72,9 @@ export function UserNav({ user }: Props) {
       <DropdownMenuContent className="w-56 space-y-3" align="end" forceMount>
         <DropdownMenuLabel className="font-normal mt-1">
           <div className="flex flex-col space-y-2">
-            <p className="text-sm font-medium">{user.email}</p>
+            <p className="text-sm font-medium">
+              {userDetails?.full_name ?? user.email}
+            </p>
             <p className="text-sm leading-none text-muted-foreground">
               3 credits
             </p>
@@ -78,7 +82,10 @@ export function UserNav({ user }: Props) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-2">
-          <DropdownMenuItem className="text-muted-foreground cursor-pointer">
+          <DropdownMenuItem
+            asChild
+            className="text-muted-foreground cursor-pointer"
+          >
             <Link href="/account">Manage account</Link>
           </DropdownMenuItem>
           <DropdownMenuItem

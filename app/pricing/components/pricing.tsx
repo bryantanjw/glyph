@@ -34,6 +34,7 @@ interface SubscriptionWithProduct extends Subscription {
 interface Props {
   session: Session | null;
   user: User | null | undefined;
+  userDetails?: any;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
 }
@@ -43,6 +44,7 @@ type BillingInterval = "month" | null;
 export default function Pricing({
   session,
   user,
+  userDetails,
   products,
   subscription,
 }: Props) {
@@ -96,7 +98,7 @@ export default function Pricing({
 
   return (
     <div className="overflow-hidden">
-      <Navbar page="pricing" user={user} />
+      <Navbar page="pricing" user={user} userDetails={userDetails} />
       <div className="pricing-bg pt-32 md:pt-48 px-10 lg:px-16 pb-12 lg:pb-0">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-bold sm:text-center sm:text-6xl text-white">

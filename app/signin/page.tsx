@@ -55,9 +55,9 @@ export default async function AuthenticationPage() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo;This library has saved me countless hours of work and
-              helped me deliver stunning designs to my clients faster than ever
-              before.&rdquo;
+              &ldquo;With Glyph, my QR codes have transformed from bland to
+              brilliant! They not only scan perfectly but also beautifully align
+              with my brand's aesthetics.&rdquo;
             </p>
             <footer className="text-sm">Sofia Davis</footer>
           </blockquote>

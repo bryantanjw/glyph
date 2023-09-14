@@ -3,22 +3,26 @@ import { redirect } from "next/navigation";
 import Playground from "@/components/playgroud";
 import { Navbar } from "@/components/navbar";
 
-import { getSession, getSubscription } from "./supabase-server";
+import { getSession, getSubscription, getUserDetails } from "./supabase-server";
+import { ThemeProvider } from "./theme-provider";
 
 export default async function PlaygroundPage() {
-  const [session, subscription] = await Promise.all([
+  const [session, userDetails, subscription] = await Promise.all([
     getSession(),
+    getUserDetails(),
     getSubscription(),
   ]);
 
-  if (!session?.user) {
-    redirect("/signin");
+  const user = session?.user;
+
+  if (!session) {
+    return redirect("/signin");
   }
 
   return (
-    <>
-      <Navbar user={session?.user} />
+    <ThemeProvider attribute="class" defaultTheme="light">
+      <Navbar user={user} userDetails={userDetails} />
       <Playground />
-    </>
+    </ThemeProvider>
   );
 }

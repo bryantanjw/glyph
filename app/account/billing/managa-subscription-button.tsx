@@ -1,10 +1,10 @@
 "use client";
-import { Session } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-
 import { postData } from "@/utils/helpers";
+
+import { Session } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 interface Props {
   session: Session;

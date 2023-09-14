@@ -243,135 +243,117 @@ export default function Playground() {
   };
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <div className="h-full flex-col md:flex pt-14 md:pt-20">
-        <div className="container h-full py-6 flex-1">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex h-full items-stretch gap-8 xl:gap-4 2xl:gap-0">
-                <motion.div
-                  initial="hidden"
-                  animate={isCustom ? "visible" : "hidden"}
-                  variants={slideInFromRight}
-                  className="flex-col flex-grow flex space-y-3 md:max-w-[240px] order-2 relative"
+    <div className="h-full flex-col md:flex pt-14 md:pt-20">
+      <div className="container h-full py-6 flex-1">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex h-full items-stretch gap-8 xl:gap-4 2xl:gap-0">
+              <motion.div
+                initial="hidden"
+                animate={isCustom ? "visible" : "hidden"}
+                variants={slideInFromRight}
+                className="flex-col flex-grow flex space-y-3 md:max-w-[240px] order-2 relative"
+              >
+                <div
+                  className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
+                  onClick={() => {
+                    setIsCustom(false);
+                  }}
                 >
-                  <div
-                    className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                    onClick={() => {
-                      setIsCustom(false);
-                    }}
-                  >
-                    <Cross2Icon className="h-5 w-5" />
-                    <span className="sr-only">Close</span>
+                  <Cross2Icon className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+                </div>
+                <div className="mb-2">
+                  <ModelSelector
+                    types={types}
+                    models={models}
+                    onModelChange={setSelectedModel}
+                  />
+                  <div className="space-y-2 mb-2">
+                    <NegativePromptField form={form} />
+                    <InferenceStepSelector form={form} />
+                    <GuidanceSelector form={form} />
                   </div>
-                  <div className="mb-2">
-                    <ModelSelector
-                      types={types}
-                      models={models}
-                      onModelChange={setSelectedModel}
-                    />
-                    <div className="space-y-2 mb-2">
-                      <NegativePromptField form={form} />
-                      <InferenceStepSelector form={form} />
-                      <GuidanceSelector form={form} />
-                    </div>
 
-                    {/* Vary selectors based on model selected */}
-                    <AnimatePresence mode="wait">
-                      {selectedModel?.name === "qrcode-sd" && (
-                        <AnimatedSelectorDiv id="qrcode-sd">
-                          <StrengthSelector form={form} />
-                          <ControlNetConditioningSelector form={form} />
-                          <SeedField form={form} />
-                        </AnimatedSelectorDiv>
-                      )}
-                      {selectedModel?.name === "qart" && (
-                        <AnimatedSelectorDiv id="qart">
-                          <TileConditioningSelector defaultValue={[0.45]} />
-                          <BrightnessConditioningSelector defaultValue={[1]} />
-                        </AnimatedSelectorDiv>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <Button
-                    className="md:hidden h-10"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setIsCustom((prev) => !prev);
-                    }}
-                  >
-                    Save
-                  </Button>
-                </motion.div>
-                <motion.div
-                  className="order-1 mt-0 border-0 p-0"
-                  initial="hidden"
-                  animate={isCustom ? "visible" : "hidden"}
-                  variants={gridVariants}
+                  {/* Vary selectors based on model selected */}
+                  <AnimatePresence mode="wait">
+                    {selectedModel?.name === "qrcode-sd" && (
+                      <AnimatedSelectorDiv id="qrcode-sd">
+                        <StrengthSelector form={form} />
+                        <ControlNetConditioningSelector form={form} />
+                        <SeedField form={form} />
+                      </AnimatedSelectorDiv>
+                    )}
+                    {selectedModel?.name === "qart" && (
+                      <AnimatedSelectorDiv id="qart">
+                        <TileConditioningSelector defaultValue={[0.45]} />
+                        <BrightnessConditioningSelector defaultValue={[1]} />
+                      </AnimatedSelectorDiv>
+                    )}
+                  </AnimatePresence>
+                </div>
+                <Button
+                  className="md:hidden h-10"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setIsCustom((prev) => !prev);
+                  }}
                 >
-                  <div className="md:flex md:flex-col space-y-4 lg:max-w-[900px] mx-auto">
-                    <div className="grid h-full gap-5 md:gap-9 lg:grid-cols-[1fr_360px]">
-                      <div className="flex flex-col space-y-4">
-                        <div className="flex flex-col space-y-2">
-                          <div className="flex justify-between">
-                            <div>
-                              <Label htmlFor="input">Input</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Switch
-                                name="show"
-                                id="show"
-                                checked={isCustom}
-                                onCheckedChange={() =>
-                                  setIsCustom((prev) => !prev)
-                                }
-                              />
-                              <Label
-                                className="font-normal cursor-pointer"
-                                htmlFor="show"
-                              >
-                                Custom
-                              </Label>
-                            </div>
+                  Save
+                </Button>
+              </motion.div>
+              <motion.div
+                className="order-1 mt-0 border-0 p-0"
+                initial="hidden"
+                animate={isCustom ? "visible" : "hidden"}
+                variants={gridVariants}
+              >
+                <div className="md:flex md:flex-col space-y-4 lg:max-w-[900px] mx-auto">
+                  <div className="grid h-full gap-5 md:gap-9 lg:grid-cols-[1fr_360px]">
+                    <div className="flex flex-col space-y-4">
+                      <div className="flex flex-col space-y-2">
+                        <div className="flex justify-between">
+                          <div>
+                            <Label htmlFor="input">Input</Label>
                           </div>
-
-                          <PresetSelector
-                            presets={presets}
-                            onSelect={(preset) => {
-                              setSelectedPreset(preset);
-                              setPrompt(preset.prompt);
-                              form.setValue("prompt", preset.prompt);
-                            }}
-                            selectedPreset={selectedPreset}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="prompt"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Textarea
-                                    placeholder={
-                                      "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
-                                    }
-                                    className="flex-1 min-h-[150px] lg:min-h-[200px]"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              name="show"
+                              id="show"
+                              checked={isCustom}
+                              onCheckedChange={() =>
+                                setIsCustom((prev) => !prev)
+                              }
+                            />
+                            <Label
+                              className="font-normal cursor-pointer"
+                              htmlFor="show"
+                            >
+                              Custom
+                            </Label>
+                          </div>
                         </div>
+
+                        <PresetSelector
+                          presets={presets}
+                          onSelect={(preset) => {
+                            setSelectedPreset(preset);
+                            setPrompt(preset.prompt);
+                            form.setValue("prompt", preset.prompt);
+                          }}
+                          selectedPreset={selectedPreset}
+                        />
                         <FormField
                           control={form.control}
-                          name="url"
+                          name="prompt"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Website</FormLabel>
                               <FormControl>
-                                <Input
-                                  placeholder="https://www.glyph.so"
+                                <Textarea
+                                  placeholder={
+                                    "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
+                                  }
+                                  className="flex-1 min-h-[150px] lg:min-h-[200px]"
                                   {...field}
                                 />
                               </FormControl>
@@ -380,84 +362,98 @@ export default function Playground() {
                           )}
                         />
                       </div>
-
-                      {prediction && prediction.output ? (
-                        <motion.div
-                          className="bg-muted rounded-md border md:hover:bg-transparent md:hover:border-0 duration-150 ease-in-out mx-auto"
-                          initial={{ scale: 0.7, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ duration: 0.15 }}
-                        >
-                          <Image
-                            alt="QR Code"
-                            src={
-                              prediction.output[prediction.output.length - 1]
-                            }
-                            width={360}
-                            height={360}
-                            className="p-3 hover:p-0 transition-all duration-150 ease-in-out"
-                          />
-                        </motion.div>
-                      ) : (
-                        <div className="min-h-[300px] min-w-[320px] md:min-h-[360px] md:min-w-[360px] max-w-[450px] rounded-md border bg-muted relative mx-auto">
-                          {isSubmitting && (
-                            <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
-                              <Label className="text-muted-foreground font-normal">
-                                {status}
-                              </Label>
-                              <Progress className="w-1/2" value={progress} />
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col lg:flex-row items-center space-x-2">
-                      {isSuccess ? (
-                        <Button
-                          className="w-full h-10 lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
-                          style={{
-                            boxShadow:
-                              "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
-                          }}
-                        >
-                          <SuccessIcon />
-                        </Button>
-                      ) : (
-                        <Button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="w-full h-10 lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
-                        >
-                          {isSubmitting ? (
-                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                          ) : (
-                            <motion.div
-                              className="flex items-center justify-center gap-x-2"
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.25 }}
-                            >
-                              <span>Generate</span>
-                              <Image
-                                className="filter invert dark:filter-none"
-                                width={18}
-                                height={18}
-                                src={"/sparkling-icon.png"}
-                                alt={"Generate"}
+                      <FormField
+                        control={form.control}
+                        name="url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Website</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="https://www.glyph.so"
+                                {...field}
                               />
-                            </motion.div>
-                          )}
-                        </Button>
-                      )}
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
+
+                    {prediction && prediction.output ? (
+                      <motion.div
+                        className="bg-muted rounded-md border md:hover:bg-transparent md:hover:border-0 duration-150 ease-in-out mx-auto"
+                        initial={{ scale: 0.7, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <Image
+                          alt="QR Code"
+                          src={prediction.output[prediction.output.length - 1]}
+                          width={360}
+                          height={360}
+                          className="p-3 hover:p-0 transition-all duration-150 ease-in-out"
+                        />
+                      </motion.div>
+                    ) : (
+                      <div className="min-h-[300px] min-w-[320px] md:min-h-[360px] md:min-w-[360px] max-w-[450px] rounded-md border bg-muted relative mx-auto">
+                        {isSubmitting && (
+                          <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
+                            <Label className="text-muted-foreground font-normal">
+                              {status}
+                            </Label>
+                            <Progress className="w-1/2" value={progress} />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                </motion.div>
-              </div>
-            </form>
-          </Form>
-        </div>
+                  <div className="flex flex-col lg:flex-row items-center space-x-2">
+                    {isSuccess ? (
+                      <Button
+                        className="w-full h-10 lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                        style={{
+                          boxShadow:
+                            "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
+                        }}
+                      >
+                        <SuccessIcon />
+                      </Button>
+                    ) : (
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full h-10 lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
+                      >
+                        {isSubmitting ? (
+                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <motion.div
+                            className="flex items-center justify-center gap-x-2"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.25 }}
+                          >
+                            <span>Generate</span>
+                            <Image
+                              className="filter invert dark:filter-none"
+                              width={18}
+                              height={18}
+                              src={"/sparkling-icon.png"}
+                              alt={"Generate"}
+                            />
+                          </motion.div>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </form>
+        </Form>
       </div>
-    </ThemeProvider>
+    </div>
   );
 }
 

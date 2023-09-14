@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -19,10 +18,16 @@ import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useSupabase } from "@/app/supabase-provider";
-import { signInFormSchema } from "@/schemas/formSchemas";
+import {
+  forgotPasswordFormSchema,
+  signInFormSchema,
+} from "@/schemas/formSchemas";
+import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -36,7 +41,7 @@ const FadeInDown = ({ children, className }: AnimatedDivProps) => (
     initial={{ opacity: 0, y: -30 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: 30 }}
-    transition={{ duration: 0.3, delay: 0.3 }}
+    transition={{ duration: 0.2, delay: 0.3 }}
     className={className}
   >
     {children}
@@ -48,7 +53,7 @@ const FadeInRight = ({ children, className }: AnimatedDivProps) => (
     initial={{ opacity: 0, x: -30 }}
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: 30 }}
-    transition={{ duration: 0.3, delay: 0.55 }}
+    transition={{ duration: 0.2, delay: 0.5 }}
     className={className}
   >
     {children}
@@ -60,7 +65,7 @@ const FadeInUp = ({ children, className }: AnimatedDivProps) => (
     initial={{ opacity: 0, y: 30 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -30 }}
-    transition={{ duration: 0.3, delay: 0.75 }}
+    transition={{ duration: 0.2, delay: 0.7 }}
     className={className}
   >
     {children}
@@ -71,13 +76,19 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const { supabase } = useSupabase();
   const { toast } = useToast();
 
+  const [passwordShown, setPasswordShown] = React.useState<boolean>(false);
   const [isSignUp, setIsSignUp] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isGoogleAuthLoading, setIsGoogleAuthLoading] =
     React.useState<boolean>(false);
+  const [isForgotPassword, setIsForgotPassword] =
+    React.useState<boolean>(false);
+  const [isForgotPasswordLoading, setIsForgotPasswordLoading] =
+    React.useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
 
   // Form definition
-  const form = useForm<z.infer<typeof signInFormSchema>>({
+  const signInForm = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
       email: "",
@@ -100,6 +111,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       setIsLoading(false);
       console.error(error);
       throw new Error(error.message);
+    } else {
+      toast({
+        title: `A confirmation email has been sent to ${email}.`,
+        description: `Please check your inbox to confirm your new email address to finish signing up.`,
+      });
     }
     console.log("handleSignUp -> data", data);
     setIsLoading(false);
@@ -142,9 +158,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo:
-          process.env.NEXT_PUBLIC_SITE_URL ??
-          `${location.origin}/auth/callback`,
+        // Remember to publish app to production in https://console.cloud.google.com/apis/credentials/consent
+        redirectTo: `${location.origin}/auth/callback`,
       },
     });
 
@@ -217,13 +232,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             </span>
           </div>
         </div>
-        <Form {...form}>
+        <Form {...signInForm}>
           <form
-            onSubmit={form.handleSubmit(isSignUp ? handleSignUp : handleSignIn)}
+            onSubmit={signInForm.handleSubmit(
+              isSignUp ? handleSignUp : handleSignIn
+            )}
           >
             <div className="grid gap-5">
               <FormField
-                control={form.control}
+                control={signInForm.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -253,26 +270,48 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               />
 
               <FormField
-                control={form.control}
+                control={signInForm.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <div className="grid gap-3">
-                        <Label
-                          className="font-normal text-muted-foreground"
-                          htmlFor="password"
-                        >
-                          Password
-                        </Label>
-                        <Input
-                          className="shadow-sm"
-                          id="password"
-                          placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-                          type="password"
-                          disabled={isLoading}
-                          {...field}
-                        />
+                        <div className="flex justify-between items-center">
+                          <Label
+                            className="font-normal text-muted-foreground"
+                            htmlFor="password"
+                          >
+                            Password
+                          </Label>
+                          <Link
+                            href={"/auth/forgot-password"}
+                            className="font-normal text-sm text-slate-400 cursor-pointer hover:underline"
+                          >
+                            Forgot password?
+                          </Link>
+                        </div>
+                        <div className="relative">
+                          <Input
+                            className="shadow-sm pr-10"
+                            id="password"
+                            placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+                            type={passwordShown ? "text" : "password"}
+                            disabled={isLoading}
+                            {...field}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setPasswordShown((prev) => !prev)}
+                            className="absolute right-2 px-2 h-6 top-1/2 transform -translate-y-1/2"
+                          >
+                            {passwordShown ? (
+                              <EyeOpenIcon className="h-4 w-4 text-gray-400" />
+                            ) : (
+                              <EyeNoneIcon className="h-4 w-4 text-gray-400" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -289,7 +328,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     {isLoading && (
                       <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Sign up
+                    Sign Up
                   </Button>
                 </FadeInRight>
               ) : (
@@ -302,7 +341,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     {isLoading && (
                       <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Sign in
+                    Sign In
                   </Button>
                 </FadeInRight>
               )}
