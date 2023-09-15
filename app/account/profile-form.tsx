@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { revalidatePath } from "next/cache";
 import { Session } from "@supabase/supabase-js";
 import * as z from "zod";
 
@@ -19,8 +18,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { useSupabase } from "../supabase-provider";
 import { Icons } from "@/components/ui/icons";
+
+import { useSupabase } from "../providers/supabase-provider";
 
 interface Props {
   session: Session | null;

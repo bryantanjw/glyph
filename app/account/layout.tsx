@@ -5,12 +5,8 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "./components/sidebar-nav";
 import { Navbar } from "@/components/navbar";
 
-import {
-  getSession,
-  getSubscription,
-  getUserDetails,
-} from "../supabase-server";
-import { ThemeProvider } from "../theme-provider";
+import { getSession, getUserDetails } from "../supabase-server";
+import { ThemeProvider } from "../providers/theme-provider";
 
 export const metadata: Metadata = {
   title: "Glyph | Your Account",

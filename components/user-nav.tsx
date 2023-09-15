@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
+import { PersonIcon } from "@radix-ui/react-icons";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -20,8 +21,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { User } from "@supabase/supabase-js";
 
-import { useSupabase } from "../app/supabase-provider";
-import { PersonIcon } from "@radix-ui/react-icons";
+import { useSupabase } from "@/app/providers/supabase-provider";
 
 interface Props {
   user: User | null | undefined;

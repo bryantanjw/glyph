@@ -26,7 +26,6 @@ import { SuccessIcon } from "./success-icon";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
-import { ThemeProvider } from "@/app/theme-provider";
 import { PresetSelector } from "./preset-selector";
 import { BrightnessConditioningSelector } from "@/components/preset-selectors/tonyadastra/brightness-conditioning-selector";
 import { ModelSelector } from "@/components/preset-selectors/model-selector";

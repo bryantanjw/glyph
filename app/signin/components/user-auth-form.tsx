@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -21,13 +22,9 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 
-import { useSupabase } from "@/app/supabase-provider";
-import {
-  forgotPasswordFormSchema,
-  signInFormSchema,
-} from "@/schemas/formSchemas";
+import { useSupabase } from "@/app/providers/supabase-provider";
+import { signInFormSchema } from "@/schemas/formSchemas";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -117,7 +114,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         description: `Please check your inbox to confirm your new email address to finish signing up.`,
       });
     }
-    console.log("handleSignUp -> data", data);
     setIsLoading(false);
   };
 
@@ -141,7 +137,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         title: "Succesfully signed in!",
       });
     }
-    console.log("handleSignIn -> data", data);
     setIsLoading(false);
   };
 
@@ -172,7 +167,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         description: `${error.message}.` || "Uh oh! Something went wrong.",
       });
     }
-    console.log("handleSignInWithGoogle -> data", data);
     setIsGoogleAuthLoading(false);
   };
 

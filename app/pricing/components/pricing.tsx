@@ -224,7 +224,7 @@ export default function Pricing({
                     }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3 }}
-                    className={`font-bold text-4xl w-12 md:w-16 ${textColorClass}`}
+                    className={`font-bold text-4xl w-15 md:w-16 ${textColorClass}`}
                   >
                     {priceString}
                   </motion.span>
@@ -262,7 +262,15 @@ export default function Pricing({
                     isPremier ? "bg-slate-900 shadow-xl" : ""
                   }`}
                 >
-                  {subscription ? "Manage" : "Buy plan"}
+                  {index === 0
+                    ? "Get Started"
+                    : index === 1
+                    ? "Upgrade to Pro"
+                    : index === 2
+                    ? "Go Psycho"
+                    : subscription
+                    ? "Manage"
+                    : "Buy plan"}
                 </Button>
 
                 <ul

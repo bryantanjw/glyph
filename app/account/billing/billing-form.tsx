@@ -74,24 +74,38 @@ function Card({ title, description, footer, children }: CardProps) {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
   useEffect(() => {
+    // Initialize --x and --y to the center of the Card
+    if (targetRef.current) {
+      targetRef.current.style.setProperty(
+        "--x",
+        `${targetRef.current.offsetWidth / 2}px`
+      );
+      targetRef.current.style.setProperty(
+        "--y",
+        `${targetRef.current.offsetHeight / 2}px`
+      );
+    }
+
     const updateMousePosition = (ev: MouseEvent) => {
-      if (!targetRef.current) return;
       const { clientX, clientY } = ev;
-      targetRef.current.style.setProperty("--x", `${clientX}px`);
-      targetRef.current.style.setProperty("--y", `${clientY}px`);
+      targetRef.current.style.setProperty("--x", `${clientX - 250}px`);
+      targetRef.current.style.setProperty("--y", `${clientY - 300}px`);
     };
 
-    window.addEventListener("mousemove", updateMousePosition);
+    targetRef.current.addEventListener("mousemove", updateMousePosition);
 
     return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
+      if (targetRef.current) {
+        targetRef.current.removeEventListener("mousemove", updateMousePosition);
+      }
     };
   }, []);
+
   return (
     <motion.div
       ref={targetRef}
       style={{ opacity, scale }}
-      className="w-full max-w-3xl my-8 border rounded-md border-slate-400 before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,_100px)_var(--y,_100px),_blue_0%,_transparent_100%)] before:opacity-40"
+      className="w-full max-w-3xl my-8 border rounded-md border-slate-400 before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,0px)_var(--y,0px),_blue_0%,_transparent_100%)] before:opacity-40"
     >
       <div className="px-5 py-4">
         <h3 className="mb-1 text-2xl font-medium">{title}</h3>

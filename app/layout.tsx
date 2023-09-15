@@ -5,7 +5,8 @@ import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
-import SupabaseProvider from "./supabase-provider";
+import SupabaseProvider from "./providers/supabase-provider";
+import ProgressBarProvider from "./providers/progress-bar-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SupabaseProvider>
-          {children}
-          <TailwindIndicator />
-          <Toaster />
-        </SupabaseProvider>
+        <ProgressBarProvider>
+          <SupabaseProvider>
+            {children}
+            <TailwindIndicator />
+            <Toaster />
+          </SupabaseProvider>
+        </ProgressBarProvider>
       </body>
     </html>
   );
