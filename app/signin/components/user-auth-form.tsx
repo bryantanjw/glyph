@@ -50,7 +50,7 @@ const FadeInRight = ({ children, className }: AnimatedDivProps) => (
     initial={{ opacity: 0, x: -30 }}
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: 30 }}
-    transition={{ duration: 0.2, delay: 0.5 }}
+    transition={{ duration: 0.2, delay: 0.4 }}
     className={className}
   >
     {children}
@@ -62,7 +62,7 @@ const FadeInUp = ({ children, className }: AnimatedDivProps) => (
     initial={{ opacity: 0, y: 30 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -30 }}
-    transition={{ duration: 0.2, delay: 0.7 }}
+    transition={{ duration: 0.2, delay: 0.6 }}
     className={className}
   >
     {children}

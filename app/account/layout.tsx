@@ -1,12 +1,13 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { Session } from "@supabase/supabase-js";
 
 import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "./components/sidebar-nav";
 import { Navbar } from "@/components/navbar";
+import { ThemeProvider } from "../providers/theme-provider";
 
 import { getSession, getUserDetails } from "../supabase-server";
-import { ThemeProvider } from "../providers/theme-provider";
 
 export const metadata: Metadata = {
   title: "Glyph | Your Account",
@@ -41,7 +42,6 @@ export default async function SettingsLayout({
   ]);
 
   const user = session?.user;
-
   if (!session) {
     return redirect("/signin");
   }

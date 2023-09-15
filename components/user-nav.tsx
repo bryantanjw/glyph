@@ -29,7 +29,6 @@ interface Props {
 }
 
 export function UserNav({ user, userDetails }: Props) {
-  console.log("userDetails: ", userDetails);
   const { supabase } = useSupabase();
   const router = useRouter();
   const { toast } = useToast();

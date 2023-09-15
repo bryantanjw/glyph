@@ -1,10 +1,15 @@
 import { Separator } from "@/components/ui/separator";
 import BillingForm from "./billing-form";
-import { getSession, getSubscription } from "@/app/supabase-server";
+import {
+  getSession,
+  getSubscription,
+  getUserDetails,
+} from "@/app/supabase-server";
 
 export default async function SettingsBillingPage() {
-  const [session, subscription] = await Promise.all([
+  const [session, userDetails, subscription] = await Promise.all([
     getSession(),
+    getUserDetails(),
     getSubscription(),
   ]);
 
@@ -17,7 +22,11 @@ export default async function SettingsBillingPage() {
         </p>
       </div>
       <Separator />
-      <BillingForm session={session} subscription={subscription} />
+      <BillingForm
+        session={session}
+        userDetails={userDetails}
+        subscription={subscription}
+      />
     </div>
   );
 }
