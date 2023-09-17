@@ -81,9 +81,7 @@ export default function Pricing({
     if (!user) {
       return router.push("/signin");
     }
-    if (subscription) {
-      return router.push("/account");
-    }
+
     try {
       const { sessionId } = await postData({
         url: "/api/create-checkout-session",
@@ -309,7 +307,7 @@ export default function Pricing({
                     disabled={!session}
                     loading={priceIdLoading === price.id}
                     onClick={() =>
-                      subscription
+                      subscription && billingInterval === "month"
                         ? redirectToCustomerPortal(price)
                         : handleCheckout(price)
                     }
