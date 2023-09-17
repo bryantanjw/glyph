@@ -1,4 +1,4 @@
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 import { stripe } from "@/utils/stripe";
@@ -47,8 +47,8 @@ export async function POST(req: Request) {
           subscription_data: {
             metadata,
           },
-          success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/`,
+          success_url: `${getURL()}order/{CHECKOUT_SESSION_ID}`,
+          cancel_url: `${getURL()}pricing`,
         });
       } else if (price.type === "one_time") {
         session = await stripe.checkout.sessions.create({
@@ -66,11 +66,12 @@ export async function POST(req: Request) {
           ],
           mode: "payment",
           allow_promotion_codes: true,
-          success_url: `${getURL()}/account`,
-          cancel_url: `${getURL()}/`,
+          success_url: `${getURL()}order/{CHECKOUT_SESSION_ID}`,
+          cancel_url: `${getURL()}pricing`,
         });
       }
 
+      // After successful checkout session creation
       if (session) {
         return new Response(JSON.stringify({ sessionId: session.id }), {
           status: 200,

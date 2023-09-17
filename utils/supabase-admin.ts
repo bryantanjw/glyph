@@ -180,9 +180,183 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
+const creditUserForOneTimePayment = async (
+  checkoutSession: Stripe.Checkout.Session,
+  lineItems: Stripe.LineItem[]
+) => {
+  // Get the Stripe customer ID from the Checkout session
+  const stripeCustomerId = checkoutSession.customer;
+
+  // Get the user ID from the customers table
+  const { data: customer, error: getCustomerError } = await supabaseAdmin
+    .from("customers")
+    .select("id")
+    .eq("stripe_customer_id", stripeCustomerId)
+    .single();
+
+  if (getCustomerError || !customer) {
+    console.error("Error getting customer:", getCustomerError);
+    return;
+  }
+
+  const userId = customer.id;
+  const priceId = lineItems[0].price.id;
+  const price = await stripe.prices.retrieve(priceId);
+  // Get the number of credits from the Price metadata
+  const creditsToAdd = parseInt(price.metadata.credits);
+
+  const { data: user, error: getUserError } = await supabaseAdmin
+    .from("users")
+    .select("credits")
+    .eq("id", userId)
+    .single();
+
+  if (getUserError) {
+    console.error("Error getting user:", getUserError);
+    return new Response(
+      JSON.stringify({
+        error: {
+          statusCode: 500,
+          message:
+            "An error occurred while updating your credits. If your account wasn't properly credited, please contact support @.",
+        },
+      }),
+      { status: 500 }
+    );
+  }
+
+  // Update the user's credits
+  const newCredits = (user?.credits || 0) + creditsToAdd;
+  const { error: updateUserError } = await supabaseAdmin
+    .from("users")
+    .update({ credits: newCredits })
+    .eq("id", userId);
+
+  if (updateUserError) {
+    console.error("Error updating user credits:", updateUserError);
+    return new Response(
+      JSON.stringify({
+        error: {
+          statusCode: 500,
+          message:
+            "An error occurred while updating your credits. If your account wasn't properly credited, please contact support @.",
+        },
+      }),
+      { status: 500 }
+    );
+  }
+};
+
+const creditUserForRecurringPayment = async (invoice: Stripe.Invoice) => {
+  // Get the Stripe customer ID from the invoice
+  const stripeCustomerId = invoice.customer;
+
+  // Get the user ID from the customers table
+  const { data: customer, error: getCustomerError } = await supabaseAdmin
+    .from("customers")
+    .select("id")
+    .eq("stripe_customer_id", stripeCustomerId)
+    .single();
+
+  if (getCustomerError || !customer) {
+    console.error("Error getting customer:", getCustomerError);
+    return;
+  }
+  const userId = customer.id;
+  const priceId = invoice.lines.data[0].price.id;
+  const price = await stripe.prices.retrieve(priceId);
+  // Get the number of credits from the Price metadata
+  const creditsToAdd = parseInt(price.metadata.credits);
+
+  const { data: user, error: getUserError } = await supabaseAdmin
+    .from("users")
+    .select("credits")
+    .eq("id", userId)
+    .single();
+
+  if (getUserError) {
+    console.error("Error getting user:", getUserError);
+    return new Response(
+      JSON.stringify({
+        error: {
+          statusCode: 500,
+          message:
+            "An error occurred while fetching your account. If your account wasn't properly credited, please contact support @.",
+        },
+      }),
+      { status: 500 }
+    );
+  }
+
+  // Update the user's credits
+  const newCredits = (user?.credits || 0) + creditsToAdd;
+  const { error: updateUserError } = await supabaseAdmin
+    .from("users")
+    .update({ credits: newCredits })
+    .eq("id", userId);
+
+  if (updateUserError) {
+    console.error("Error updating user credits:", updateUserError);
+    return new Response(
+      JSON.stringify({
+        error: {
+          statusCode: 500,
+          message:
+            "An error occurred while updating your credits. If your account wasn't properly credited, please contact support @.",
+        },
+      }),
+      { status: 500 }
+    );
+  }
+};
+
+const deductCredits = async (userId: string, creditsToDeduct: number) => {
+  const { data: user, error: getUserError } = await supabaseAdmin
+    .from("users")
+    .select("credits")
+    .eq("id", userId)
+    .single();
+
+  if (getUserError) {
+    console.error("Error getting user:", getUserError);
+    return new Response(
+      JSON.stringify({
+        error: {
+          statusCode: 500,
+          message: "Error getting user",
+        },
+      }),
+      { status: 500 }
+    );
+  }
+
+  // Update the user's credits
+  const newCredits = (user?.credits || 0) - creditsToDeduct;
+  const { error: updateUserError } = await supabaseAdmin
+    .from("users")
+    .update({ credits: newCredits })
+    .eq("id", userId);
+
+  if (updateUserError) {
+    console.error("Error deducting user credits:", updateUserError);
+    return new Response(
+      JSON.stringify({
+        error: {
+          statusCode: 500,
+          message: "Error deducting user credits",
+        },
+      }),
+      { status: 500 }
+    );
+  }
+};
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
+  creditUserForOneTimePayment,
+  creditUserForRecurringPayment,
+  deductCredits,
 };

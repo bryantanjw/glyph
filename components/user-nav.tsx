@@ -76,48 +76,54 @@ export function UserNav({ user, userDetails }: Props) {
               {userDetails?.full_name ?? user.email}
             </p>
             <p className="text-sm leading-none text-muted-foreground">
-              3 credits
+              {userDetails?.credits ?? 0} credits
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup className="space-y-2">
+        <DropdownMenuGroup className="space-y-1">
           <DropdownMenuItem
             asChild
             className="text-muted-foreground cursor-pointer"
           >
             <Link href="/account">Manage account</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={toggleTheme}
-            className="text-muted-foreground cursor-pointer"
-          >
-            Toggle theme
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={async () => {
-              const { error } = await supabase.auth.signOut();
-              if (error) {
-                console.error("Error signing out:", error.message);
-                toast({
-                  variant: "destructive",
-                  title: "Uh oh! Something went wrong.",
-                  description: error.message || "Failed to sign out.",
-                });
-                return;
-              }
-              router.push("/signin");
-            }}
-            className="text-muted-foreground cursor-pointer"
-          >
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <div className="space-y-5">
+            <DropdownMenuItem
+              onClick={toggleTheme}
+              className="text-muted-foreground cursor-pointer"
+            >
+              Toggle theme
+              <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                const { error } = await supabase.auth.signOut();
+                if (error) {
+                  console.error("Error signing out:", error.message);
+                  toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: error.message || "Failed to sign out.",
+                  });
+                  return;
+                }
+                router.push("/signin");
+              }}
+              className="text-muted-foreground cursor-pointer"
+            >
+              Log out
+              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </div>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <div className="mx-2">
-          <Button className="w-full flex items-center mb-2">Add credits</Button>
+          <Link href={"/pricing"}>
+            <Button className="w-full flex items-center mb-2">
+              Add credits
+            </Button>
+          </Link>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

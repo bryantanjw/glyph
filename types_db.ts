@@ -182,6 +182,7 @@ export interface Database {
         Row: {
           avatar_url: string | null;
           billing_address: Json | null;
+          credits: number;
           full_name: string | null;
           id: string;
           payment_method: Json | null;
@@ -189,6 +190,7 @@ export interface Database {
         Insert: {
           avatar_url?: string | null;
           billing_address?: Json | null;
+          credits?: number;
           full_name?: string | null;
           id: string;
           payment_method?: Json | null;
@@ -196,6 +198,7 @@ export interface Database {
         Update: {
           avatar_url?: string | null;
           billing_address?: Json | null;
+          credits?: number;
           full_name?: string | null;
           id?: string;
           payment_method?: Json | null;
@@ -217,7 +220,7 @@ export interface Database {
       [_ in never]: never;
     };
     Enums: {
-      pricing_plan_interval: "day" | "week" | "month" | "year";
+      pricing_plan_interval: "day" | "week" | "month" | "year" | "one_time";
       pricing_type: "one_time" | "recurring";
       subscription_status:
         | "trialing"

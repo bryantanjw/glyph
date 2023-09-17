@@ -1,15 +1,26 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Session } from "@supabase/supabase-js";
-
-import ManageSubscriptionButton from "./managa-subscription-button";
-import { Database } from "@/types_db";
-import { Label } from "@/components/ui/label";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowRightIcon, ShadowInnerIcon } from "@radix-ui/react-icons";
+import { AnimatePresence, motion } from "framer-motion";
+import { Session } from "@supabase/supabase-js";
+import {
+  ArrowRightIcon,
+  CheckCircledIcon,
+  ShadowInnerIcon,
+} from "@radix-ui/react-icons";
+
+import { Label } from "@/components/ui/label";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+
+import { Database } from "@/types_db";
+import { postData } from "@/utils/helpers";
+import { Icons } from "@/components/ui/icons";
+import { ResizablePanel } from "@/components/ui/resizable-panel";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 type Product = Database["public"]["Tables"]["products"]["Row"];
@@ -32,14 +43,26 @@ export default function BillingForm({
   userDetails,
   subscription,
 }: BillingFormProps) {
-  const subscriptionPrice =
-    subscription &&
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: subscription?.prices?.currency!,
-      minimumFractionDigits: 0,
-    }).format((subscription?.prices?.unit_amount || 0) / 100);
-  console.log("userDetails:", userDetails);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const redirectToCustomerPortal = async () => {
+    try {
+      setIsLoading(true);
+      const { url } = await postData({
+        url: "/api/create-portal-link",
+      });
+      router.push(url);
+      setIsLoading(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Couldn't access customer protal link.",
+        description: error.message ?? `Please try again`,
+      });
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -50,24 +73,32 @@ export default function BillingForm({
             View your available credits to generate images.
           </p>
         </div>
-        <CreditCard userDetails={userDetails} />
+        <CreditCard
+          userDetails={userDetails}
+          redirectToCustomerPortal={redirectToCustomerPortal}
+          isLoading={isLoading}
+        />
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 pt-14">
         <div className="space-y-1">
           <Label>Subscription</Label>
           <p className="text-[0.8rem] text-muted-foreground">
-            Manage your Glyph subscription plan.
+            View your active Glyph subscription plan details.
           </p>
         </div>
-        <SubscriptionCard />
+        <SubscriptionCard
+          subscription={subscription}
+          redirectToCustomerPortal={redirectToCustomerPortal}
+        />
       </div>
     </div>
   );
 }
 
-function CreditCard({ userDetails }) {
+function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
   const targetRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Initialize --x and --y to the center of the Card
@@ -98,14 +129,24 @@ function CreditCard({ userDetails }) {
   }, []);
 
   return (
-    <div className="flex flex-col space-y-8 w-full max-w-xl">
+    <div className="flex flex-col space-y-8 max-w-xs md:w-full md:max-w-xl h-[220px] md:h-full">
       <motion.div
         ref={targetRef}
-        className="relative border dark:border-slate-700 border-opacity-10 bg-gradient-to-tl from-gray-900 to-gray-800 text-white h-56 md:w-96 p-6 rounded-xl before:rounded-xl shadow-md before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,0px)_var(--y,0px),gray_0%,_transparent_100%)] before:opacity-20"
+        className="relative border dark:border-slate-700 border-opacity-10 bg-gradient-to-tl from-gray-900 to-gray-800 text-white h-56 md:w-96 p-6 rounded-xl before:rounded-xl shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,0px)_var(--y,0px),gray_0%,_transparent_100%)] before:opacity-30 dark:before:opacity-20"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+        // Grainy background
+        style={{
+          backgroundImage: `url(
+            https://grainy-gradients.vercel.app/noise.svg
+          ), linear-gradient(to top left, rgb(31 41 55), rgb(17 24 39))`,
+          backgroundBlendMode: "overlay",
+        }}
       >
         <div className="h-full flex flex-col justify-between">
           <div className="flex items-start justify-between space-x-4">
-            <div className=" text-xl font-semibold tracking-tigh">
+            <div className="text-lg md:text-xl font-semibold tracking-tigh">
               {userDetails?.full_name.length > 35
                 ? `${userDetails?.full_name.slice(0, 35)}...`
                 : userDetails?.full_name.toUpperCase() ?? "GLYPH"}
@@ -122,9 +163,9 @@ function CreditCard({ userDetails }) {
             </div>
           </div>
 
-          <div className="inline-block w-12 h-8 bg-gradient-to-tl from-yellow-200 to-yellow-100 rounded-md shadow-inner overflow-hidden">
+          <div className="inline-block w-8 h-6 md:w-12 md:h-8 bg-gradient-to-tl from-yellow-200 to-yellow-100 rounded-md shadow-inner overflow-hidden">
             <div className="relative w-full h-full grid grid-cols-2 gap-1">
-              <div className="absolute border border-gray-900 rounded w-4 h-6 left-4 top-1"></div>
+              <div className="absolute border border-gray-900 rounded w-3 h-5 md:w-4 md:h-6 left-2.5 md:left-4 top-0.5 md:top-1"></div>
               <div className="border-b border-r border-gray-900 rounded-br"></div>
               <div className="border-b border-l border-gray-900 rounded-bl"></div>
               <div className=""></div>
@@ -137,51 +178,143 @@ function CreditCard({ userDetails }) {
           <div className="">
             <div className="text-xs font-semibold tracking-tight">balance</div>
 
-            <div className="text-2xl font-semibold">30 credits</div>
+            <div className="text-xl font-semibold">
+              {userDetails?.credits ?? 0} credits
+            </div>
           </div>
         </div>
       </motion.div>
 
-      <div className="relative">
-        <div className="absolute right-20 flex space-x-3 items-center bg-white text-gray-900 border-gray-200 shadow-2xl -mt-16 w-64 p-2 rounded-lg">
+      <motion.div
+        className="relative"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, delay: 0.2 }}
+      >
+        <AnimatedButton
+          onClick={() => router.push("/pricing")}
+          className={"bottom-1 -right-2 md:bottom-20 w-48"}
+        >
           <div className="flex-initial">
-            <div className="inline-flex items-center p-2 justify-center rounded-lg bg-gradient-tl from-black via-green-400 bg-slate-800">
-              <ShadowInnerIcon className="w-4 h-4 filter invert" />
+            <div className="inline-flex items-center p-2 justify-center rounded-lg bg-gradient-tl from-green-600 via-green-600 bg-green-500">
+              <svg
+                className="h-4 w-4 text-white opacity-90"
+                width="24"
+                height="24"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>
+                <path
+                  d="M15 8.5C14.315 7.81501 13.1087 7.33855 12 7.30872M9 15C9.64448 15.8593 10.8428 16.3494 12 16.391M12 7.30872C10.6809 7.27322 9.5 7.86998 9.5 9.50001C9.5 12.5 15 11 15 14C15 15.711 13.5362 16.4462 12 16.391M12 7.30872V5.5M12 16.391V18.5"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>
+              </svg>
             </div>
           </div>
 
           <style>{`
             @keyframes bounce {
               0% {
-                transform: translateX(5px);
-              }
-              50% {
                 transform: translateX(0px);
               }
-              100% {
+              50% {
                 transform: translateX(5px);
+              }
+              100% {
+                transform: translateX(0px);
               }
             }
           `}</style>
 
-          <div className="flex items-center justify-between gap-3 group">
-            <Link
-              href={"#"}
-              className="text-sm hover:underline underline-offset-2 transition-all"
-            >
-              Go to customer portal
-            </Link>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm group-hover:underline underline-offset-2 transition-all">
+              Add credits
+            </p>
             <ArrowRightIcon className="w-4 h-4 group-hover:animate-bounce" />
           </div>
-        </div>
-      </div>
+        </AnimatedButton>
+
+        <AnimatedButton
+          onClick={redirectToCustomerPortal}
+          className={"-right-2 top-1 md:top-0 md:-mt-16 w-60"}
+        >
+          <div className="flex-initial">
+            <div className="inline-flex items-center p-2 justify-center rounded-lg bg-gradient-tl from-black via-green-400 bg-slate-800">
+              {isLoading ? (
+                <Icons.spinner className="w-4 h-4 filter invert animate-spin" />
+              ) : (
+                <ShadowInnerIcon className="w-4 h-4 filter invert" />
+              )}
+            </div>
+          </div>
+
+          <style>{`
+            @keyframes bounce {
+              0% {
+                transform: translateX(0px);
+              }
+              50% {
+                transform: translateX(5px);
+              }
+              100% {
+                transform: translateX(0px);
+              }
+            }
+          `}</style>
+
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm group-hover:underline underline-offset-2 transition-all">
+              Manage your billing
+            </p>
+            <ArrowRightIcon className="w-4 h-4 group-hover:animate-bounce" />
+          </div>
+        </AnimatedButton>
+      </motion.div>
     </div>
   );
 }
 
-function SubscriptionCard() {
+function SubscriptionCard({ subscription, redirectToCustomerPortal }) {
+  console.log("subscription", subscription);
+  const [groupHover, setGroupHover] = useState(false);
+
+  const subscriptionPrice =
+    subscription &&
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: subscription?.prices?.currency!,
+      minimumFractionDigits: 0,
+    }).format((subscription?.prices?.unit_amount || 0) / 100);
+
+  const subscriptionEndingAt = new Date(
+    subscription?.cancel_at || subscription?.current_period_end
+  ).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
+  const features = JSON.parse(subscription?.prices?.metadata?.features || "[]");
+
   return (
-    <div className="relative bg-indigo-700 shadow-lg rounded-lg shadow-lg p-5 overflow-hidden max-w-md">
+    <motion.div
+      className="relative bg-slate-50 shadow-xl rounded-lg p-6 overflow-hidden max-w-sm border dark:border-slate-800 border-opacity-10"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      onMouseEnter={() => setGroupHover(true)}
+      onMouseLeave={() => setGroupHover(false)}
+    >
       <svg
         className="absolute top-0 right-0"
         width="158"
@@ -190,16 +323,22 @@ function SubscriptionCard() {
       >
         <defs>
           <linearGradient x1="50%" y1="0%" x2="50%" y2="96.22%" id="a">
-            <stop stop-color="#818CF8" stop-opacity=".88" offset="0%" />
-            <stop stop-color="#818CF8" stop-opacity=".24" offset="100%" />
+            <stop stopColor="#818CF8" stopOpacity=".88" offset="0%" />
+            <stop stopColor="#818CF8" stopOpacity=".24" offset="100%" />
           </linearGradient>
         </defs>
         <g
           transform="translate(-719 -96)"
           stroke="url(#a)"
           fill="none"
-          fill-rule="evenodd"
+          fillRule="evenodd"
         >
+          <animate
+            attributeName="stroke"
+            values="#6366F1; #4F46E5; #4338CA; #3730A3; #4338CA; #4F46E5; #6366F1;"
+            dur="2s"
+            repeatCount="indefinite"
+          />
           <path d="M802.959 69.706c.987-31.014 27.104-55.35 58.333-54.356 31.23.994 55.747 26.94 54.76 57.954-.987 31.013-27.103 55.349-58.333 54.356-31.23-.994-55.747-26.94-54.76-57.954Z" />
           <path d="M859.16 15.329c32.617-.2 59.212 24.794 59.4 55.824.19 31.028-26.097 56.343-58.714 56.543-32.617.2-59.212-24.793-59.4-55.823-.19-31.03 26.097-56.346 58.714-56.544Z" />
           <path d="M857.026 15.367c34.01-1.498 62.687 22.421 64.052 53.424 1.366 31.003-25.097 57.35-59.107 58.847-34.01 1.5-62.688-22.419-64.053-53.422-1.366-31.004 25.098-57.35 59.108-58.849Z" />
@@ -246,26 +385,131 @@ function SubscriptionCard() {
           <path d="M859.505-70.5c78.428 0 142.005 63.578 142.005 142.005 0 78.428-63.577 142.005-142.005 142.005-78.427 0-142.005-63.577-142.005-142.005C717.5-6.922 781.078-70.5 859.505-70.5Z" />
         </g>
       </svg>
-      <div className="relative pt-[6.25rem] pb-14">
-        <div className="text-xs font-bold uppercase text-green-400 tracking-widest mb-2">
-          Featured app
+      <ResizablePanel>
+        <div className="relative pt-14 pb-6 group">
+          {subscription ? (
+            <>
+              <Badge
+                variant="secondary"
+                className="absolute text-[10px] -top-2 -left-2 hover:bg-currentColor bg-slate-800 text-white opacity-30"
+              >
+                {subscription?.cancel_at
+                  ? `Ending on ${subscriptionEndingAt}`
+                  : `Next billing cycle on ${subscriptionEndingAt}`}
+              </Badge>
+              <div className="font-bold uppercase text-indigo-600 tracking-widest mb-2">
+                {subscription?.prices?.products?.name}
+              </div>
+              <div className="inline-flex mb-2 gap-4">
+                <span className={`font-bold text-4xl w-15 text-black`}>
+                  {subscriptionPrice}
+                </span>
+                <div className="flex flex-col text-sm tracking-wide">
+                  <span className="text-slate-900">USD</span>
+                  <span className="text-slate-600">Billed monthly</span>
+                </div>
+              </div>
+              <div className="text-sm space-y-3 grow mt-5 text-slate-800">
+                {features.slice(0, 2).map((feature, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center gap-3 border-b pb-3 border-opacity-70 border-slate-400"
+                  >
+                    <CheckCircledIcon className="w-5 h-5 flex-shrink-0" />
+                    <span>{feature.trim()}</span>
+                  </li>
+                ))}
+                {!groupHover && <p className="text-center">...</p>}
+                {groupHover && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="space-y-3 mb-4">
+                      {features.slice(2).map((feature, index) => (
+                        <li
+                          key={index + 5} // add 2 to avoid key conflict with the first two items
+                          className="flex items-center gap-3 border-b pb-3 border-opacity-70 border-slate-400"
+                        >
+                          <CheckCircledIcon className="w-5 h-5 flex-shrink-0" />
+                          <span>{feature.trim()}</span>
+                        </li>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="pr-10">
+              <h3 className="text-2xl font-extrabold text-slate-800 mb-2">
+                No active plans
+              </h3>
+              <p className="text-sm text-slate-700">
+                You are not currently subscribed to a plan.
+              </p>
+            </div>
+          )}
         </div>
-        <h3 className="text-2xl font-extrabold text-indigo-50 leading-snug mb-2">
-          The easy way to scan your documents
-        </h3>
-        <p className="text-indigo-200">
-          Lorem ipsum dolor sit amet, consecte adipiscing elit sed do eiusmod.
-        </p>
-      </div>
-      <div className="relative text-right">
-        <a
-          className="inline-flex w-11 h-11 justify-center items-center bg-green-400 hover:bg-green-300 text-pink-50 hover:text-white rounded-full transition duration-150"
-          href="#0"
+      </ResizablePanel>
+
+      {groupHover && (
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 20 }}
+          transition={{ duration: 0.2, delay: 0.2 }}
+          className="relative flex justify-end items-center gap-3"
+          onClick={() =>
+            subscription
+              ? redirectToCustomerPortal()
+              : (window.location.href = "/pricing")
+          }
         >
-          <span className="sr-only">Read more</span>{" "}
-          <span className="font-bold -mt-px"></span>
-        </a>
-      </div>
-    </div>
+          <div className="flex items-center group cursor-pointer">
+            <p className="group-hover:underline underline-offset-2 text-black text-sm mr-2">
+              {subscription ? "Compare plans" : "Get started"}
+            </p>
+            <Button
+              variant="outline"
+              className="inline-flex w-9 h-9 p-2 justify-center items-center text-black border-slate-800 group-hover:text-black group-hover:bg-slate-100 rounded-full"
+            >
+              <ArrowRightIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
+
+const AnimatedButton = ({ children, onClick, className }) => {
+  return (
+    <motion.div
+      onClick={onClick}
+      className={cn(
+        "absolute group md:right-20 flex space-x-3 items-center bg-white text-gray-900 border-gray-200 shadow-2xl p-2 rounded-lg cursor-pointer",
+        className
+      )}
+      initial={{
+        opacity: 0,
+        y: 50,
+        scale: 1,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      }}
+      whileHover={{
+        scale: 1.05,
+        boxShadow: "0px 25px 50px -12px rgba(0, 0, 0, 0.25)",
+      }}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
+  );
+};

@@ -1,4 +1,24 @@
-import { NextResponse } from "next/server";
+/**
+ * Currently deployed in an AWS Lambda Function: pollPredictions
+ *
+ * This function polls the status of an image generation process
+ * by making a GET request to the Replicate API using a provided prediction ID.
+ *
+ * Input:
+ * - event.pathParameters.id: Contains the prediction ID used to poll the status.
+ *
+ * Output:
+ * - Success: Returns the current status of the prediction, which can be 'succeeded', 'failed', or 'in-progress'.
+ * - Error: Returns an error status and message.
+ *
+ * Dependencies:
+ * - Replicate API
+ *
+ * Error Handling:
+ * - Returns appropriate error messages based on the Replicate API response or any internal errors.
+ * - Handles scenarios where the Replicate API returns a non-200 status code.
+ */
+
 import { headers } from "next/headers";
 import { Ratelimit } from "@upstash/ratelimit";
 import redis from "@/lambdas/generatePredictions/utils/redis";
@@ -55,7 +75,7 @@ export async function POST(request: Request) {
 
   // POST request to Replicate to start the image restoration generation process
   console.log("Start /predictions POST request");
-  let startResponse = await fetch("https://api.replicate.com/v1/predictions", {
+  const response = await fetch("https://api.replicate.com/v1/predictions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -78,36 +98,26 @@ export async function POST(request: Request) {
     }),
   });
 
-  if (!startResponse.ok) {
-    throw new Error(`HTTP error! status: ${startResponse.status}`);
-  }
-  let jsonStartResponse = await startResponse.json();
-  console.log("jsonStartResponse", jsonStartResponse);
-
-  let endpointUrl = jsonStartResponse.urls.get;
-
-  // // GET request to get the status of the image restoration process & return the result when it's ready
-  let predictions: string | null = null;
-  while (!predictions) {
-    // Loop in 1s intervals until the alt text is ready
-    let finalResponse = await fetch(endpointUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Token " + process.env.REPLICATE_API_KEY,
-      },
-    });
-    let jsonFinalResponse = await finalResponse.json();
-    console.log("jsonFinalResponse", jsonFinalResponse);
-
-    if (jsonFinalResponse.status === "succeeded") {
-      predictions = jsonFinalResponse;
-    } else if (jsonFinalResponse.status === "failed") {
-      break;
-    } else {
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-    }
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return NextResponse.json(predictions ?? "Failed to generate image.");
+  if (response.status !== 201) {
+    let error = await response.json();
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        status: "error",
+        message: error.detail,
+      }),
+    };
+  }
+
+  const prediction = await response.json();
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify(prediction),
+  };
 }

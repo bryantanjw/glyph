@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/ui/icons";
 
-import { useSupabase } from "../providers/supabase-provider";
+import { useSupabase } from "../../providers/supabase-provider";
 
 interface Props {
   session: Session | null;

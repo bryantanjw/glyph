@@ -55,7 +55,7 @@ const AnimatedSelectorDiv = ({ children, id }) => (
   </motion.div>
 );
 
-export default function Playground() {
+export default function Playground({ user }) {
   const { toast } = useToast();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -145,7 +145,7 @@ export default function Playground() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, userId: user.id }),
       }
     );
 
@@ -227,11 +227,12 @@ export default function Playground() {
         });
         break;
       } else {
+        // Delay to make requests to API Gateway every 5 seconds
         await new Promise((resolve) => setTimeout(resolve, 5000));
       }
     }
 
-    // After 2 seconds of setting isSuccess to true, set it to false
+    // After 2 seconds of image generation success, restore button to default state
     setTimeout(() => {
       setIsSuccess(false);
     }, 2000);
@@ -422,7 +423,7 @@ export default function Playground() {
                       <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full h-10 lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75  disabled:cursor-not-allowed"
+                        className="w-full h-10 lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75 disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
                           <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -433,14 +434,14 @@ export default function Playground() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.25 }}
                           >
-                            <span>Generate</span>
                             <Image
-                              className="filter invert dark:filter-none"
+                              className="filter invert dark:filter-none lg:-ml-1"
                               width={18}
                               height={18}
                               src={"/sparkling-icon.png"}
                               alt={"Generate"}
                             />
+                            <span>Generate</span>
                           </motion.div>
                         )}
                       </Button>

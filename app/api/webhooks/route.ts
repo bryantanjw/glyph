@@ -4,6 +4,8 @@ import {
   upsertProductRecord,
   upsertPriceRecord,
   manageSubscriptionStatusChange,
+  creditUserForOneTimePayment,
+  creditUserForRecurringPayment,
 } from "@/utils/supabase-admin";
 
 import { stripe } from "@/utils/stripe";
@@ -17,6 +19,7 @@ const relevantEvents = new Set([
   "customer.subscription.created",
   "customer.subscription.updated",
   "customer.subscription.deleted",
+  "invoice.payment_succeeded",
 ]);
 
 export async function POST(req: Request) {
@@ -63,6 +66,22 @@ export async function POST(req: Request) {
               checkoutSession.customer as string,
               true
             );
+          } else if (checkoutSession.mode === "payment") {
+            // Call your function to credit the user for a one-time payment
+            const lineItems = await stripe.checkout.sessions.listLineItems(
+              checkoutSession.id
+            );
+            await creditUserForOneTimePayment(checkoutSession, lineItems.data);
+          }
+          break;
+        case "invoice.payment_succeeded":
+          // Call your function to credit the user for a subscription payment
+          const invoice = event.data.object as Stripe.Invoice;
+          // TODO: implement creditUserForInitialSubscriptionPayment in case of future plan for promotions and trials
+          if (invoice.billing_reason === "subscription_create") {
+            await creditUserForRecurringPayment(invoice);
+          } else {
+            await creditUserForRecurringPayment(invoice);
           }
           break;
         default:

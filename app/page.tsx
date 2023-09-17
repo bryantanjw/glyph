@@ -22,7 +22,7 @@ export default async function PlaygroundPage() {
   return (
     <ThemeProvider attribute="class" defaultTheme="light">
       <Navbar user={user} userDetails={userDetails} />
-      <Playground />
+      <Playground user={user} />
     </ThemeProvider>
   );
 }

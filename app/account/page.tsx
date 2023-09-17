@@ -1,23 +1,32 @@
 import { Separator } from "@/components/ui/separator";
-import { ProfileForm } from "./profile-form";
-import { getSession, getUserDetails } from "../supabase-server";
+import BillingForm from "./billing-form";
+import {
+  getSession,
+  getSubscription,
+  getUserDetails,
+} from "@/app/supabase-server";
 
-export default async function SettingsProfilePage() {
-  const [session, userDetails] = await Promise.all([
+export default async function SettingsBillingPage() {
+  const [session, userDetails, subscription] = await Promise.all([
     getSession(),
     getUserDetails(),
+    getSubscription(),
   ]);
 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Profile</h3>
+        <h3 className="text-lg font-medium">Billing</h3>
         <p className="text-sm text-muted-foreground">
-          Update your account settings.
+          Manage your subscription and payment details.
         </p>
       </div>
       <Separator />
-      <ProfileForm session={session} userDetails={userDetails} />
+      <BillingForm
+        session={session}
+        userDetails={userDetails}
+        subscription={subscription}
+      />
     </div>
   );
 }

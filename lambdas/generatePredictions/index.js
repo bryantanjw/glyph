@@ -33,8 +33,15 @@
  * - Returns appropriate error messages based on the Replicate API response or any internal errors.
  */
 
-const Ratelimit = require("@upstash/ratelimit").Ratelimit;
-const redis = require("./utils/redis");
+import { createClient } from "@supabase/supabase-js";
+import { Ratelimit } from "@upstash/ratelimit";
+import redis from "./utils/redis.js";
+
+// Initialize Supabase admin client
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 // Create a new ratelimiter, that allows 5 requests per 30 minutes
 const ratelimit = new Ratelimit({
@@ -44,7 +51,37 @@ const ratelimit = new Ratelimit({
   prefix: "@upstash/ratelimit",
 });
 
-exports.handler = async (event) => {
+const deductCredits = async (userId, creditsToDeduct) => {
+  console.log("userId", userId);
+  // Get the user's current credits
+  const { data: user, error: getUserError } = await supabaseAdmin
+    .from("users")
+    .select("credits")
+    .eq("id", userId)
+    .single();
+
+  if (getUserError) {
+    console.error("Error getting user:", getUserError);
+    throw new Error("Error getting user");
+  }
+
+  // Calculate the new credits
+  const newCredits = (user.credits || 0) - creditsToDeduct;
+
+  // Update the user's credits
+  const { error: updateUserError } = await supabaseAdmin
+    .from("users")
+    .update({ credits: newCredits })
+    .eq("id", userId);
+  console.log("Deducted credits from user:", userId);
+
+  if (updateUserError) {
+    console.error("Error deducting user credits:", updateUserError);
+    throw new Error("Error deducting user credits");
+  }
+};
+
+export const handler = async (event) => {
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
@@ -62,6 +99,7 @@ exports.handler = async (event) => {
       strength,
       controlnetConditioning,
       seed,
+      userId,
     } = req;
 
     // Use a constant string to limit all requests with a single ratelimit
@@ -116,6 +154,9 @@ exports.handler = async (event) => {
 
     // Return immediately with a "polling" status and the URL to poll for the result
     if (endpointUrl) {
+      // Deduct one credit from the user
+      await deductCredits(userId, 1);
+
       return {
         statusCode: 200,
         headers,

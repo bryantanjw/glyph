@@ -78,11 +78,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isGoogleAuthLoading, setIsGoogleAuthLoading] =
     React.useState<boolean>(false);
-  const [isForgotPassword, setIsForgotPassword] =
-    React.useState<boolean>(false);
-  const [isForgotPasswordLoading, setIsForgotPasswordLoading] =
-    React.useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
 
   // Form definition
   const signInForm = useForm<z.infer<typeof signInFormSchema>>({
