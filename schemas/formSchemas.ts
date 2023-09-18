@@ -7,6 +7,9 @@ export const formSchema = z.object({
   //     prompt: z.string(),
   //   })
   //   .optional(),
+  modelVersion: z.string().min(1, {
+    message: "Model version is empty.",
+  }),
   prompt: z.string().min(1, {
     message: "Prompt is empty.",
   }),

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Session } from "@supabase/supabase-js";
 import {
   ArrowRightIcon,
@@ -285,7 +285,6 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
 }
 
 function SubscriptionCard({ subscription, redirectToCustomerPortal }) {
-  console.log("subscription", subscription);
   const [groupHover, setGroupHover] = useState(false);
 
   const subscriptionPrice =
@@ -490,7 +489,7 @@ const AnimatedButton = ({ children, onClick, className }) => {
     <motion.div
       onClick={onClick}
       className={cn(
-        "absolute group md:right-20 flex space-x-3 items-center bg-white text-gray-900 border-gray-200 shadow-2xl p-2 rounded-lg cursor-pointer",
+        "absolute group md:-right-20 flex space-x-3 items-center bg-white text-gray-900 border-gray-200 shadow-2xl p-2 rounded-lg cursor-pointer",
         className
       )}
       initial={{

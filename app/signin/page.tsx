@@ -37,7 +37,7 @@ export default async function AuthenticationPage() {
         <div className="lg:p-8 flex justify-center items-center h-screen relative">
           <UserAuthForm />
 
-          <p className="px-2 md:px-8 text-center text-xs text-muted-foreground absolute bottom-10 w-full">
+          <p className="px-2 md:px-8 text-center text-xs text-muted-foreground absolute bottom-10">
             By continuing, you agree to our{" "}
             <Link
               href="/terms"

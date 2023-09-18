@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
+import * as z from "zod";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PopoverProps } from "@radix-ui/react-popover";
+import { UseFormReturn } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
 import { useMutationObserver } from "@/hooks/use-mutation-observer";
@@ -28,27 +30,41 @@ import {
 } from "@/components/ui/popover";
 
 import { Model, ModelType } from "@/app/data/models";
+import { formSchema } from "@/schemas/formSchemas";
 
 interface ModelSelectorProps extends PopoverProps {
   types: readonly ModelType[];
   models: Model[];
   onModelChange: (model: Model) => void;
+  form: UseFormReturn<z.infer<typeof formSchema>>;
 }
 
 export function ModelSelector({
   models,
   types,
   onModelChange,
+  form,
   ...props
 }: ModelSelectorProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedModel, setSelectedModel] = React.useState<Model>(models[0]);
   const [peekedModel, setPeekedModel] = React.useState<Model>(models[0]);
 
+  const { watch } = form;
+  const modelVersion = watch("modelVersion");
+
+  React.useEffect(() => {
+    const newSelectedModel = models.find((model) => model.id === modelVersion);
+    if (newSelectedModel) {
+      setSelectedModel(newSelectedModel);
+    }
+  }, [modelVersion]);
+
   // Update the selected model both locally and in the parent component
   const handleModelSelect = (model: Model) => {
     setSelectedModel(model);
     onModelChange(model);
+    form.setValue("modelVersion", selectedModel.id);
     setOpen(false);
   };
 
@@ -59,8 +75,8 @@ export function ModelSelector({
           <Label htmlFor="model">Model</Label>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-[260px] text-sm">
-          The model which will generate the completion. Some models are suitable
-          for natural language tasks, others specialize in code. Learn more.
+          The model which will generate the image. Each model is suitable for
+          specific themes or prompts.
         </HoverCardContent>
       </HoverCard>
       <Popover open={open} onOpenChange={setOpen} {...props}>
@@ -76,7 +92,10 @@ export function ModelSelector({
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="end" className="PopoverContent md:w-[290px] p-0">
+        <PopoverContent
+          align="end"
+          className="popover-content md:w-[260px] p-0"
+        >
           <HoverCard>
             <HoverCardContent
               className="hidden md:block"
@@ -106,18 +125,16 @@ export function ModelSelector({
                 <CommandEmpty>No Models found.</CommandEmpty>
                 <HoverCardTrigger />
                 {types.map((type) => (
-                  <CommandGroup key={type} heading={type}>
-                    {models
-                      .filter((model) => model.type === type)
-                      .map((model) => (
-                        <ModelItem
-                          key={model.id}
-                          model={model}
-                          isSelected={selectedModel?.id === model.id}
-                          onPeek={(model) => setPeekedModel(model)}
-                          onSelect={() => handleModelSelect(model)}
-                        />
-                      ))}
+                  <CommandGroup key={type} heading={"Available to you"}>
+                    {models.map((model) => (
+                      <ModelItem
+                        key={model.id}
+                        model={model}
+                        isSelected={selectedModel?.id === model.id}
+                        onPeek={(model) => setPeekedModel(model)}
+                        onSelect={() => handleModelSelect(model)}
+                      />
+                    ))}
                   </CommandGroup>
                 ))}
               </CommandList>

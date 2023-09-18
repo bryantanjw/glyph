@@ -69,16 +69,19 @@ export function UserNav({ user, userDetails }: Props) {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 space-y-3" align="end" forceMount>
+      <DropdownMenuContent className="w-56 space-y-2" align="end" forceMount>
         <DropdownMenuLabel className="font-normal mt-1">
-          <div className="flex flex-col space-y-2">
+          <Link
+            href={"/account"}
+            className="flex flex-col space-y-1 hover:underline underline-offset-2"
+          >
             <p className="text-sm font-medium">
               {userDetails?.full_name ?? user.email}
             </p>
             <p className="text-sm leading-none text-muted-foreground">
               {userDetails?.credits ?? 0} credits
             </p>
-          </div>
+          </Link>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-1">

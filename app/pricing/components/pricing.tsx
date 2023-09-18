@@ -10,7 +10,7 @@ import * as SwitchPrimitives from "@radix-ui/react-switch";
 
 import { Button } from "@/components/ui/button";
 
-import { Navbar } from "@/components/navbar";
+import Navbar from "@/components/navbar";
 import { Testimonials } from "./testimonials";
 
 import { postData } from "@/utils/helpers";
@@ -21,6 +21,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/ui/icons";
 import { ResizablePanel } from "@/components/ui/resizable-panel";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Balancer } from "react-wrap-balancer";
 
 type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 type Product = Database["public"]["Tables"]["products"]["Row"];
@@ -52,8 +53,6 @@ export default function Pricing({
   products,
   subscription,
 }: PricingProps) {
-  console.log("subscription", subscription);
-
   const router = useRouter();
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>("month");
@@ -136,22 +135,19 @@ export default function Pricing({
     <div className="overflow-hidden">
       <Navbar page="pricing" user={user} userDetails={userDetails} />
       <div className="pricing-bg pt-32 md:pt-44 px-10 lg:px-16 pb-12 lg:pb-0">
-        <div className="sm:flex sm:flex-col sm:align-center md:ml-6">
-          <h1 className="text-4xl font-bold sm:text-center sm:text-6xl text-white">
-            Pricing Plans
-          </h1>
-          <p className="max-w-2xl mx-auto mt-5 sm:text-center text-xl text-slate-500">
-            You have{" "}
-            <span className="font-semibold">
-              {userDetails.credits !== null ? (
-                userDetails.credits
-              ) : (
-                <Skeleton className="h-5 w-5" />
-              )}{" "}
-              credits.
-            </span>{" "}
-            Choose to upgrade to a plan or pay as you go.
-          </p>
+        <div className="sm:flex sm:flex-col sm:align-center md:ml-4">
+          <Balancer>
+            <h1 className="text-4xl font-bold sm:text-center sm:text-6xl text-white lg:ml-2">
+              Pricing Plans
+            </h1>
+            <p className="max-w-2xl mx-auto mt-5 sm:text-center text-xl text-slate-500">
+              You have{" "}
+              <span className="font-semibold">
+                {session ? userDetails?.credits : 0} credits.
+              </span>{" "}
+              Choose to upgrade to a plan or pay as you go.
+            </p>
+          </Balancer>
         </div>
 
         <div className="flex justify-center min-w-[80px] m-auto pb-0 md:py-8 mt-8">
@@ -304,13 +300,16 @@ export default function Pricing({
                   </div>
 
                   <Button
-                    disabled={!session}
                     loading={priceIdLoading === price.id}
-                    onClick={() =>
-                      subscription && billingInterval === "month"
-                        ? redirectToCustomerPortal(price)
-                        : handleCheckout(price)
-                    }
+                    onClick={() => {
+                      if (!session) {
+                        router.push("/signin");
+                      } else if (subscription && billingInterval === "month") {
+                        redirectToCustomerPortal(price);
+                      } else {
+                        handleCheckout(price);
+                      }
+                    }}
                     className={`w-full h-10 mb-10 mt-4 ${
                       isPro ? "bg-slate-900 shadow-xl" : ""
                     }`}

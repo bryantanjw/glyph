@@ -4,7 +4,8 @@ import { Session } from "@supabase/supabase-js";
 
 import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "./components/sidebar-nav";
-import { Navbar } from "@/components/navbar";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 import { ThemeProvider } from "../providers/theme-provider";
 
 import { getSession, getUserDetails } from "../supabase-server";
@@ -64,6 +65,7 @@ export default async function SettingsLayout({
           <div className="flex-1 lg:max-w-2xl">{children}</div>
         </div>
       </div>
+      <Footer />
     </ThemeProvider>
   );
 }

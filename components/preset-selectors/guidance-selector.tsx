@@ -38,8 +38,9 @@ export function GuidanceSelector({ form }: GuidanceSelectorProps) {
             <Slider
               id="guidance"
               max={30}
-              defaultValue={[value]}
-              step={0.2}
+              min={0.5}
+              value={[value]}
+              step={0.5}
               onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
               aria-label="Guidance"
@@ -47,7 +48,7 @@ export function GuidanceSelector({ form }: GuidanceSelectorProps) {
           </div>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-[260px] text-sm">
-          The extent to which the prompt should guide the output (minimum: 0.1;
+          Adjust how much the output should follow your prompt (minimum: 0.5;
           maximum: 30).
         </HoverCardContent>
       </HoverCard>

@@ -42,10 +42,10 @@ export function ControlNetConditioningSelector({
             </div>
             <Slider
               id="ControlNetConditioning"
-              max={2}
+              max={4}
               min={1}
-              defaultValue={[value]}
-              step={0.01}
+              value={[value]}
+              step={0.05}
               onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
               aria-label="ControlNet Conditioning"
@@ -53,7 +53,8 @@ export function ControlNetConditioningSelector({
           </div>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-[260px] text-sm">
-          Adjust the properties of the tile/grid.
+          Adjust the how readable you want the QR code to be. (minimum: 1;
+          maximum: 4)
         </HoverCardContent>
       </HoverCard>
     </div>

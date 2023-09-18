@@ -8,12 +8,16 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import {
   ArrowRightIcon,
+  CameraIcon,
   Cross2Icon,
   EnterIcon,
   ExitIcon,
   HamburgerMenuIcon,
+  MoonIcon,
   NotionLogoIcon,
   PersonIcon,
+  RocketIcon,
+  SunIcon,
 } from "@radix-ui/react-icons";
 import { User } from "@supabase/supabase-js";
 
@@ -31,6 +35,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSupabase } from "@/app/providers/supabase-provider";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 interface NavbarProps {
   page?: string;
@@ -38,10 +43,11 @@ interface NavbarProps {
   userDetails?: any;
 }
 
-export function Navbar({ page, user, userDetails }: NavbarProps) {
+export default function Navbar({ page, user, userDetails }: NavbarProps) {
   const { supabase } = useSupabase();
   const router = useRouter();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   const [isWhiteSectionInView, setIsWhiteSectionInView] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -61,6 +67,25 @@ export function Navbar({ page, user, userDetails }: NavbarProps) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  React.useEffect(() => {
+    function handleKeydown(event) {
+      // Check if the 'Meta' (Command on Mac) key is pressed along with 'K'
+      if (event.metaKey && event.key === "k") {
+        toggleTheme();
+      }
+    }
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme]);
+  const toggleTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
 
   return (
     <div>
@@ -137,7 +162,7 @@ export function Navbar({ page, user, userDetails }: NavbarProps) {
                       href="/gallery"
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "bg-transparent focus:bg-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 mr-5  ",
+                        "bg-transparent focus:bg-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800",
                         page === "pricing" &&
                           !isWhiteSectionInView &&
                           "hover:bg-slate-800 focus:bg-slate-800"
@@ -148,7 +173,9 @@ export function Navbar({ page, user, userDetails }: NavbarProps) {
                   </NavigationMenuItem>
 
                   {user ? (
-                    <UserNav user={user} userDetails={userDetails} />
+                    <div className="pl-5">
+                      <UserNav user={user} userDetails={userDetails} />
+                    </div>
                   ) : (
                     <NavigationMenuItem>
                       <NavigationMenuLink
@@ -191,7 +218,7 @@ export function Navbar({ page, user, userDetails }: NavbarProps) {
         {isMenuOpen && (
           <motion.div
             className={cn(
-              "fixed top-14 flex w-full flex-col justify-between bg-white border-b rounded-b-md z-40 bg-opacity-80 backdrop-blur",
+              "fixed top-14 flex w-full flex-col justify-between bg-white dark:bg-slate-900 border-b rounded-b-md z-40 bg-opacity-80 backdrop-blur",
               page === "pricing"
                 ? "dark bg-slate-900 text-white border-slate-700"
                 : "",
@@ -204,8 +231,15 @@ export function Navbar({ page, user, userDetails }: NavbarProps) {
           >
             <div className="flex flex-col px-6 py-6">
               <div className="flex flex-col gap-5">
-                <Link href="/pricing">Pricing</Link>
-                <Link href="/gallery">Gallery</Link>
+                <Link href="/pricing" className="flex items-center gap-3">
+                  <RocketIcon /> Pricing
+                </Link>
+                <Link href="/gallery" className="flex items-center gap-3">
+                  <CameraIcon /> Gallery
+                </Link>
+                <span className="flex items-center gap-3" onClick={toggleTheme}>
+                  {theme === "light" ? <MoonIcon /> : <SunIcon />} Toggle theme
+                </span>
                 <p
                   onClick={async () => {
                     const { error } = await supabase.auth.signOut();
@@ -220,9 +254,9 @@ export function Navbar({ page, user, userDetails }: NavbarProps) {
                     }
                     router.push("/signin");
                   }}
-                  className="cursor-pointer flex items-center gap-2 mt-4"
+                  className="cursor-pointer flex items-center gap-3 mt-4"
                 >
-                  Logout <ExitIcon />
+                  <ExitIcon /> Logout
                 </p>
               </div>
             </div>
@@ -256,7 +290,7 @@ export function Navbar({ page, user, userDetails }: NavbarProps) {
                     </div>
                   </div>
 
-                  <ArrowRightIcon />
+                  <ArrowRightIcon className="h-5 w-5 mr-2" />
                 </Link>
               ) : (
                 <div className="flex items-center gap-2">

@@ -38,7 +38,7 @@ export function StrengthSelector({ form }: StrengthSelectorProps) {
             <Slider
               id="strength"
               max={30}
-              defaultValue={[value]}
+              value={[value]}
               step={0.2}
               onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"

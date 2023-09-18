@@ -25,6 +25,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSupabase } from "@/app/providers/supabase-provider";
 import { signInFormSchema } from "@/schemas/formSchemas";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { Balancer } from "react-wrap-balancer";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -180,12 +181,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <div className="text-center mb-2">
           {isSignUp ? (
             <FadeInDown key="signUp">
-              <h1 className="text-3xl font-semibold tracking-tight mb-2">
-                Redesign your <span className="text-indigo-500">QR code</span>{" "}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Create an account below. You will get 3 credits for free.
-              </p>
+              <Balancer>
+                <h1 className="text-3xl font-semibold tracking-tight mb-2">
+                  Redesign your <span className="text-indigo-700">QR code</span>{" "}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Create an account below. You will get 3 credits for free.
+                </p>
+              </Balancer>
             </FadeInDown>
           ) : (
             <FadeInDown key="signIn">

@@ -1,3 +1,4 @@
+import Footer from "@/components/footer";
 import Pricing from "./components/pricing";
 import {
   getSession,
@@ -15,12 +16,15 @@ export default async function PricingPage() {
   ]);
 
   return (
-    <Pricing
-      session={session}
-      user={session?.user}
-      userDetails={userDetails}
-      products={products}
-      subscription={subscription}
-    />
+    <>
+      <Pricing
+        session={session}
+        user={session?.user}
+        userDetails={userDetails}
+        products={products}
+        subscription={subscription}
+      />
+      <Footer />
+    </>
   );
 }

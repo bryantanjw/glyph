@@ -1,8 +1,9 @@
 import { Session } from "@supabase/supabase-js";
 import { getSession, getUserDetails } from "../supabase-server";
 
-import { Navbar } from "@/components/navbar";
+import Navbar from "@/components/navbar";
 import Gallery from "./components/Gallery";
+import Footer from "@/components/footer";
 
 export default async function GalleryPage() {
   const [session, userDetails] = await Promise.all([
@@ -15,6 +16,7 @@ export default async function GalleryPage() {
       <Navbar user={session?.user} userDetails={userDetails} />
 
       <Gallery />
+      <Footer />
     </div>
   );
 }
