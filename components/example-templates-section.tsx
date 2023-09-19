@@ -8,7 +8,7 @@ import { P } from "@/components/ui/typography";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 
-import { Preset, presets } from "@/app/data/presets";
+import { Preset, presets } from "@/data/presets";
 
 type SeeExampleOutputDialogProps = {
   item: any;

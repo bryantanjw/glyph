@@ -41,8 +41,8 @@ import { ControlNetConditioningSelector } from "@/components/preset-selectors/na
 import { NegativePromptField } from "@/components/preset-selectors/negative-prompt-field";
 
 import { formSchema } from "@/schemas/formSchemas";
-import { Model, models, types } from "@/app/data/models";
-import { Preset, presets } from "@/app/data/presets";
+import { Model, models, types } from "@/data/models";
+import { Preset, presets } from "@/data/presets";
 import { extractProgress } from "@/utils/helpers";
 import Link from "next/link";
 import { usePlaygroundForm } from "@/hooks/use-playground-form";
@@ -268,8 +268,8 @@ export default function Playground({ user }) {
               {/* Vary selectors based on model selected */}
               <AnimatePresence mode="wait">
                 {(selectedModel?.name === "General Purpose" ||
-                  selectedModel?.name === "Realism") && (
-                  <AnimatedSelectorDiv id="Realism">
+                  selectedModel?.name === "Realistic Vision") && (
+                  <AnimatedSelectorDiv id="Realistic Vision">
                     <GuidanceSelector form={form} />
                     <ControlNetConditioningSelector form={form} />
                     <SeedField form={form} />
@@ -378,8 +378,8 @@ export default function Playground({ user }) {
                       <Image
                         alt="QR Code"
                         src={prediction.output[prediction.output.length - 1]}
-                        width={360}
-                        height={360}
+                        width={768}
+                        height={768}
                         className="p-3 hover:p-0 transition-all duration-150 ease-in-out"
                       />
                     </motion.div>
@@ -410,6 +410,7 @@ export default function Playground({ user }) {
                   </Button>
                 ) : (
                   <Button
+                    disabled={isSubmitting}
                     onClick={(event) => {
                       if (!user) {
                         event.preventDefault();

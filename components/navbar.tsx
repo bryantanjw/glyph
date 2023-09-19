@@ -33,7 +33,7 @@ import {
 import { UserNav } from "./user-nav";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useSupabase } from "@/app/providers/supabase-provider";
+import { useSupabase } from "@/components/providers/supabase-provider";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 

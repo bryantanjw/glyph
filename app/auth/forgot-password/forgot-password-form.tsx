@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
-import { useSupabase } from "@/app/providers/supabase-provider";
+import { useSupabase } from "@/components/providers/supabase-provider";
 import { forgotPasswordFormSchema } from "@/schemas/formSchemas";
 
 interface ForgotPasswordFormProps

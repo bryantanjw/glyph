@@ -20,10 +20,10 @@ export default async function Footer() {
           </Row>
         </Row>
         <Row className="justify-end items-center w-auto gap-6 text-slate-600">
-          <Link href={"https://github.com/bryantanjw"}>
+          <Link href={"https://github.com/bryantanjw"} target="_blank">
             <GitHubLogoIcon className="h-6 w-6 hover:text-slate-800" />
           </Link>
-          <Link href={"https://twitter.com/bryantanjw"}>
+          <Link href={"https://twitter.com/bryantanjw"} target="_blank">
             <TwitterLogoIcon className="h-6 w-6 hover:text-slate-800" />
           </Link>
         </Row>

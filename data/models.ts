@@ -11,17 +11,20 @@ export interface Model<Type = string> {
 
 export const models: Model<ModelType>[] = [
   {
+    id: "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    name: "General Purpose SD1.5",
+    description: "Fast and capable model across all themes",
+  },
+  {
     id: "79878d00000d92d6f8923ffe8d25605463c928eaf322b022a29e0b6328a6cfd0",
     name: "Realistic Vision",
     description: "Fast and capable model for realistic themes",
-    // strengths: "Moderate classification, semantic search",
+    strengths: "Hyperrealism, photorealism, realistic lighting",
   },
   {
     id: "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
-    name: "General Purpose",
+    name: "General Purpose SD",
     description: "Slow but generally capable model across themes",
-    // strengths:
-    //   "Parsing text, simple classification, address correction, keywords",
   },
   // {
   //   id: "c8fd040b-41c3-42d7-84a8-69ea8b7e724b",

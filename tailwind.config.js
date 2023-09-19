@@ -50,6 +50,18 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        rose: {
+          one: "#FFF1F2",
+          two: "#FFE4E6",
+          three: "#FECDD3",
+          four: "#FDA4AF",
+          five: "#FB7185",
+          six: "#F43F5E",
+          seven: "#E11D48",
+          eight: "#BE123C",
+          nine: "#9F1239",
+          ten: "#881337",
+        },
         padding: ["hover"],
       },
       borderRadius: {

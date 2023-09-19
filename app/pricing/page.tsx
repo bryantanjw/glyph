@@ -16,15 +16,17 @@ export default async function PricingPage() {
   ]);
 
   return (
-    <>
-      <Pricing
-        session={session}
-        user={session?.user}
-        userDetails={userDetails}
-        products={products}
-        subscription={subscription}
-      />
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-grow">
+        <Pricing
+          session={session}
+          user={session?.user}
+          userDetails={userDetails}
+          products={products}
+          subscription={subscription}
+        />
+      </main>
       <Footer />
-    </>
+    </div>
   );
 }

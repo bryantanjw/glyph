@@ -21,7 +21,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { User } from "@supabase/supabase-js";
 
-import { useSupabase } from "@/app/providers/supabase-provider";
+import { useSupabase } from "@/components/providers/supabase-provider";
 
 interface Props {
   user: User | null | undefined;

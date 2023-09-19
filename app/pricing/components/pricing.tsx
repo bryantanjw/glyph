@@ -134,7 +134,7 @@ export default function Pricing({
   return (
     <div className="overflow-hidden">
       <Navbar page="pricing" user={user} userDetails={userDetails} />
-      <div className="pricing-bg pt-32 md:pt-44 px-10 lg:px-16 pb-12 lg:pb-0">
+      <div className="pricing-bg pt-32 md:pt-44 px-10 pb-12 lg:pb-0">
         <div className="sm:flex sm:flex-col sm:align-center md:ml-4">
           <Balancer>
             <h1 className="text-4xl font-bold sm:text-center sm:text-6xl text-white lg:ml-2">
@@ -248,8 +248,8 @@ export default function Pricing({
                        : "z-0 bg-slate-800 bg-opacity-70 border-slate-600 border-opacity-60 rounded-2xl lg:rounded-t-2xl lg:rounded-b-none lg:mb-0"
                    }`,
                   {
-                    "lg:pr-20 lg:-mr-8": index === 0,
-                    "lg:pl-16 lg:-ml-6": index === 2,
+                    "lg:pr-16 lg:left-8": index === 0,
+                    "lg:pl-16 lg:right-6": index === 2,
                   }
                 )}
               >

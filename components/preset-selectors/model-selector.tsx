@@ -29,7 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { Model, ModelType } from "@/app/data/models";
+import { Model, ModelType } from "@/data/models";
 import { formSchema } from "@/schemas/formSchemas";
 
 interface ModelSelectorProps extends PopoverProps {

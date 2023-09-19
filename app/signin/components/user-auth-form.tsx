@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 
-import { useSupabase } from "@/app/providers/supabase-provider";
+import { useSupabase } from "@/components/providers/supabase-provider";
 import { signInFormSchema } from "@/schemas/formSchemas";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Balancer } from "react-wrap-balancer";
