@@ -255,24 +255,26 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
                 <span className="flex items-center gap-3" onClick={toggleTheme}>
                   {theme === "light" ? <MoonIcon /> : <SunIcon />} Toggle theme
                 </span>
-                <p
-                  onClick={async () => {
-                    const { error } = await supabase.auth.signOut();
-                    if (error) {
-                      console.error("Error signing out:", error.message);
-                      toast({
-                        variant: "destructive",
-                        title: "Uh oh! Something went wrong.",
-                        description: error.message || "Failed to sign out.",
-                      });
-                      return;
-                    }
-                    router.push("/signin");
-                  }}
-                  className="cursor-pointer flex items-center gap-3 mt-4"
-                >
-                  <ExitIcon /> Logout
-                </p>
+                {user && (
+                  <p
+                    onClick={async () => {
+                      const { error } = await supabase.auth.signOut();
+                      if (error) {
+                        console.error("Error signing out:", error.message);
+                        toast({
+                          variant: "destructive",
+                          title: "Uh oh! Something went wrong.",
+                          description: error.message || "Failed to sign out.",
+                        });
+                        return;
+                      }
+                      router.push("/signin");
+                    }}
+                    className="cursor-pointer flex items-center gap-3 mt-4"
+                  >
+                    <ExitIcon /> Logout
+                  </p>
+                )}
               </div>
             </div>
 
