@@ -378,9 +378,9 @@ export default function Pricing({
         </div>
       </div>
 
-      <div id="whiteSection">
+      {/* <div id="whiteSection">
         <Testimonials />
-      </div>
+      </div> */}
     </div>
   );
 }
