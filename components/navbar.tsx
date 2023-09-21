@@ -308,10 +308,13 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
                   <ArrowRightIcon className="h-5 w-5 mr-2" />
                 </Link>
               ) : (
-                <div className="flex items-center gap-2 p-4 hover:bg-gray-50 justify-between">
-                  <Link href="/signin">Log In</Link>
+                <Link
+                  href="/signin"
+                  className="flex items-center gap-2 p-4 hover:bg-gray-50 justify-between"
+                >
+                  <p>Log In</p>
                   <ArrowRightIcon className="mr-3" />
-                </div>
+                </Link>
               )}
             </div>
           </motion.div>
