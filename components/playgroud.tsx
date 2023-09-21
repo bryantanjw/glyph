@@ -51,8 +51,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useRouter } from "next/navigation";
 
 export default function Playground({ user }) {
+  const router = useRouter();
   const form = usePlaygroundForm();
   const { toast } = useToast();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -434,7 +436,29 @@ export default function Playground({ user }) {
                     ) : (
                       <Button
                         disabled={isSubmitting}
-                        typeof="submit"
+                        onClick={async (event) => {
+                          event.preventDefault();
+                          if (!user) {
+                            toast({
+                              description: "Please log in to generate images.",
+                              action: (
+                                <ToastAction
+                                  altText="Log In"
+                                  onClick={() => {
+                                    router.push("/signin");
+                                  }}
+                                >
+                                  <LockOpen1Icon className="mr-2" /> Log In
+                                </ToastAction>
+                              ),
+                            });
+                          } else {
+                            const isValid = await form.trigger();
+                            if (isValid) {
+                              onSubmit(form.getValues());
+                            }
+                          }
+                        }}
                         className="w-full lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75 disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
