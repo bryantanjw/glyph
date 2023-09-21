@@ -98,7 +98,7 @@ export const presets: Preset[] = [
   {
     id: "7",
     modelVersion:
-      "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Neo Aztec",
     prompt: "a townhouse inspired by aztec architecture on a sunny day",
     negativePrompt,
@@ -108,7 +108,7 @@ export const presets: Preset[] = [
   {
     id: "8",
     modelVersion:
-      "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Forestpunk",
     prompt:
       "forestpunk, green pastures, lush environment, vivid colors, animation by studio ghibli",
@@ -133,7 +133,7 @@ export const presets: Preset[] = [
   {
     id: "10",
     modelVersion:
-      "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Darthouven Fish Men",
     prompt: "Darthouven Fish Men",
     negativePrompt,
@@ -145,7 +145,7 @@ export const presets: Preset[] = [
   {
     id: "11",
     modelVersion:
-      "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Japanese fusion",
     prompt: "Japanese painting, mountains, 1girl",
     negativePrompt,
