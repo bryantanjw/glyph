@@ -9,6 +9,7 @@ import { getSession, getSubscription, getUserDetails } from "./supabase-server";
 import { ThemeProvider } from "../components/providers/theme-provider";
 import Footer from "@/components/footer";
 import { Balancer } from "react-wrap-balancer";
+import { Badge } from "@/components/ui/badge";
 
 export default async function PlaygroundPage() {
   const [session, userDetails, subscription] = await Promise.all([
@@ -26,7 +27,12 @@ export default async function PlaygroundPage() {
         <Column className="w-full items-center min-h-screen">
           <Column className="items-center pt-32 pb-10 max-w-3xl lg:max-w-5xl">
             <Balancer className="text-center">
-              <h1 className="text-4xl font-bold">Glyph</h1>
+              <div className="relative">
+                <h1 className="text-4xl font-bold">Glyph</h1>
+                <Badge className="absolute top-0 right-6 bg-blue-600 border-0">
+                  Beta
+                </Badge>
+              </div>
               <p className="text-lg text-muted-foreground mt-3">
                 Create, captivate, connect. <br />
                 Elevate every scan with Glyph.

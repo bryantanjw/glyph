@@ -186,7 +186,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                   Redesign your <span className="text-indigo-700">QR code</span>{" "}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Create an account below. You will get 3 credits for free.
+                  Create an account below and start generating for free.
                 </p>
               </Balancer>
             </FadeInDown>
