@@ -135,19 +135,19 @@ export default function Pricing({
     <div className="overflow-hidden">
       <Navbar page="pricing" user={user} userDetails={userDetails} />
       <div className="pricing-bg pt-32 md:pt-44 px-10 pb-12 lg:pb-0">
-        <div className="sm:flex sm:flex-col sm:align-center md:ml-4">
-          <Balancer>
-            <h1 className="text-4xl font-bold sm:text-center sm:text-6xl text-white lg:ml-2">
-              Pricing Plans
-            </h1>
-            <p className="max-w-2xl mx-auto mt-5 sm:text-center text-xl text-slate-500">
+        <div className="flex flex-col align-center text-center">
+          <h1 className="text-4xl font-bold sm:text-6xl text-white">
+            Pricing Plans
+          </h1>
+          <p className="max-w-2xl mx-auto mt-5 text-xl text-slate-500">
+            <Balancer>
               You have{" "}
               <span className="font-semibold">
                 {session ? userDetails?.credits : 0} credits.
               </span>{" "}
               Choose to upgrade to a plan or pay as you go.
-            </p>
-          </Balancer>
+            </Balancer>
+          </p>
         </div>
 
         <div className="flex justify-center min-w-[80px] m-auto pb-0 md:py-8 mt-8">

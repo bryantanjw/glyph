@@ -30,13 +30,13 @@ import {
 } from "@/components/ui/popover";
 
 import { Model, ModelType } from "@/data/models";
-import { formSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/schemas/formSchemas";
 
 interface ModelSelectorProps extends PopoverProps {
   types: readonly ModelType[];
   models: Model[];
   onModelChange: (model: Model) => void;
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<z.infer<typeof playgroundFormSchema>>;
 }
 
 export function ModelSelector({
@@ -69,7 +69,7 @@ export function ModelSelector({
   };
 
   return (
-    <div className="grid gap-2 mb-2">
+    <div className="grid gap-2 mb-2 md:-mt-2">
       <HoverCard openDelay={200}>
         <HoverCardTrigger asChild>
           <Label htmlFor="model">Model</Label>

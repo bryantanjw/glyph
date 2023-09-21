@@ -1,9 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 
 import { Toaster } from "@/components/ui/toaster";
-import { Column } from "@/components/ui/column";
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 
 import SupabaseProvider from "../components/providers/supabase-provider";
@@ -27,6 +27,7 @@ export default function RootLayout({
         <ProgressBarProvider>
           <SupabaseProvider>
             {children}
+            <Analytics />
             <TailwindIndicator />
             <Toaster />
           </SupabaseProvider>

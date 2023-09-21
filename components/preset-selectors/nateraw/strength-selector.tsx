@@ -12,11 +12,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-import { formSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/schemas/formSchemas";
 import { useSliderChange } from "@/hooks/use-slider-change";
 
 interface StrengthSelectorProps {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<z.infer<typeof playgroundFormSchema>>;
 }
 
 export function StrengthSelector({ form }: StrengthSelectorProps) {

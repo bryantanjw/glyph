@@ -12,10 +12,10 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-import { formSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/schemas/formSchemas";
 
 interface NegativePromptFieldProps {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<z.infer<typeof playgroundFormSchema>>;
 }
 
 export function NegativePromptField({ form }: NegativePromptFieldProps) {

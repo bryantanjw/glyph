@@ -11,19 +11,18 @@ export interface Preset {
   seed?: number;
 }
 
-const image = "";
 const negativePrompt = "ugly, disfigured, low quality, blurry, nsfw";
 const seed = -1;
 const height = 768;
 const width = 768;
-const qrcode_background = "gray";
-const border = 4;
+const qrcode_background = "white";
+const border = 1;
 
 export const presets: Preset[] = [
   {
+    id: "1",
     modelVersion:
       "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
-    id: "9cb0e66a-9937-465d-a188-2c4c4ae2401f",
     name: "Anime",
     negativePrompt,
     prompt: "test",
@@ -31,9 +30,9 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "61eb0e32-2391-4cd3-adc3-66efe09bc0b7",
+    id: "2",
     modelVersion:
-      "79878d00000d92d6f8923ffe8d25605463c928eaf322b022a29e0b6328a6cfd0",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Cyberpunk anime",
     prompt: "A cyberpunk alleyway, anime, tokyo 2050",
     negativePrompt,
@@ -43,9 +42,9 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "61eb0e32-2391-4cd3-adc3-66efe09bc0b7",
+    id: "3",
     modelVersion:
-      "79878d00000d92d6f8923ffe8d25605463c928eaf322b022a29e0b6328a6cfd0",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Mechanical Girl",
     prompt:
       "1mechanical girl,ultra realistic details, portrait, global illumination, shadows, octane render, 8k, ultra sharp,intricate, ornaments detailed, cold colors, metal, egypician detail, highly intricate details, realistic light, trending on cgsociety, glowing eyes, facing camera, neon details, machanical limbs,blood vessels connected to tubes,mechanical vertebra attaching to back,mechanical cervial attaching to neck,sitting,wires and cables connecting to head",
@@ -56,12 +55,12 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "61eb0e32-2391-4cd3-adc3-66efe09bc0b7",
+    id: "4",
     modelVersion:
-      "79878d00000d92d6f8923ffe8d25605463c928eaf322b022a29e0b6328a6cfd0",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Studio Ghibli anime",
     prompt:
-      "1mechanical girl,ultra realistic details, portrait, global illumination, shadows, octane render, 8k, ultra sharp,intricate, ornaments detailed, cold colors, metal, egypician detail, highly intricate details, realistic light, trending on cgsociety, glowing eyes, facing camera, neon details, machanical limbs,blood vessels connected to tubes,mechanical vertebra attaching to back,mechanical cervial attaching to neck,sitting,wires and cables connecting to head",
+      "portrait of cute girl, cloudy sky background lush landscape illustration concept art anime key visual trending pixiv fanbox by wlop and greg rutkowski and makoto shinkai and studio ghibli",
     negativePrompt:
       "lowres, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, malformed mouth, malformed face, sunglasses, sitting, multiple faces, Watermark, Text, censored, deformed, bad anatomy, disfigured, poorly drawn face, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, disconnected head, malformed hands, long neck, mutated hands and fingers, bad hands, missing fingers, cropped, worst quality, low quality, mutation, poorly drawn, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, missing fingers, fused fingers, abnormal eye proportion, Abnormal hands, abnormal legs, abnormal feet, abnormal fingers",
     inferenceStep: 40,
@@ -70,9 +69,9 @@ export const presets: Preset[] = [
     seed,
   },
   {
+    id: "5",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
-    id: "a4e1fa51-f4ce-4e45-892c-224030a00bdd",
     name: "Medieval",
     prompt:
       "Medieval village scene with busy streets and castle in the distance",
@@ -84,9 +83,9 @@ export const presets: Preset[] = [
     seed: 2145122936,
   },
   {
+    id: "6",
     modelVersion:
-      "79878d00000d92d6f8923ffe8d25605463c928eaf322b022a29e0b6328a6cfd0",
-    id: "cc198b13-4933-43aa-977e-dcd95fa30770",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Abstract art",
     prompt:
       "abstract art, non-representative, non-figurative, abstract expressionism, cubist, modern art, geometric, minimalism, surreal, avant-garde ",
@@ -97,9 +96,9 @@ export const presets: Preset[] = [
     controlNetConditioning: 2.2,
   },
   {
+    id: "7",
     modelVersion:
       "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
-    id: "c569a06a-0bd6-43a7-adf9-bf68c09e7a79",
     name: "Neo Aztec",
     prompt: "a townhouse inspired by aztec architecture on a sunny day",
     negativePrompt,
@@ -107,7 +106,7 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "15ccc0d7-f37a-4f0a-8163-a37e162877dc",
+    id: "8",
     modelVersion:
       "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
     name: "Forestpunk",
@@ -118,7 +117,7 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "4641ef41-1c0f-421d-b4b2-70fe431081f3",
+    id: "9",
     modelVersion:
       "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
     name: "Futuristic",
@@ -132,7 +131,7 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "1234abcd-5678-efgh-9012-ijkl34567890",
+    id: "10",
     modelVersion:
       "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
     name: "Darthouven Fish Men",
@@ -144,26 +143,13 @@ export const presets: Preset[] = [
     seed,
   },
   {
+    id: "11",
     modelVersion:
       "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
-    id: "48d34082-72f3-4a1b-a14d-f15aca4f57a0",
     name: "Japanese fusion",
     prompt: "Japanese painting, mountains, 1girl",
     negativePrompt,
     inferenceStep: 30,
-    seed,
-  },
-  {
-    id: "61eb0e32-2391-4cd3-adc3-66efe09bc0b7",
-    modelVersion:
-      "79878d00000d92d6f8923ffe8d25605463c928eaf322b022a29e0b6328a6cfd0",
-    name: "Mechanical Girl",
-    prompt:
-      "1mechanical girl,ultra realistic details, portrait, global illumination, shadows, octane render, 8k, ultra sharp,intricate, ornaments detailed, cold colors, metal, egypician detail, highly intricate details, realistic light, trending on cgsociety, glowing eyes, facing camera, neon details, machanical limbs,blood vessels connected to tubes,mechanical vertebra attaching to back,mechanical cervial attaching to neck,sitting,wires and cables connecting to head",
-    negativePrompt,
-    inferenceStep: 30,
-    guidance: 12,
-    controlNetConditioning: 2.0,
     seed,
   },
 ];

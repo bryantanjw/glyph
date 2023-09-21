@@ -1,22 +1,23 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/schemas/formSchemas";
 
 export function usePlaygroundForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof playgroundFormSchema>>({
+    resolver: zodResolver(playgroundFormSchema),
     defaultValues: {
-      // selectedPreset: presets.find((preset) => preset.name === "Futuristic"),
       modelVersion:
-        "79878d00000d92d6f8923ffe8d25605463c928eaf322b022a29e0b6328a6cfd0",
+        "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
       prompt: "",
-      url: "",
+      url: "https://glyph.so",
+      image:
+        "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Glyph_QR-4SnbMgp1uJIaw8nPw9m9KNNkDGkSgY.png",
       negativePrompt: "ugly, disfigured, low quality, blurry, nsfw",
-      inferenceStep: 80,
-      guidance: 12,
+      inferenceStep: 30,
+      guidance: 9.5,
       strength: 0.85,
-      controlNetConditioning: 1.2,
+      controlNetConditioning: 1.8,
       seed: -1,
     },
   });

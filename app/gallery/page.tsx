@@ -3,5 +3,9 @@ import { getAll } from "@/sanity/sanity-utils";
 
 export default async function GalleryPage() {
   const data = await getAll();
-  return <ImageGrid data={data} />;
+  return (
+    <div className="items-center justify-center h-screen">
+      <ImageGrid data={data} />
+    </div>
+  );
 }

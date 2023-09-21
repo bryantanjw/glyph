@@ -117,7 +117,7 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
             <div className="space-x-2">
               <NavigationMenu>
                 <NavigationMenuList>
-                  <NavigationMenuItem>
+                  {/* <NavigationMenuItem>
                     <NavigationMenuTrigger
                       className={cn(
                         "bg-transparent data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800",
@@ -155,6 +155,21 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
                         </ListItem>
                       </ul>
                     </NavigationMenuContent>
+                  </NavigationMenuItem> */}
+
+                  <NavigationMenuItem>
+                    <Link
+                      href="/pricing"
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent focus:bg-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800",
+                        page === "pricing" &&
+                          !isWhiteSectionInView &&
+                          "hover:bg-slate-800 focus:bg-slate-800"
+                      )}
+                    >
+                      Pricing
+                    </Link>
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
@@ -285,7 +300,7 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
                         {userDetails?.full_name ?? user.email}
                       </p>
                       <p className="text-sm leading-none text-muted-foreground">
-                        3 credits
+                        {userDetails?.credits ?? 0} credits
                       </p>
                     </div>
                   </div>
@@ -293,9 +308,9 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
                   <ArrowRightIcon className="h-5 w-5 mr-2" />
                 </Link>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 p-4 hover:bg-gray-50 justify-between">
                   <Link href="/signin">Log In</Link>
-                  <EnterIcon />
+                  <ArrowRightIcon className="mr-3" />
                 </div>
               )}
             </div>

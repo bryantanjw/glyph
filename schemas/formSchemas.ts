@@ -1,12 +1,6 @@
 import { z } from "zod";
 
-export const formSchema = z.object({
-  // selectedPreset: z
-  //   .object({
-  //     name: z.string(),
-  //     prompt: z.string(),
-  //   })
-  //   .optional(),
+export const playgroundFormSchema = z.object({
   modelVersion: z.string().min(1, {
     message: "Model version is empty.",
   }),
@@ -16,7 +10,9 @@ export const formSchema = z.object({
   url: z.string().min(1, {
     message: "Website URL is empty.",
   }),
-  // Inputs for nateraw/qrcode-sd
+  image: z.string().nonempty({
+    message: "Image is required",
+  }),
   negativePrompt: z.string().optional(),
   inferenceStep: z.number().optional(),
   guidance: z.number().optional(),

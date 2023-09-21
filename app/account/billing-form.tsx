@@ -129,10 +129,10 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
   }, []);
 
   return (
-    <div className="flex flex-col space-y-8 max-w-xs md:w-full md:max-w-xl h-[220px] md:h-full">
+    <div className="flex flex-col space-y-5 md:space-y-8 max-w-xs md:w-full md:max-w-xl h-[260px] md:h-full">
       <motion.div
         ref={targetRef}
-        className="relative border dark:border-slate-700 border-opacity-10 bg-gradient-to-tl from-gray-900 to-gray-800 text-white h-56 md:w-96 p-6 rounded-xl before:rounded-xl shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,0px)_var(--y,0px),gray_0%,_transparent_100%)] before:opacity-30 dark:before:opacity-20"
+        className="relative border dark:border-slate-700 border-opacity-10 bg-gradient-to-tl from-gray-900 to-gray-800 text-white h-56 md:w-96 p-5 md:p-6 rounded-xl before:rounded-xl shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,0px)_var(--y,0px),gray_0%,_transparent_100%)] before:opacity-30 dark:before:opacity-20"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
@@ -175,7 +175,7 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
             </div>
           </div>
 
-          <div className="">
+          <div className="mt-5 md:mt-0">
             <div className="text-xs font-semibold tracking-tight">balance</div>
 
             <div className="text-xl font-semibold">
@@ -193,7 +193,7 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
       >
         <AnimatedButton
           onClick={() => router.push("/pricing")}
-          className={"bottom-1 -right-2 md:bottom-20 w-48"}
+          className={"md:bottom-20 md:w-48"}
         >
           <div className="flex-initial">
             <div className="inline-flex items-center p-2 justify-center rounded-lg bg-gradient-tl from-green-600 via-green-600 bg-green-500">
@@ -246,7 +246,7 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
 
         <AnimatedButton
           onClick={redirectToCustomerPortal}
-          className={"-right-2 top-1 md:top-0 md:-mt-16 w-60"}
+          className={"md:top-0 md:-mt-16 md:w-60"}
         >
           <div className="flex-initial">
             <div className="inline-flex items-center p-2 justify-center rounded-lg bg-gradient-tl from-black via-green-400 bg-slate-800">
@@ -489,7 +489,7 @@ const AnimatedButton = ({ children, onClick, className }) => {
     <motion.div
       onClick={onClick}
       className={cn(
-        "absolute group md:right-20 flex space-x-3 items-center bg-white text-gray-900 border-gray-200 shadow-2xl p-2 rounded-lg cursor-pointer",
+        "md:absolute group mb-4 md:mb-0 md:right-20 flex space-x-3 items-center bg-white text-gray-900 border-gray-200 shadow-2xl p-2 rounded-lg cursor-pointer",
         className
       )}
       initial={{

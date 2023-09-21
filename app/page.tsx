@@ -24,26 +24,26 @@ export default async function PlaygroundPage() {
       <Navbar user={user} userDetails={userDetails} />
       <div className="max-w-7xl w-full mx-auto flex flex-col items-center">
         <Column className="w-full items-center min-h-screen">
-          <Column className="items-center pt-28 pb-10 w-full max-w-4xl">
+          <Column className="items-center pt-32 pb-10 max-w-3xl lg:max-w-5xl">
             <Balancer className="text-center">
               <h1 className="text-4xl font-bold">Glyph</h1>
-              <p className="text-lg text-muted-foreground mt-4">
+              <p className="text-lg text-muted-foreground mt-3">
                 Create, captivate, connect. <br />
                 Elevate every scan with Glyph.
               </p>
             </Balancer>
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
-            <Column className="gap-8 w-full px-8 md:px-3">
+            <Column className="gap-8 w-full px-8 md:px-0">
               <Playground user={user} />
             </Column>
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
-            <Column className="w-full items-center justify-start px-8 md:px-3">
+            <Column className="w-full items-center justify-start px-8 md:px-5 lg:px-0">
               <Column className="w-full space-y-1">
                 <p className="text-xl font-semibold">Need inspiration?</p>
                 <p className="text-md text-muted-foreground pb-5">
-                  Select one of the prompts below.
+                  Try out one of the prompts below.
                 </p>
               </Column>
               <ExampleTemplatesSection />
