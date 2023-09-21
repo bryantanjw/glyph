@@ -519,6 +519,9 @@ export default function Playground({ user }) {
                           {status}
                         </Label>
                         <Progress className="w-1/2" value={progress} />
+                        <div className="absolute bottom-4 w-full text-center text-slate-500 text-xs">
+                          Takes 10-25 seconds to generate.
+                        </div>
                       </div>
                     )}
                   </div>

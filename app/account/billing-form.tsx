@@ -132,17 +132,10 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
     <div className="flex flex-col space-y-5 md:space-y-8 max-w-xs md:w-full md:max-w-xl h-[260px] md:h-full">
       <motion.div
         ref={targetRef}
-        className="relative border dark:border-slate-700 border-opacity-10 text-white h-56 md:w-96 p-5 md:p-6 rounded-xl before:rounded-xl shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,0px)_var(--y,0px),gray_0%,_transparent_100%)] before:opacity-30 dark:before:opacity-20 bg-gradient-to-tl from-gray-900 to-gray-800 md:bg-transparent"
+        className="relative border dark:border-slate-700 border-opacity-10 text-white h-56 md:w-96 p-5 md:p-6 rounded-xl before:rounded-xl shadow-2xl before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(circle_farthest-side_at_var(--x,0px)_var(--y,0px),gray_0%,_transparent_100%)] before:opacity-30 dark:before:opacity-20 bg-gradient-to-tl from-gray-900 to-gray-800 md:bg-transparent md:grainy-background"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        // Grainy background
-        style={{
-          backgroundImage: `url(
-      https://grainy-gradients.vercel.app/noise.svg
-    ), linear-gradient(to top left, rgb(31 41 55), rgb(17 24 39))`,
-          backgroundBlendMode: "overlay",
-        }}
       >
         <div className="h-full flex flex-col justify-between">
           <div className="flex items-start justify-between space-x-4">

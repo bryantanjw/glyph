@@ -92,6 +92,11 @@
       background-image: radial-gradient(ellipse 85% 120% at center bottom, rgb(255,255,255,0.2) 0%, rgb(26,41,80) 50%);
     }
   }
+
+  .grainy-background {
+    background-image: url(https://grainy-gradients.vercel.app/noise.svg), linear-gradient(to top left, rgb(31 41 55), rgb(17 24 39));
+    background-blend-mode: overlay;
+  }
 }
 
 .popover-content {
