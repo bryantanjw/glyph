@@ -19,7 +19,6 @@ import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useSupabase } from "@/components/providers/supabase-provider";
@@ -139,7 +138,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const handleSignInWithGoogle = async () => {
     setIsGoogleAuthLoading(true);
 
-    // Add a delay to indicate loading
+    // Add a 1s delay to indicate loading
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const { data, error } = await supabase.auth.signInWithOAuth({

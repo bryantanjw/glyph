@@ -6,12 +6,14 @@ import type { PutBlobResult } from "@vercel/blob";
 import { useState, useEffect } from "react";
 import {
   Cross2Icon,
+  ExternalLinkIcon,
   LockClosedIcon,
   LockOpen1Icon,
   MixerHorizontalIcon,
+  PlusCircledIcon,
   ReloadIcon,
 } from "@radix-ui/react-icons";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -22,10 +24,8 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { SuccessIcon } from "./success-icon";
 import { useToast } from "@/components/ui/use-toast";
@@ -42,25 +42,21 @@ import { NegativePromptField } from "@/components/preset-selectors/negative-prom
 
 import { playgroundFormSchema } from "@/schemas/formSchemas";
 import { Model, models, types } from "@/data/models";
-import { Preset, presets } from "@/data/presets";
+import { Preset } from "@/data/presets";
 import { extractProgress } from "@/utils/helpers";
 import { usePlaygroundForm } from "@/hooks/use-playground-form";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
 import { useRouter } from "next/navigation";
+import { ImageSelector } from "./image-selector";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
-export default function Playground({ user }) {
+export default function Playground({ user, userDetails }) {
   const router = useRouter();
   const form = usePlaygroundForm();
   const { toast } = useToast();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const [file, setFile] = useState<File | null>(null);
-  const [blob, setBlob] = useState<PutBlobResult | null>(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [selectedPreset, setSelectedPreset] = useState<Preset>();
   const [isCustom, setIsCustom] = useState(false);
   const [selectedModel, setSelectedModel] = useState<Model | null>(models[0]);
@@ -69,6 +65,7 @@ export default function Playground({ user }) {
   const [prediction, setPrediction] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("Starting...");
+  const [predictionId, setPredictionId] = useState<string>(null);
 
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
@@ -116,26 +113,46 @@ export default function Playground({ user }) {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  useEffect(() => {
-    // List blob objects from Vercel Blob Storage
-    const getBlobs = async () => {
-      const res = await fetch("/api/blob/get-blobs");
-      const data = await res.json();
-      console.log(data);
-    };
-    getBlobs();
-  }, []);
+  // useEffect(() => {
+  //   // List blob objects from Vercel Blob Storage
+  //   const getBlobs = async () => {
+  //     const res = await fetch("/api/blob/get-blobs");
+  //     const data = await res.json();
+  //     console.log(data);
+  //   };
+  //   getBlobs();
+
+  //   const deleteBlob = async () => {
+  //     const urls = [
+  //       "ADD_URLS_TO_DELETE_HERE",
+  //     ];
+
+  //     const delBlobResponse = await fetch("/api/blob/delete", {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ urls }), // Send the URLs in the request body
+  //     });
+
+  //     if (!delBlobResponse.ok) {
+  //       throw new Error("Failed to delete file");
+  //     }
+  //     console.log("delBlobResponse", delBlobResponse);
+  //   };
+  //   deleteBlob();
+  // }, []);
 
   async function onSubmit(values: z.infer<typeof playgroundFormSchema>) {
-    console.log("values", values);
     setStatus("Starting...");
     setProgress(0);
     setPrediction(null);
     setSubmitting(true);
 
     // Upload image to Vercel Blob Storage
-    try {
-      if (file) {
+    let blob;
+    if (file) {
+      try {
         const blobResponse = await fetch(
           `/api/blob/upload?filename=${file.name}`,
           {
@@ -148,127 +165,150 @@ export default function Playground({ user }) {
           throw new Error("Failed to upload file");
         }
 
-        const blob = (await blobResponse.json()) as PutBlobResult;
-        setBlob(blob);
-      }
-    } catch (error) {
-      console.error(error);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: error.message || "Unknown error",
-      });
-      setSubmitting(false);
-      return;
-    }
-
-    // Make initial request to Lambda function to create a prediction
-    const res = await fetch(
-      "https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...values, userId: user.id }),
-      }
-    );
-
-    const response = await res.json();
-    console.log("response", response);
-
-    if (res.status !== 200 || response.status === "error") {
-      setSubmitting(false);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: response.message || "Unknown error",
-      });
-      return;
-    }
-
-    // Extract the prediction ID from the returned URL for polling
-    const predictionId = response.url.split("/").pop();
-
-    // Poll the API Gateway endpoint for the status using the prediction ID
-    let predictions = null;
-    while (!predictions) {
-      let pollRes = await fetch(
-        `https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions/${predictionId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Token " + process.env.REPLICATE_API_KEY,
-          },
-        }
-      );
-      let pollResponse = await pollRes.json();
-      console.log("pollResponse", pollResponse);
-      const { status, logs } = pollResponse;
-
-      if (status === "processing") {
-        setStatus("Generating...");
-      } else {
-        setStatus(status.charAt(0).toUpperCase() + status.slice(1) + "...");
-      }
-      const progress = extractProgress(logs);
-      if (progress !== null) {
-        setProgress(progress);
-      }
-
-      if (pollResponse.status === "succeeded") {
-        predictions = pollResponse;
-        setPrediction(predictions);
-        setIsSuccess(true);
-        setSubmitting(false);
-        toast({
-          title: "QR Code generated!",
-        });
-      } else if (pollResponse.status === "failed") {
-        setSubmitting(false);
+        blob = (await blobResponse.json()) as PutBlobResult;
+        console.log("blob", blob);
+      } catch (error) {
+        console.error(error);
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
-          description: pollResponse.message || "Image generation failed.",
-          action: (
-            <ToastAction altText="Try again" onClick={retrySubmit}>
-              Try again
-            </ToastAction>
-          ),
+          description: error.message || "Unknown error",
         });
-        break;
-      } else {
-        // Delay to make requests to API Gateway every 3 seconds
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        setSubmitting(false);
+        return;
       }
     }
 
-    // Delete blob object from Vercel Blob Storage
-    // if (blob) {
-    //   try {
-    //     const delBlobResponse = await fetch(
-    //       `/api/blob/delete?url=${blob.url}`,
-    //       {
-    //         method: "POST",
-    //       }
-    //     );
+    if (blob || values.image) {
+      // Make initial request to Lambda function to create a prediction
+      try {
+        const res = await fetch(
+          "https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...values,
+              userId: user.id,
+              image: blob ? blob.url : values.image,
+            }),
+          }
+        );
 
-    //     if (!delBlobResponse.ok) {
-    //       throw new Error("Failed to delete file");
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //     toast({
-    //       variant: "destructive",
-    //       title: "Uh oh! Something went wrong.",
-    //       description: error.message || "Unknown error",
-    //     });
-    //     setSubmitting(false);
-    //     return;
-    //   }
-    // }
+        const response = await res.json();
+        console.log("response", response);
 
+        if (res.status !== 200 || response.status === "error") {
+          if (response.message === "You have insufficient credits.") {
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "You have no credits left.",
+              action: (
+                <ToastAction
+                  altText="Add credits"
+                  onClick={() => {
+                    router.push("/pricing");
+                  }}
+                >
+                  <PlusCircledIcon className="mr-2" /> Add credits
+                </ToastAction>
+              ),
+            });
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: response.message || "Unknown error",
+            });
+          }
+          setSubmitting(false);
+          return;
+        }
+
+        // Extract the prediction ID from the returned URL for polling
+        const predictionId = response.url.split("/").pop();
+        setPredictionId(predictionId);
+      } catch (error) {
+        console.error(error);
+      }
+
+      // Poll the API Gateway endpoint for the status using the prediction ID
+      let predictions = null;
+      while (!predictions) {
+        let pollRes = await fetch(
+          `https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions/${predictionId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Token " + process.env.REPLICATE_API_KEY,
+            },
+          }
+        );
+        let pollResponse = await pollRes.json();
+        console.log("pollResponse", pollResponse);
+        const { status, logs } = pollResponse;
+
+        if (status === "processing") {
+          setStatus("Generating...");
+        } else {
+          setStatus(status.charAt(0).toUpperCase() + status.slice(1) + "...");
+        }
+        const progress = extractProgress(logs);
+        if (progress !== null) {
+          setProgress(progress);
+        }
+
+        if (pollResponse.status === "succeeded") {
+          predictions = pollResponse;
+          setPrediction(predictions);
+          setIsSuccess(true);
+          setSubmitting(false);
+          toast({
+            title: "QR Code generated!",
+          });
+        } else if (pollResponse.status === "failed") {
+          setSubmitting(false);
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: pollResponse.message || "Image generation failed.",
+            action: (
+              <ToastAction altText="Try again" onClick={retrySubmit}>
+                Try again
+              </ToastAction>
+            ),
+          });
+          break;
+        } else {
+          // Delay to make requests to API Gateway every 3 seconds
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
+      }
+
+      // Delete blob object from Vercel Blob Storage after generation
+      if (blob) {
+        try {
+          const delBlobResponse = await fetch(
+            `/api/blob/delete?url=${blob.url}`,
+            {
+              method: "DELETE",
+            }
+          );
+
+          if (!delBlobResponse.ok) {
+            throw new Error("Failed to delete file");
+          }
+          console.log("delBlobResponse", delBlobResponse);
+        } catch (error) {
+          console.error("delBlobResponse", error);
+          setSubmitting(false);
+        }
+      }
+    }
     // After 2 seconds of image generation success, restore button to default state
     setTimeout(() => {
       setIsSuccess(false);
@@ -333,14 +373,11 @@ export default function Playground({ user }) {
               <div className="grid h-full gap-5 lg:grid-cols-[1fr_420px]">
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-col space-y-2">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <Label htmlFor="input">Input</Label>
-                      </div>
+                    <div>
+                      <Label htmlFor="input">Input</Label>
                     </div>
 
                     <PresetSelector
-                      presets={presets}
                       onSelect={(preset) => {
                         setSelectedPreset(preset);
                         form.setValue("prompt", preset.prompt);
@@ -350,8 +387,8 @@ export default function Playground({ user }) {
                         form.setValue("guidance", preset.guidance);
                         form.setValue("strength", preset.strength);
                         form.setValue(
-                          "controlNetConditioning",
-                          preset.controlNetConditioning
+                          "controlnetConditioning",
+                          preset.controlnetConditioning
                         );
                         form.setValue("seed", preset.seed);
                       }}
@@ -376,51 +413,17 @@ export default function Playground({ user }) {
                       )}
                     />
                   </div>
-                  <FormField
-                    name="url"
-                    render={({ field }) => (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <FormItem>
-                              <FormLabel>Website</FormLabel>
-                              <Input
-                                disabled={true}
-                                placeholder="https://glyph.so"
-                              />
-                            </FormItem>
-                          </TooltipTrigger>
-                          <TooltipContent side="bottom">
-                            Custom domains are coming soon!
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
+
+                  <ImageSelector
+                    file={file}
+                    setFile={setFile}
+                    selectedImage={selectedImage}
+                    setSelectedImage={setSelectedImage}
+                    onSelect={(image) => {
+                      setSelectedImage(image);
+                      form.setValue("image", image.url);
+                    }}
                   />
-                  {/* <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Image</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="file"
-                            onChange={(event) => {
-                              console.log("file", file);
-                              setFile(event.target.files[0]);
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  /> */}
-                  {/* {blob && (
-                    <div>
-                      Blob url: <a href={blob.url}>{blob.url}</a>
-                    </div>
-                  )} */}
 
                   <div className="flex flex-row items-center space-x-2">
                     {isSuccess ? (
@@ -497,20 +500,39 @@ export default function Playground({ user }) {
                 </div>
 
                 {prediction && prediction.output ? (
-                  <Link
-                    href={prediction.output[prediction.output.length - 1]}
-                    target="_blank"
-                  >
-                    <div className="bg-muted rounded-md border md:hover:bg-transparent md:hover:border-0 duration-150 ease-in-out mx-auto">
-                      <Image
-                        alt="QR Code"
-                        src={prediction.output[prediction.output.length - 1]}
-                        width={768}
-                        height={768}
-                        quality={100}
-                      />
-                    </div>
-                  </Link>
+                  <Dialog>
+                    <DialogTrigger>
+                      <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto">
+                        <Image
+                          alt="Glyph image output"
+                          src={prediction.output[prediction.output.length - 1]}
+                          width={768}
+                          height={768}
+                          quality={100}
+                        />
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <figure className={"aspect-square"}>
+                        <Image
+                          fill={true}
+                          loading={"eager"}
+                          alt="Glyph image output"
+                          src={prediction.output[prediction.output.length - 1]}
+                          quality={100}
+                        />
+                      </figure>
+                      <Link
+                        href={prediction.output[prediction.output.length - 1]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute right-12 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                      >
+                        <ExternalLinkIcon className="h-4 w-4" />
+                        <span className="sr-only">External Link</span>
+                      </Link>
+                    </DialogContent>
+                  </Dialog>
                 ) : (
                   <div className="min-h-[300px] min-w-[320px] md:min-h-[420px] md:min-w-[420px] rounded-md border bg-muted relative mx-auto">
                     {isSubmitting && (
@@ -520,7 +542,7 @@ export default function Playground({ user }) {
                         </Label>
                         <Progress className="w-1/2" value={progress} />
                         <div className="absolute bottom-4 w-full text-center text-slate-500 text-xs">
-                          Takes 10-25 seconds to generate.
+                          Takes 8-20 seconds to generate.
                         </div>
                       </div>
                     )}

@@ -7,28 +7,20 @@ export interface Preset {
   inferenceStep: number;
   guidance?: number;
   strength?: number;
-  controlNetConditioning?: number;
+  controlnetConditioning?: number;
   seed?: number;
 }
 
 const negativePrompt = "ugly, disfigured, low quality, blurry, nsfw";
 const seed = -1;
+const controlnetConditioning = 2.1;
+const guidance = 9.5;
 const height = 768;
 const width = 768;
 const qrcode_background = "white";
 const border = 1;
 
 export const presets: Preset[] = [
-  {
-    id: "1",
-    modelVersion:
-      "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
-    name: "Anime",
-    negativePrompt,
-    prompt: "test",
-    inferenceStep: 30,
-    seed,
-  },
   {
     id: "2",
     modelVersion:
@@ -38,7 +30,7 @@ export const presets: Preset[] = [
     negativePrompt,
     inferenceStep: 55,
     guidance: 13,
-    controlNetConditioning: 2.2,
+    controlnetConditioning: 2.2,
     seed,
   },
   {
@@ -51,7 +43,7 @@ export const presets: Preset[] = [
     negativePrompt,
     inferenceStep: 30,
     guidance: 11,
-    controlNetConditioning: 2.1,
+    controlnetConditioning: 2.1,
     seed,
   },
   {
@@ -65,7 +57,7 @@ export const presets: Preset[] = [
       "lowres, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, malformed mouth, malformed face, sunglasses, sitting, multiple faces, Watermark, Text, censored, deformed, bad anatomy, disfigured, poorly drawn face, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, disconnected head, malformed hands, long neck, mutated hands and fingers, bad hands, missing fingers, cropped, worst quality, low quality, mutation, poorly drawn, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, missing fingers, fused fingers, abnormal eye proportion, Abnormal hands, abnormal legs, abnormal feet, abnormal fingers",
     inferenceStep: 40,
     guidance: 11.5,
-    controlNetConditioning: 2.3,
+    controlnetConditioning: 2.3,
     seed,
   },
   {
@@ -79,7 +71,7 @@ export const presets: Preset[] = [
       "(worst quality, poor details:1.4), lowres, (artist name, signature, watermark:1.4), bad-artist-anime, bad_prompt_version2,  bad-hands-5, ng_deepnegative_v1_75t",
     inferenceStep: 20,
     guidance: 7.5,
-    controlNetConditioning: 1.5,
+    controlnetConditioning: 1.5,
     seed: 2145122936,
   },
   {
@@ -93,7 +85,7 @@ export const presets: Preset[] = [
     inferenceStep: 40,
     seed,
     guidance: 12,
-    controlNetConditioning: 2.2,
+    controlnetConditioning: 2.2,
   },
   {
     id: "7",
@@ -102,6 +94,8 @@ export const presets: Preset[] = [
     name: "Neo Aztec",
     prompt: "a townhouse inspired by aztec architecture on a sunny day",
     negativePrompt,
+    guidance,
+    controlnetConditioning,
     inferenceStep: 30,
     seed,
   },
@@ -113,13 +107,15 @@ export const presets: Preset[] = [
     prompt:
       "forestpunk, green pastures, lush environment, vivid colors, animation by studio ghibli",
     negativePrompt,
+    guidance,
+    controlnetConditioning,
     inferenceStep: 30,
     seed,
   },
   {
     id: "9",
     modelVersion:
-      "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
+      "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     name: "Futuristic",
     prompt:
       "aerial view, a futuristic research complex in a bright foggy jungle, hard lighting",
@@ -127,7 +123,7 @@ export const presets: Preset[] = [
     inferenceStep: 80,
     guidance: 12,
     strength: 0.85,
-    controlNetConditioning: 1.2,
+    controlnetConditioning: 1.4,
     seed,
   },
   {
@@ -139,7 +135,7 @@ export const presets: Preset[] = [
     negativePrompt,
     inferenceStep: 40,
     guidance: 7.5,
-    controlNetConditioning: 2.2,
+    controlnetConditioning: 2.2,
     seed,
   },
   {
@@ -149,6 +145,8 @@ export const presets: Preset[] = [
     name: "Japanese fusion",
     prompt: "Japanese painting, mountains, 1girl",
     negativePrompt,
+    guidance,
+    controlnetConditioning: 1.2,
     inferenceStep: 30,
     seed,
   },

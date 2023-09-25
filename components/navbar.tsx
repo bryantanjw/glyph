@@ -91,8 +91,10 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
     <div>
       <div
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 lg:px-8 sm:flex-row h-14 backdrop-blur-md border-b border-b-opacity-50 bg-transparent dark:text-white",
-          page === "pricing" ? "text-white border-slate-800" : "text-black",
+          "fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 lg:px-8 sm:flex-row h-14 backdrop-blur-md border-b border-opacity-20 bg-transparent dark:text-white",
+          page === "pricing"
+            ? "text-white border-slate-800"
+            : "text-black border-slate-500",
           isWhiteSectionInView && "text-black border-slate-200"
         )}
       >

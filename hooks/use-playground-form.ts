@@ -12,12 +12,12 @@ export function usePlaygroundForm() {
       prompt: "",
       url: "https://glyph.so",
       image:
-        "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Glyph_QR-4SnbMgp1uJIaw8nPw9m9KNNkDGkSgY.png",
+        "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Glyph_QR-jPjQUqTP5VN05X9jLsv0PZWX7TAgeA.png",
       negativePrompt: "ugly, disfigured, low quality, blurry, nsfw",
-      inferenceStep: 30,
+      inferenceStep: 20,
       guidance: 9.5,
       strength: 0.85,
-      controlNetConditioning: 1.8,
+      controlnetConditioning: 1.3,
       seed: -1,
     },
   });

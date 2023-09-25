@@ -24,7 +24,7 @@ export function ControlNetConditioningSelector({
 }: ControlNetConditioningSelectorProps) {
   const { value, handleSliderChange } = useSliderChange(
     form,
-    "controlNetConditioning"
+    "controlnetConditioning"
   );
 
   return (

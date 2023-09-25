@@ -45,20 +45,7 @@ export default function ImageItem({ image, alt, ar }: Image) {
       </figure>
       <DialogContent className="max-w-2xl">
         <figure className={clsx("aspect-square")}>
-          <Image
-            fill={true}
-            loading={"eager"}
-            alt={alt}
-            src={image}
-            className={clsx(
-              "object-cover duration-700 ease-in-out group-hover:cursor-pointer group-hover:opacity-90",
-              isLoading
-                ? "scale-120 blur-3xl grayscale"
-                : "scale-100 blur-0 grayscale-0"
-            )}
-            onLoadingComplete={() => setIsLoading(false)}
-            quality={100}
-          />
+          <Image loading={"eager"} alt={alt} src={image} quality={100} />
         </figure>
       </DialogContent>
     </Dialog>

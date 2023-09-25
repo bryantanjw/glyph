@@ -17,7 +17,7 @@ export const playgroundFormSchema = z.object({
   inferenceStep: z.number().optional(),
   guidance: z.number().optional(),
   strength: z.number().optional(),
-  controlNetConditioning: z.number().optional(),
+  controlnetConditioning: z.number().optional(),
   seed: z.number().optional(),
 });
 

@@ -15,3 +15,20 @@ export async function DELETE(request: Request) {
     return new Response(error, { status: 500 });
   }
 }
+
+/*
+ * To delete an array of blob URLs
+ */
+// export async function DELETE(request: Request) {
+//   const body = await request.json();
+//   const urlsToDelete = body.urls;
+
+//   try {
+//     const deletePromises = urlsToDelete.map((url) => del(url));
+//     await Promise.all(deletePromises);
+//     return new Response();
+//   } catch (error) {
+//     console.log("blob/delete error", error);
+//     return new Response(error, { status: 500 });
+//   }
+// }

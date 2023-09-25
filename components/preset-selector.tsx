@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PopoverProps } from "@radix-ui/react-popover";
 
@@ -22,16 +21,14 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { Preset } from "@/data/presets";
+import { Preset, presets } from "@/data/presets";
 
 interface PresetSelectorProps extends PopoverProps {
-  presets: Preset[];
   onSelect: (preset: Preset) => void;
   selectedPreset: Preset | null;
 }
 
 export function PresetSelector({
-  presets,
   selectedPreset,
   ...props
 }: PresetSelectorProps) {

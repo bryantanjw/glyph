@@ -35,13 +35,13 @@ export default async function PlaygroundPage() {
               </div>
               <p className="text-lg text-muted-foreground mt-3">
                 Create, captivate, connect. <br />
-                Elevate every scan with Glyph.
+                Elevate your brand with Glyph.
               </p>
             </Balancer>
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
             <Column className="gap-8 w-full px-8 md:px-0">
-              <Playground user={user} />
+              <Playground user={user} userDetails={userDetails} />
             </Column>
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
