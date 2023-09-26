@@ -1,13 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { Column } from "@/components/ui/column";
 import { Row } from "@/components/ui/row";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 
 import { Preset, presets } from "@/data/presets";
+import Image from "next/image";
+import { Button } from "./ui/button";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { ScrollArea } from "./ui/scroll-area";
+import clsx from "clsx";
 
 type SeeExampleOutputDialogProps = {
   item: any;
@@ -25,9 +29,9 @@ function Item({ item, onSelectExample }: ItemProps) {
       onClick={() => {
         onSelectExample(item);
       }}
-      className="group min-w-[256px] w-[256px] border flex items-center justify-center border-primary/20 rounded p-4 cursor-pointer hover:border-muted-foreground hover:shadow-md transition-colors"
+      className="group min-w-[256px] w-[256px] border flex items-center justify-center border-primary/20 rounded p-4 cursor-pointer hover:border-muted-foreground hover:shadow-md transition-colors duration-500"
     >
-      <p className="group-hover:text-slate-800 text-sm text-primary/70 line-clamp-2 leading-tight">
+      <p className="group-hover:text-slate-900 dark:group-hover:text-slate-100 text-sm text-primary/70 line-clamp-2 leading-tight duration-500">
         {item?.prompt}
       </p>
     </div>
@@ -38,16 +42,63 @@ const SeeExampleOutputDialog = ({
   item,
   setOpen,
 }: SeeExampleOutputDialogProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <Dialog open={!!item} onOpenChange={setOpen}>
-      <DialogContent className="!pt-[50px] data-[state=open]:animate-contentShow flex flex-col items-start fixed left-[50%] top-[50%] w-[100vw] max-h-[85vh] min-h-[30vh] sm:w-[100vw] max-w-5xl -translate-x-1/2 -translate-y-1/2 border p-[25px] focus:outline-none">
-        <p>{item?.prompt}</p>
-        <div className="relative scrollbar-hide max-h-[400px] overflow-auto shadow-sm min-h-[350px] border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 w-full rounded-lg p-1">
-          <div className="absolute right-3 top-3 flex items-center justify-end">
-            <Badge variant={"outline"}>{item?.output?.length} items</Badge>
+      <DialogContent className="!pt-[42px] max-w-sm md:max-w-4xl md:max-h-4xl">
+        <div className="flex flex-col md:flex-row w-full gap-5">
+          <div className="w-full  md:w-1/2">
+            <ScrollArea className="aspect-square h-[250px] md:h-full relative shadow-sm border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 w-full rounded-lg">
+              <div className="space-y-2 p-4">
+                {item &&
+                  Object.keys(item).map((key) => {
+                    if (
+                      key !== "id" &&
+                      key !== "modelVersion" &&
+                      key !== "name" &&
+                      key !== "exampleImage" &&
+                      key !== "category"
+                    ) {
+                      return (
+                        <p key={key} className="text-sm">
+                          <span className="font-semibold">{key}:</span>{" "}
+                          {JSON.stringify(item[key], null, 2)}
+                        </p>
+                      );
+                    }
+                    return null;
+                  })}
+              </div>
+            </ScrollArea>
           </div>
-          <code>{JSON.stringify(item?.output, null, 2)}</code>
+          <div className="w-full md:w-1/2">
+            <div className="relative scrollbar-hide overflow-auto shadow-sm border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 w-full rounded-lg p-1">
+              <figure className={"aspect-square"}>
+                <Image
+                  loading="lazy"
+                  priority={false}
+                  className={clsx(
+                    "object-cover duration-700 ease-in-out",
+                    isLoading
+                      ? "scale-120 blur-3xl grayscale"
+                      : "scale-100 blur-0 grayscale-0"
+                  )}
+                  src={item?.exampleImage}
+                  fill={true}
+                  alt="Example Image"
+                  onLoadingComplete={() => setIsLoading(false)}
+                />
+              </figure>
+            </div>
+          </div>
         </div>
+        <Row className="justify-end">
+          <Button className="items-center gap-2">
+            <CheckIcon />
+            Apply
+          </Button>
+        </Row>
       </DialogContent>
     </Dialog>
   );

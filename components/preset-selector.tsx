@@ -57,7 +57,7 @@ export function PresetSelector({
               <CommandGroup heading="Examples">
                 {presets.map((preset) => (
                   <CommandItem
-                    key={preset.id}
+                    key={preset.name}
                     onSelect={() => {
                       props.onSelect(preset);
                       setOpen(false);
@@ -67,7 +67,7 @@ export function PresetSelector({
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",
-                        selectedPreset?.id === preset.id
+                        selectedPreset?.name === preset.name
                           ? "opacity-100"
                           : "opacity-0"
                       )}

@@ -1,6 +1,6 @@
 const CATEGORY = [
   { title: "QR Code", value: "qr" },
-  { title: "Pattern", value: "pattern" },
+  { title: "Subliminal", value: "subliminal" },
 ];
 
 const RATIOS = [

@@ -1,14 +1,15 @@
 export interface Preset {
   modelVersion: string;
-  negativePrompt?: string;
-  id: string;
+  category: string;
   name: string;
   prompt: string;
+  negativePrompt?: string;
   inferenceStep: number;
   guidance?: number;
   strength?: number;
   controlnetConditioning?: number;
   seed?: number;
+  exampleImage?: string;
 }
 
 const negativePrompt = "ugly, disfigured, low quality, blurry, nsfw";
@@ -22,9 +23,9 @@ const border = 1;
 
 export const presets: Preset[] = [
   {
-    id: "2",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Cyberpunk anime",
     prompt: "A cyberpunk alleyway, anime, tokyo 2050",
     negativePrompt,
@@ -32,24 +33,28 @@ export const presets: Preset[] = [
     guidance: 13,
     controlnetConditioning: 2.2,
     seed,
+    exampleImage:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/293603ea3467f1656330b721d498aacd56d409ee-768x768.png",
   },
   {
-    id: "3",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
-    name: "Mechanical Girl",
+    category: "QR",
+    name: "Andreas Rocha cubism",
     prompt:
-      "1mechanical girl,ultra realistic details, portrait, global illumination, shadows, octane render, 8k, ultra sharp,intricate, ornaments detailed, cold colors, metal, egypician detail, highly intricate details, realistic light, trending on cgsociety, glowing eyes, facing camera, neon details, machanical limbs,blood vessels connected to tubes,mechanical vertebra attaching to back,mechanical cervial attaching to neck,sitting,wires and cables connecting to head",
+      "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting",
     negativePrompt,
-    inferenceStep: 30,
-    guidance: 11,
-    controlnetConditioning: 2.1,
+    inferenceStep: 50,
+    guidance: 7.5,
+    controlnetConditioning: 1.0,
     seed,
+    exampleImage:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/fcac945b61f9b3c5eabc8f22c6919adbb46903a9-768x768.png",
   },
   {
-    id: "4",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Studio Ghibli anime",
     prompt:
       "portrait of cute girl, cloudy sky background lush landscape illustration concept art anime key visual trending pixiv fanbox by wlop and greg rutkowski and makoto shinkai and studio ghibli",
@@ -59,11 +64,13 @@ export const presets: Preset[] = [
     guidance: 11.5,
     controlnetConditioning: 2.3,
     seed,
+    exampleImage:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/f686c0af6278698995fe912fee1ef9279c993ee1-768x768.png",
   },
   {
-    id: "5",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "Subliminal",
     name: "Medieval",
     prompt:
       "Medieval village scene with busy streets and castle in the distance",
@@ -73,11 +80,13 @@ export const presets: Preset[] = [
     guidance: 7.5,
     controlnetConditioning: 1.5,
     seed: 2145122936,
+    exampleImage:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/708531aadd0e4bba0608ae8d74aa3703603c84ea-768x768.png",
   },
   {
-    id: "6",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Abstract art",
     prompt:
       "abstract art, non-representative, non-figurative, abstract expressionism, cubist, modern art, geometric, minimalism, surreal, avant-garde ",
@@ -88,9 +97,9 @@ export const presets: Preset[] = [
     controlnetConditioning: 2.2,
   },
   {
-    id: "7",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Neo Aztec",
     prompt: "a townhouse inspired by aztec architecture on a sunny day",
     negativePrompt,
@@ -100,9 +109,9 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "8",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Forestpunk",
     prompt:
       "forestpunk, green pastures, lush environment, vivid colors, animation by studio ghibli",
@@ -113,9 +122,9 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    id: "9",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Futuristic",
     prompt:
       "aerial view, a futuristic research complex in a bright foggy jungle, hard lighting",
@@ -125,11 +134,13 @@ export const presets: Preset[] = [
     strength: 0.85,
     controlnetConditioning: 1.4,
     seed,
+    exampleImage:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/d7316dd8f258780e011b5ccc292d78f2cbaa44cb-1024x1024.png",
   },
   {
-    id: "10",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Darthouven Fish Men",
     prompt: "Darthouven Fish Men",
     negativePrompt,
@@ -137,17 +148,21 @@ export const presets: Preset[] = [
     guidance: 7.5,
     controlnetConditioning: 2.2,
     seed,
+    exampleImage:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/4197c26893fb2d7f99fe77931d4275809336a4f3-768x768.png",
   },
   {
-    id: "11",
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+    category: "QR",
     name: "Japanese fusion",
-    prompt: "Japanese painting, mountains, 1girl",
+    prompt: "Japanese painting, mountains",
     negativePrompt,
     guidance,
     controlnetConditioning: 1.2,
     inferenceStep: 30,
     seed,
+    exampleImage:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/5be6c4ddbebdc7dfa14b2d0ecc1e61b0f8ea7452-768x768.png",
   },
 ];

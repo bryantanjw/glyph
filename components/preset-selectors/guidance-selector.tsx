@@ -40,7 +40,7 @@ export function GuidanceSelector({ form }: GuidanceSelectorProps) {
               max={30}
               min={0.5}
               value={[value]}
-              step={0.5}
+              step={0.1}
               onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
               aria-label="Guidance"

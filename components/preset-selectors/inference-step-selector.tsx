@@ -38,6 +38,7 @@ export function InferenceStepSelector({ form }: InferenceStepSelectorProps) {
             <Slider
               id="inferenceStep"
               max={100}
+              min={20}
               value={[value]}
               step={2}
               onValueChange={handleSliderChange}

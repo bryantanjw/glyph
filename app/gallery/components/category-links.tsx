@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const categories = [
   { _id: 1, category: "qr" },
-  { _id: 2, category: "pattern" },
+  { _id: 2, category: "subliminal" },
 ];
 
 export default function CategoryLinks() {

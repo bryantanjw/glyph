@@ -65,7 +65,6 @@ export default function Playground({ user, userDetails }) {
   const [prediction, setPrediction] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("Starting...");
-  const [predictionId, setPredictionId] = useState<string>(null);
 
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
@@ -181,63 +180,58 @@ export default function Playground({ user, userDetails }) {
 
     if (blob || values.image) {
       // Make initial request to Lambda function to create a prediction
-      try {
-        const res = await fetch(
-          "https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...values,
-              userId: user.id,
-              image: blob ? blob.url : values.image,
-            }),
-          }
-        );
-
-        const response = await res.json();
-        console.log("response", response);
-
-        if (res.status !== 200 || response.status === "error") {
-          if (response.message === "You have insufficient credits.") {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "You have no credits left.",
-              action: (
-                <ToastAction
-                  altText="Add credits"
-                  onClick={() => {
-                    router.push("/pricing");
-                  }}
-                >
-                  <PlusCircledIcon className="mr-2" /> Add credits
-                </ToastAction>
-              ),
-            });
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: response.message || "Unknown error",
-            });
-          }
-          setSubmitting(false);
-          return;
+      const res = await fetch(
+        "https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...values,
+            userId: user.id,
+            image: blob ? blob.url : values.image,
+          }),
         }
+      );
 
-        // Extract the prediction ID from the returned URL for polling
-        const predictionId = response.url.split("/").pop();
-        setPredictionId(predictionId);
-      } catch (error) {
-        console.error(error);
+      const response = await res.json();
+      console.log("response", response);
+
+      if (res.status !== 200 || response.status === "error") {
+        if (response.message === "You have insufficient credits.") {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "You have no credits left.",
+            action: (
+              <ToastAction
+                altText="Add credits"
+                onClick={() => {
+                  router.push("/pricing");
+                }}
+              >
+                <PlusCircledIcon className="mr-2" /> Add credits
+              </ToastAction>
+            ),
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: response.message || "Unknown error",
+          });
+        }
+        setSubmitting(false);
+        return;
       }
+
+      // Extract the prediction ID from the returned URL for polling
+      const predictionId = response.url.split("/").pop();
 
       // Poll the API Gateway endpoint for the status using the prediction ID
       let predictions = null;
-      while (!predictions) {
+      while (!predictions && predictionId) {
         let pollRes = await fetch(
           `https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions/${predictionId}`,
           {
