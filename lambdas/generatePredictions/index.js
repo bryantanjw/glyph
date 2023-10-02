@@ -6,16 +6,16 @@
  *
  * Input:
  * - event.body: Contains parameters for the prediction process.
- *   {
- *     prompt,
- *     url,
- *     negativePrompt,
- *     inferenceStep,
- *     guidance,
- *     strength,
- *     controlnetConditioning,
- *     seed
- *   }
+ *  {
+ *    prompt,
+ *    url,
+ *    negativePrompt,
+ *    inferenceStep,
+ *    guidance,
+ *    strength,
+ *    controlnetConditioning,
+ *    seed
+ *  }
  *
  * Output:
  * - Success: Returns a status 'polling' with a URL to poll for the result.
@@ -43,17 +43,43 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// Create a new ratelimiter, that allows 5 requests per 30 minutes
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(5, "30 m"),
-  analytics: true,
-  prefix: "@upstash/ratelimit",
-});
+// Create a new ratelimiters for each subscription tier
+const ratelimits = {
+  free: new Ratelimit({
+    redis,
+    analytics: true,
+    prefix: "ratelimit:free",
+    limiter: Ratelimit.slidingWindow(10, "5 m"),
+  }),
+  starter: new Ratelimit({
+    redis,
+    analytics: true,
+    prefix: "ratelimit:starter",
+    limiter: Ratelimit.slidingWindow(5, "10 m"),
+  }),
+  pro: new Ratelimit({
+    redis,
+    analytics: true,
+    prefix: "ratelimit:pro",
+    limiter: Ratelimit.slidingWindow(20, "5 m"),
+  }),
+  psycho: new Ratelimit({
+    redis,
+    analytics: true,
+    prefix: "ratelimit:psycho",
+    limiter: Ratelimit.slidingWindow(50, "5 m"),
+  }),
+};
+
+// Mapping of subscription tier ids to ratelimit keys
+const subscriptionTierToRateLimitKey = {
+  price_1NoP2HLr4ehzJMlIpmWs1lFR: "psycho",
+  price_1NoP0ALr4ehzJMlIThL2H2pe: "pro",
+  price_1NoOQ2Lr4ehzJMlIYHjD193o: "starter",
+};
 
 const deductCredits = async (userId, creditsToDeduct) => {
-  console.log("userId", userId);
-  // Get the user's current credits
+  console.log("userId", userId); // Get the user's current credits
   const { data: user, error: getUserError } = await supabaseAdmin
     .from("users")
     .select("credits")
@@ -63,12 +89,10 @@ const deductCredits = async (userId, creditsToDeduct) => {
   if (getUserError) {
     console.error("Error getting user:", getUserError);
     throw new Error("Error getting user");
-  }
+  } // Calculate the new credits
 
-  // Calculate the new credits
-  const newCredits = (user.credits || 0) - creditsToDeduct;
+  const newCredits = (user.credits || 0) - creditsToDeduct; // Update the user's credits
 
-  // Update the user's credits
   const { error: updateUserError } = await supabaseAdmin
     .from("users")
     .update({ credits: newCredits })
@@ -100,12 +124,15 @@ export const handler = async (event) => {
       controlnetConditioning,
       seed,
       userId,
-    } = req;
+      subscription_tier,
+    } = req; // Use a constant string to limit all requests with a single ratelimit // Or use a userID, apiKey or ip address for individual limits.
 
-    // Use a constant string to limit all requests with a single ratelimit
-    // Or use a userID, apiKey or ip address for individual limits.
-    const identifier = "ip address";
-    const { success } = await ratelimit.limit(identifier);
+    const identifier = subscription_tier ? "ip address" : userId; // Select the appropriate rate limiter based on the subscription tier
+    const ratelimiter =
+      ratelimits[subscriptionTierToRateLimitKey[subscription_tier]] ||
+      ratelimits.free;
+    console.log("subscription tier", ratelimiter.prefix);
+    const { success } = await ratelimiter.limit(identifier);
 
     if (!success) {
       return {
@@ -116,9 +143,8 @@ export const handler = async (event) => {
           message: "You've exceeded your tier limit. Please try again later.",
         }),
       };
-    }
+    } // POST request to Replicate to start the image restoration generation process
 
-    // POST request to Replicate to start the image restoration generation process
     let startResponse = await fetch(
       "https://api.replicate.com/v1/predictions",
       {
@@ -150,9 +176,8 @@ export const handler = async (event) => {
     }
 
     let jsonStartResponse = await startResponse.json();
-    let endpointUrl = jsonStartResponse.urls.get;
+    let endpointUrl = jsonStartResponse.urls.get; // Return immediately with a "polling" status and the URL to poll for the result
 
-    // Return immediately with a "polling" status and the URL to poll for the result
     if (endpointUrl) {
       // Deduct one credit from the user
       await deductCredits(userId, 1);

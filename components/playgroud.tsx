@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { PutBlobResult } from "@vercel/blob";
 import { useState, useEffect } from "react";
@@ -29,9 +30,11 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { SuccessIcon } from "./success-icon";
 import { useToast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { ToastAction } from "@/components/ui/toast";
 import { Toggle } from "./ui/toggle";
 
+import { ImageSelector } from "./image-selector";
 import { PresetSelector } from "./preset-selector";
 import { ModelSelector } from "@/components/preset-selectors/model-selector";
 import { InferenceStepSelector } from "@/components/preset-selectors/inference-step-selector";
@@ -45,11 +48,8 @@ import { Model, models, types } from "@/data/models";
 import { Preset } from "@/data/presets";
 import { extractProgress } from "@/utils/helpers";
 import { usePlaygroundForm } from "@/hooks/use-playground-form";
-import { useRouter } from "next/navigation";
-import { ImageSelector } from "./image-selector";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
-export default function Playground({ user, userDetails }) {
+export default function Playground({ user, userDetails, subscription }) {
   const router = useRouter();
   const form = usePlaygroundForm();
   const { toast } = useToast();
@@ -191,6 +191,7 @@ export default function Playground({ user, userDetails }) {
             ...values,
             userId: user.id,
             image: blob ? blob.url : values.image,
+            subscription_tier: subscription?.price_id,
           }),
         }
       );

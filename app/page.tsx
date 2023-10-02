@@ -41,7 +41,11 @@ export default async function PlaygroundPage() {
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
             <Column className="gap-8 w-full px-8 md:px-0">
-              <Playground user={user} userDetails={userDetails} />
+              <Playground
+                user={user}
+                userDetails={userDetails}
+                subscription={subscription}
+              />
             </Column>
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
