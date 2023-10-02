@@ -6,16 +6,17 @@
  *
  * Input:
  * - event.body: Contains parameters for the prediction process.
- *  {
- *    prompt,
- *    url,
- *    negativePrompt,
- *    inferenceStep,
- *    guidance,
- *    strength,
- *    controlnetConditioning,
- *    seed
- *  }
+ *   {
+ *     prompt,
+ *     url,
+ *    image,
+ *     negativePrompt,
+ *     inferenceStep,
+ *     guidance,
+ *     strength,
+ *     controlnetConditioning,
+ *     seed
+ *   }
  *
  * Output:
  * - Success: Returns a status 'polling' with a URL to poll for the result.
@@ -37,12 +38,19 @@ import { createClient } from "@supabase/supabase-js";
 import { Ratelimit } from "@upstash/ratelimit";
 import redis from "./utils/redis.js";
 
+const REPLICATE_API_URL = "https://api.replicate.com/v1/predictions";
+const MODEL_VERSION_1 =
+  "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b";
+const MODEL_VERSION_2 =
+  "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4";
+
 // Initialize Supabase admin client
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+// Create a new ratelimiter, that allows 30 requests per 10 minutes
 // Create a new ratelimiters for each subscription tier
 const ratelimits = {
   free: new Ratelimit({
@@ -73,35 +81,27 @@ const ratelimits = {
 
 // Mapping of subscription tier ids to ratelimit keys
 const subscriptionTierToRateLimitKey = {
-  price_1NoP2HLr4ehzJMlIpmWs1lFR: "psycho",
-  price_1NoP0ALr4ehzJMlIThL2H2pe: "pro",
-  price_1NoOQ2Lr4ehzJMlIYHjD193o: "starter",
+  price_1NuJ60Lr4ehzJMlIGSSNFUHY: "psycho",
+  price_1NuJ5xLr4ehzJMlIZ0p87pNK: "pro",
+  price_1NuJ5qLr4ehzJMlI27gBJqye: "starter",
 };
 
-const deductCredits = async (userId, creditsToDeduct) => {
-  console.log("userId", userId); // Get the user's current credits
-  const { data: user, error: getUserError } = await supabaseAdmin
-    .from("users")
-    .select("credits")
-    .eq("id", userId)
-    .single();
-
-  if (getUserError) {
-    console.error("Error getting user:", getUserError);
-    throw new Error("Error getting user");
-  } // Calculate the new credits
-
-  const newCredits = (user.credits || 0) - creditsToDeduct; // Update the user's credits
-
-  const { error: updateUserError } = await supabaseAdmin
-    .from("users")
-    .update({ credits: newCredits })
-    .eq("id", userId);
-  console.log("Deducted credits from user:", userId);
-
-  if (updateUserError) {
-    console.error("Error deducting user credits:", updateUserError);
-    throw new Error("Error deducting user credits");
+const makeRequest = async (modelVersion, input) => {
+  try {
+    return await fetch(REPLICATE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + process.env.REPLICATE_API_KEY,
+      },
+      body: JSON.stringify({
+        version: modelVersion,
+        input,
+      }),
+    });
+  } catch (error) {
+    console.error("Error making request:", error);
+    return null;
   }
 };
 
@@ -113,25 +113,50 @@ export const handler = async (event) => {
 
   try {
     const req = JSON.parse(event.body);
-    console.log("req " + req);
+    console.log("req ", JSON.stringify(req, null, 2));
     const {
+      modelVersion,
       prompt,
       url,
+      image,
       negativePrompt,
       inferenceStep,
+      controlnetConditioning,
       guidance,
       strength,
-      controlnetConditioning,
       seed,
       userId,
       subscription_tier,
-    } = req; // Use a constant string to limit all requests with a single ratelimit // Or use a userID, apiKey or ip address for individual limits.
+    } = req; // Get the user's current credits
+
+    const { data: user, error: getUserError } = await supabaseAdmin
+      .from("users")
+      .select("credits")
+      .eq("id", userId)
+      .single();
+
+    if (getUserError) {
+      console.error("Error getting user:", getUserError);
+      throw new Error("Error getting user");
+    } // Check if the user has sufficient credits
+
+    if (user.credits <= 0) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          status: "error",
+          message: "You have insufficient credits.",
+        }),
+      };
+    } // Use a constant string to limit all requests with a single ratelimit // Or use a userID, apiKey or ip address for individual limits.
 
     const identifier = subscription_tier ? "ip address" : userId; // Select the appropriate rate limiter based on the subscription tier
     const ratelimiter =
       ratelimits[subscriptionTierToRateLimitKey[subscription_tier]] ||
       ratelimits.free;
     console.log("subscription tier", ratelimiter.prefix);
+
     const { success } = await ratelimiter.limit(identifier);
 
     if (!success) {
@@ -145,34 +170,33 @@ export const handler = async (event) => {
       };
     } // POST request to Replicate to start the image restoration generation process
 
-    let startResponse = await fetch(
-      "https://api.replicate.com/v1/predictions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Token " + process.env.REPLICATE_API_KEY,
-        },
-        body: JSON.stringify({
-          version:
-            "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
-          input: {
-            prompt,
-            qr_code_content: url,
-            negative_prompt: negativePrompt,
-            num_inference_steps: inferenceStep,
-            guidance_scale: guidance,
-            seed,
-            strength,
-            controlnet_conditioning_scale: controlnetConditioning,
-            batch_size: 1,
-          },
-        }),
-      }
-    );
+    let startResponse = null;
+    const input = {
+      prompt,
+      qr_code_content: url,
+      image,
+      negative_prompt: negativePrompt,
+      num_inference_steps: inferenceStep,
+      guidance_scale: guidance,
+      controlnet_conditioning_scale: controlnetConditioning,
+      num_outputs: 1,
+      seed,
+      qrcode_background: "white",
+      border: 4,
+      width: 768,
+      height: 768,
+    };
+
+    if (modelVersion === MODEL_VERSION_1) {
+      startResponse = await makeRequest(modelVersion, input);
+    } else if (modelVersion === MODEL_VERSION_2) {
+      input.strength = strength;
+      input.batch_size = 1;
+      startResponse = await makeRequest(modelVersion, input);
+    }
 
     if (!startResponse.ok) {
-      throw new Error(`HTTP error! status: ${startResponse.status}`);
+      throw new Error(`HTTP error! status: ${startResponse.statusText}`);
     }
 
     let jsonStartResponse = await startResponse.json();
@@ -180,7 +204,16 @@ export const handler = async (event) => {
 
     if (endpointUrl) {
       // Deduct one credit from the user
-      await deductCredits(userId, 1);
+      const newCredits = (user.credits || 0) - 1;
+      const { error: updateUserError } = await supabaseAdmin
+        .from("users")
+        .update({ credits: newCredits })
+        .eq("id", userId);
+
+      if (updateUserError) {
+        console.error("Error deducting user credits:", updateUserError);
+        throw new Error("Error deducting user credits");
+      }
 
       return {
         statusCode: 200,

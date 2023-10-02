@@ -1,19 +1,21 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 import { Column } from "@/components/ui/column";
+import { Button } from "./ui/button";
+import { ScrollArea } from "./ui/scroll-area";
 import { Row } from "@/components/ui/row";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-import { Preset, presets } from "@/data/presets";
-import Image from "next/image";
-import { Button } from "./ui/button";
-import { CheckIcon } from "@radix-ui/react-icons";
-import { ScrollArea } from "./ui/scroll-area";
 import clsx from "clsx";
+import { Preset, presets } from "@/data/presets";
+import { usePlaygroundForm } from "@/hooks/use-playground-form";
 
 type SeeExampleOutputDialogProps = {
+  form: ReturnType<typeof usePlaygroundForm>;
   item: any;
   setOpen: (state: boolean) => void;
 };
@@ -39,10 +41,25 @@ function Item({ item, onSelectExample }: ItemProps) {
 }
 
 const SeeExampleOutputDialog = ({
+  form,
   item,
   setOpen,
 }: SeeExampleOutputDialogProps) => {
   const [isLoading, setIsLoading] = useState(true);
+
+  const onSubmit = () => {
+    form.setValue("prompt", item.prompt);
+    form.setValue("modelVersion", item.modelVersion);
+    form.setValue("negativePrompt", item.negativePrompt);
+    form.setValue("inferenceStep", item.inferenceStep);
+    form.setValue("guidance", item.guidance);
+    form.setValue("strength", item.strength);
+    form.setValue("controlnetConditioning", item.controlnetConditioning);
+    form.setValue("seed", item.seed);
+    console.log("after", form.getValues()); // Log the form values after setting
+
+    setOpen(false);
+  };
 
   return (
     <Dialog open={!!item} onOpenChange={setOpen}>
@@ -94,7 +111,7 @@ const SeeExampleOutputDialog = ({
           </div>
         </div>
         <Row className="justify-end">
-          <Button className="items-center gap-2">
+          <Button className="items-center gap-2" onClick={onSubmit}>
             <CheckIcon />
             Apply
           </Button>
@@ -104,7 +121,7 @@ const SeeExampleOutputDialog = ({
   );
 };
 
-export default function ExampleTemplatesSection() {
+export default function ExampleTemplatesSection({ form }) {
   const [selectedExample, setSelectedExample] = React.useState<Preset | null>(
     null
   );
@@ -112,6 +129,7 @@ export default function ExampleTemplatesSection() {
   return (
     <React.Fragment>
       <SeeExampleOutputDialog
+        form={form}
         item={selectedExample}
         setOpen={() => setSelectedExample(null)}
       />

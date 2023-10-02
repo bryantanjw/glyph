@@ -17,7 +17,7 @@ export function usePlaygroundForm() {
       inferenceStep: 20,
       guidance: 9.5,
       strength: 0.85,
-      controlnetConditioning: 1.3,
+      controlnetConditioning: 1.0,
       seed: -1,
     },
   });

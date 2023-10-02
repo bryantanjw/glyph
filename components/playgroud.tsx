@@ -48,6 +48,9 @@ import { Model, models, types } from "@/data/models";
 import { Preset } from "@/data/presets";
 import { extractProgress } from "@/utils/helpers";
 import { usePlaygroundForm } from "@/hooks/use-playground-form";
+import { Row } from "./ui/row";
+import { Column } from "./ui/column";
+import ExampleTemplatesSection from "./example-templates-section";
 
 export default function Playground({ user, userDetails, subscription }) {
   const router = useRouter();
@@ -315,239 +318,267 @@ export default function Playground({ user, userDetails, subscription }) {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex h-full items-stretch gap-5">
-          <motion.div
-            initial="hidden"
-            animate={isCustom ? "visible" : "hidden"}
-            variants={slideInFromRight}
-            className="flex-col flex-grow flex space-y-3 order-2 relative"
-          >
-            <div
-              className="absolute md:hidden right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-              onClick={() => {
-                setIsCustom(false);
-              }}
-            >
-              <Cross2Icon className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </div>
-            <div className="mb-2">
-              <ModelSelector
-                types={types}
-                models={models}
-                onModelChange={setSelectedModel}
-                form={form}
-              />
-              <div className="space-y-2 mb-2">
-                <NegativePromptField form={form} />
-                <InferenceStepSelector form={form} />
-                <GuidanceSelector form={form} />
-                <ControlNetConditioningSelector form={form} />
-                <SeedField form={form} />
-              </div>
-            </div>
-            <Button
-              className="md:hidden h-10"
-              onClick={(event) => {
-                event.preventDefault();
-                setIsCustom((prev) => !prev);
-              }}
-            >
-              Save
-            </Button>
-          </motion.div>
-          <motion.div
-            className="order-1 mt-0 border-0 p-0"
-            initial="hidden"
-            animate={isCustom ? "visible" : "hidden"}
-            variants={gridVariants}
-          >
-            <div className="md:flex md:flex-col space-y-4 mx-auto">
-              <div className="grid h-full gap-5 lg:grid-cols-[1fr_420px]">
-                <div className="flex flex-col space-y-4">
-                  <div className="flex flex-col space-y-2">
-                    <div>
-                      <Label htmlFor="input">Input</Label>
-                    </div>
-
-                    <PresetSelector
-                      onSelect={(preset) => {
-                        setSelectedPreset(preset);
-                        form.setValue("prompt", preset.prompt);
-                        form.setValue("modelVersion", preset.modelVersion);
-                        form.setValue("negativePrompt", preset.negativePrompt);
-                        form.setValue("inferenceStep", preset.inferenceStep);
-                        form.setValue("guidance", preset.guidance);
-                        form.setValue("strength", preset.strength);
-                        form.setValue(
-                          "controlnetConditioning",
-                          preset.controlnetConditioning
-                        );
-                        form.setValue("seed", preset.seed);
-                      }}
-                      selectedPreset={selectedPreset}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="prompt"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Textarea
-                              placeholder={
-                                "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
-                              }
-                              className="flex-1 min-h-[150px] lg:min-h-[200px]"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <ImageSelector
-                    file={file}
-                    setFile={setFile}
-                    selectedImage={selectedImage}
-                    setSelectedImage={setSelectedImage}
-                    onSelect={(image) => {
-                      setSelectedImage(image);
-                      form.setValue("image", image.url);
-                    }}
+    <>
+      <Column className="gap-8 w-full px-8 md:px-0">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex h-full items-stretch gap-5">
+              <motion.div
+                initial="hidden"
+                animate={isCustom ? "visible" : "hidden"}
+                variants={slideInFromRight}
+                className="flex-col flex-grow flex space-y-3 order-2 relative"
+              >
+                <div
+                  className="absolute md:hidden right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
+                  onClick={() => {
+                    setIsCustom(false);
+                  }}
+                >
+                  <Cross2Icon className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+                </div>
+                <div className="mb-2">
+                  <ModelSelector
+                    types={types}
+                    models={models}
+                    onModelChange={setSelectedModel}
+                    form={form}
                   />
-
-                  <div className="flex flex-row items-center space-x-2">
-                    {isSuccess ? (
-                      <Button
-                        className="w-full lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
-                        style={{
-                          boxShadow:
-                            "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
-                        }}
-                      >
-                        <SuccessIcon />
-                      </Button>
-                    ) : (
-                      <Button
-                        disabled={isSubmitting}
-                        onClick={async (event) => {
-                          event.preventDefault();
-                          if (!user) {
-                            toast({
-                              description: "Please log in to generate images.",
-                              action: (
-                                <ToastAction
-                                  altText="Log In"
-                                  onClick={() => {
-                                    router.push("/signin");
-                                  }}
-                                >
-                                  <LockOpen1Icon className="mr-2" /> Log In
-                                </ToastAction>
-                              ),
-                            });
-                          } else {
-                            const isValid = await form.trigger();
-                            if (isValid) {
-                              onSubmit(form.getValues());
-                            }
-                          }
-                        }}
-                        className="w-full lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75 disabled:cursor-not-allowed"
-                      >
-                        {isSubmitting ? (
-                          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          <motion.div
-                            className="flex items-center justify-center gap-x-2"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.25 }}
-                          >
-                            {user ? (
-                              <Image
-                                className="filter invert dark:filter-none lg:-ml-1"
-                                width={18}
-                                height={18}
-                                src={"/sparkling-icon.png"}
-                                alt={"Generate"}
-                              />
-                            ) : (
-                              <LockClosedIcon className="h-4 w-4" />
-                            )}
-                            <span>Generate</span>
-                          </motion.div>
-                        )}
-                      </Button>
-                    )}
-                    <Toggle
-                      aria-label="Toggle customize"
-                      className="bg-accent"
-                      onPressedChange={() => setIsCustom((prev) => !prev)}
-                    >
-                      <MixerHorizontalIcon />
-                    </Toggle>
+                  <div className="space-y-2 mb-2">
+                    <NegativePromptField form={form} />
+                    <InferenceStepSelector form={form} />
+                    <GuidanceSelector form={form} />
+                    <ControlNetConditioningSelector form={form} />
+                    <SeedField form={form} />
                   </div>
                 </div>
+                <Button
+                  className="md:hidden h-10"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setIsCustom((prev) => !prev);
+                  }}
+                >
+                  Save
+                </Button>
+              </motion.div>
+              <motion.div
+                className="order-1 mt-0 border-0 p-0"
+                initial="hidden"
+                animate={isCustom ? "visible" : "hidden"}
+                variants={gridVariants}
+              >
+                <div className="md:flex md:flex-col space-y-4 mx-auto">
+                  <div className="grid h-full gap-5 lg:grid-cols-[1fr_420px]">
+                    <div className="flex flex-col space-y-4">
+                      <div className="flex flex-col space-y-2">
+                        <div>
+                          <Label htmlFor="input">Input</Label>
+                        </div>
 
-                {prediction && prediction.output ? (
-                  <Dialog>
-                    <DialogTrigger>
-                      <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto">
-                        <Image
-                          alt="Glyph image output"
-                          src={prediction.output[prediction.output.length - 1]}
-                          width={768}
-                          height={768}
-                          quality={100}
+                        <PresetSelector
+                          onSelect={(preset) => {
+                            setSelectedPreset(preset);
+                            form.setValue("prompt", preset.prompt);
+                            form.setValue("modelVersion", preset.modelVersion);
+                            form.setValue(
+                              "negativePrompt",
+                              preset.negativePrompt
+                            );
+                            form.setValue(
+                              "inferenceStep",
+                              preset.inferenceStep
+                            );
+                            form.setValue("guidance", preset.guidance);
+                            form.setValue("strength", preset.strength);
+                            form.setValue(
+                              "controlnetConditioning",
+                              preset.controlnetConditioning
+                            );
+                            form.setValue("seed", preset.seed);
+                          }}
+                          selectedPreset={selectedPreset}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="prompt"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea
+                                  placeholder={
+                                    "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
+                                  }
+                                  className="flex-1 min-h-[150px] lg:min-h-[200px]"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl">
-                      <figure className={"aspect-square"}>
-                        <Image
-                          fill={true}
-                          loading={"eager"}
-                          alt="Glyph image output"
-                          src={prediction.output[prediction.output.length - 1]}
-                          quality={100}
-                        />
-                      </figure>
-                      <Link
-                        href={prediction.output[prediction.output.length - 1]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="absolute right-12 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-                      >
-                        <ExternalLinkIcon className="h-4 w-4" />
-                        <span className="sr-only">External Link</span>
-                      </Link>
-                    </DialogContent>
-                  </Dialog>
-                ) : (
-                  <div className="min-h-[300px] min-w-[320px] md:min-h-[420px] md:min-w-[420px] rounded-md border bg-muted relative mx-auto">
-                    {isSubmitting && (
-                      <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
-                        <Label className="text-muted-foreground font-normal">
-                          {status}
-                        </Label>
-                        <Progress className="w-1/2" value={progress} />
-                        <div className="absolute bottom-4 w-full text-center text-slate-500 text-xs">
-                          Takes 8-20 seconds to generate.
-                        </div>
+
+                      <ImageSelector
+                        file={file}
+                        setFile={setFile}
+                        selectedImage={selectedImage}
+                        setSelectedImage={setSelectedImage}
+                        onSelect={(image) => {
+                          setSelectedImage(image);
+                          form.setValue("image", image.url);
+                        }}
+                      />
+
+                      <div className="flex flex-row items-center space-x-2">
+                        {isSuccess ? (
+                          <Button
+                            className="w-full lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                            style={{
+                              boxShadow:
+                                "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
+                            }}
+                          >
+                            <SuccessIcon />
+                          </Button>
+                        ) : (
+                          <Button
+                            disabled={isSubmitting}
+                            onClick={async (event) => {
+                              event.preventDefault();
+                              if (!user) {
+                                toast({
+                                  description:
+                                    "Please log in to generate images.",
+                                  action: (
+                                    <ToastAction
+                                      altText="Log In"
+                                      onClick={() => {
+                                        router.push("/signin");
+                                      }}
+                                    >
+                                      <LockOpen1Icon className="mr-2" /> Log In
+                                    </ToastAction>
+                                  ),
+                                });
+                              } else {
+                                const isValid = await form.trigger();
+                                if (isValid) {
+                                  onSubmit(form.getValues());
+                                }
+                              }
+                            }}
+                            className="w-full lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75 disabled:cursor-not-allowed"
+                          >
+                            {isSubmitting ? (
+                              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <motion.div
+                                className="flex items-center justify-center gap-x-2"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.25 }}
+                              >
+                                {user ? (
+                                  <Image
+                                    className="filter invert dark:filter-none lg:-ml-1"
+                                    width={18}
+                                    height={18}
+                                    src={"/sparkling-icon.png"}
+                                    alt={"Generate"}
+                                  />
+                                ) : (
+                                  <LockClosedIcon className="h-4 w-4" />
+                                )}
+                                <span>Generate</span>
+                              </motion.div>
+                            )}
+                          </Button>
+                        )}
+                        <Toggle
+                          aria-label="Toggle customize"
+                          className="bg-accent"
+                          onPressedChange={() => setIsCustom((prev) => !prev)}
+                        >
+                          <MixerHorizontalIcon />
+                        </Toggle>
+                      </div>
+                    </div>
+
+                    {prediction && prediction.output ? (
+                      <Dialog>
+                        <DialogTrigger>
+                          <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto">
+                            <Image
+                              alt="Glyph image output"
+                              src={
+                                prediction.output[prediction.output.length - 1]
+                              }
+                              width={768}
+                              height={768}
+                              quality={100}
+                            />
+                          </div>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl">
+                          <figure className={"aspect-square"}>
+                            <Image
+                              fill={true}
+                              loading={"eager"}
+                              alt="Glyph image output"
+                              src={
+                                prediction.output[prediction.output.length - 1]
+                              }
+                              quality={100}
+                            />
+                          </figure>
+                          <Link
+                            href={
+                              prediction.output[prediction.output.length - 1]
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute right-12 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                          >
+                            <ExternalLinkIcon className="h-4 w-4" />
+                            <span className="sr-only">External Link</span>
+                          </Link>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <div className="min-h-[300px] min-w-[320px] md:min-h-[420px] md:min-w-[420px] rounded-md border bg-muted relative mx-auto">
+                        {isSubmitting && (
+                          <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
+                            <Label className="text-muted-foreground font-normal">
+                              {status}
+                            </Label>
+                            <Progress className="w-1/2" value={progress} />
+                            <div className="absolute bottom-4 w-full text-center text-slate-500 text-xs">
+                              Takes 8-20 seconds to generate.
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                )}
-              </div>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
-      </form>
-    </Form>
+          </form>
+        </Form>
+      </Column>
+
+      <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
+      <Column className="w-full items-center justify-start px-8 md:px-5 lg:px-0">
+        <Column className="w-full space-y-1">
+          <p className="text-xl font-semibold">Need inspiration?</p>
+          <p className="text-md text-muted-foreground pb-5">
+            Try out one of the prompts below.
+          </p>
+        </Column>
+        <ExampleTemplatesSection form={form} />
+      </Column>
+    </>
   );
 }

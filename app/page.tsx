@@ -40,24 +40,13 @@ export default async function PlaygroundPage() {
             </Balancer>
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
-            <Column className="gap-8 w-full px-8 md:px-0">
-              <Playground
-                user={user}
-                userDetails={userDetails}
-                subscription={subscription}
-              />
-            </Column>
 
-            <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
-            <Column className="w-full items-center justify-start px-8 md:px-5 lg:px-0">
-              <Column className="w-full space-y-1">
-                <p className="text-xl font-semibold">Need inspiration?</p>
-                <p className="text-md text-muted-foreground pb-5">
-                  Try out one of the prompts below.
-                </p>
-              </Column>
-              <ExampleTemplatesSection />
-            </Column>
+            <Playground
+              user={user}
+              userDetails={userDetails}
+              subscription={subscription}
+            />
+
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
             <CTA />
             <Row className="my-16 w-full h-[1px] bg-transparent" />
