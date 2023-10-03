@@ -1,15 +1,16 @@
+import { ThemeProvider } from "../components/providers/theme-provider";
+import { Balancer } from "react-wrap-balancer";
+
+import { Badge } from "@/components/ui/badge";
 import { Row } from "@/components/ui/row";
 import { Column } from "@/components/ui/column";
 import Navbar from "@/components/navbar";
 import Playground from "@/components/playgroud";
-import ExampleTemplatesSection from "@/components/example-templates-section";
 import CTA from "@/components/cta";
+import Footer from "@/components/footer";
+import FAQ from "@/components/faq";
 
 import { getSession, getSubscription, getUserDetails } from "./supabase-server";
-import { ThemeProvider } from "../components/providers/theme-provider";
-import Footer from "@/components/footer";
-import { Balancer } from "react-wrap-balancer";
-import { Badge } from "@/components/ui/badge";
 
 export default async function PlaygroundPage() {
   const [session, userDetails, subscription] = await Promise.all([
@@ -47,6 +48,8 @@ export default async function PlaygroundPage() {
               subscription={subscription}
             />
 
+            <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
+            <FAQ />
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
             <CTA />
             <Row className="my-16 w-full h-[1px] bg-transparent" />

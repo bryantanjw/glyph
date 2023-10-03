@@ -34,7 +34,7 @@ export function ControlNetConditioningSelector({
           <div className="grid gap-3">
             <div className="flex items-center justify-between">
               <Label htmlFor="ControlNetConditioning" className="leading-[1.5]">
-                ControlNet Conditioning
+                Control Weight
               </Label>
               <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
                 {value}
