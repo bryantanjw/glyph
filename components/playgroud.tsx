@@ -53,6 +53,7 @@ import { Column } from "./ui/column";
 import ExampleTemplatesSection from "./example-templates-section";
 
 export default function Playground({ user, userDetails, subscription }) {
+  console.log("userDetaials", userDetails);
   const router = useRouter();
   const form = usePlaygroundForm();
   const { toast } = useToast();
@@ -207,7 +208,8 @@ export default function Playground({ user, userDetails, subscription }) {
           toast({
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
-            description: "You have no credits left.",
+            description:
+              "You have no credits left. You can continue to use Glyph for free, but you won't be able to upload your own image.",
             action: (
               <ToastAction
                 altText="Add credits"
@@ -429,6 +431,7 @@ export default function Playground({ user, userDetails, subscription }) {
                           setSelectedImage(image);
                           form.setValue("image", image.url);
                         }}
+                        userDetails={userDetails}
                       />
 
                       <div className="flex flex-row items-center space-x-2">
@@ -558,6 +561,15 @@ export default function Playground({ user, userDetails, subscription }) {
                               Takes 8-20 seconds to generate.
                             </div>
                           </div>
+                        )}
+                        {!isSubmitting && selectedImage && (
+                          <Image
+                            alt="Selected image"
+                            src={selectedImage.url}
+                            width={768}
+                            height={768}
+                            quality={100}
+                          />
                         )}
                       </div>
                     )}

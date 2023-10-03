@@ -153,7 +153,7 @@ export default function Pricing({
         <div className="flex justify-center min-w-[80px] m-auto pb-0 md:py-8 mt-8">
           <div className="relative items-center h-11 flex w-[235px] p-1 pl-3 rounded-xl bg-slate-800 bg-opacity-50 backdrop-blur-md border border-white border-opacity-10 gap-2">
             <span
-              className="absolute m-0 inset-0 m-0 pointer-events-none"
+              className="absolute m-0 inset-0 pointer-events-none"
               aria-hidden="true"
             >
               <span
@@ -183,7 +183,7 @@ export default function Pricing({
                 setBillingInterval(checked ? "month" : "one_time")
               }
               className={cn(
-                "peer inline-flex z-10 h-[22.5px] w-[36px] -mr-2 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 bg-slate-900 border border-white border-opacity-20"
+                "peer inline-flex z-10 h-[22.5px] w-[36px] -mr-2 shrink-0 cursor-pointer items-center rounded-full border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 bg-slate-900 border border-white border-opacity-20"
               )}
             >
               <SwitchPrimitives.Thumb
@@ -311,7 +311,7 @@ export default function Pricing({
                       }
                     }}
                     className={`w-full h-10 mb-10 mt-4 ${
-                      isPro ? "bg-slate-900 shadow-xl" : ""
+                      isPro ? "bg-slate-900 shadow-xl text-white" : ""
                     }`}
                   >
                     {priceIdLoading === price.id && (
@@ -378,7 +378,7 @@ export default function Pricing({
         </div>
       </div>
 
-      <div id="whiteSection">
+      <div id="whiteSection" className="bg-white">
         <Testimonials />
       </div>
     </div>
