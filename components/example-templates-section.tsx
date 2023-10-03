@@ -48,6 +48,7 @@ const SeeExampleOutputDialog = ({
   const [isLoading, setIsLoading] = useState(true);
 
   const onSubmit = () => {
+    form.setValue("image", item.image);
     form.setValue("prompt", item.prompt);
     form.setValue("modelVersion", item.modelVersion);
     form.setValue("negativePrompt", item.negativePrompt);
@@ -74,7 +75,7 @@ const SeeExampleOutputDialog = ({
                       key !== "id" &&
                       key !== "modelVersion" &&
                       key !== "name" &&
-                      key !== "exampleImage" &&
+                      key !== "exampleOutput" &&
                       key !== "category"
                     ) {
                       return (
@@ -101,7 +102,7 @@ const SeeExampleOutputDialog = ({
                       ? "scale-120 blur-3xl grayscale"
                       : "scale-100 blur-0 grayscale-0"
                   )}
-                  src={item?.exampleImage}
+                  src={item?.exampleOutput}
                   fill={true}
                   alt="Example Image"
                   onLoadingComplete={() => setIsLoading(false)}

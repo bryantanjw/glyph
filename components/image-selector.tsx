@@ -27,29 +27,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-interface ExampleImage {
-  name: string;
-  url: string;
-}
-
-export const exampleImages: ExampleImage[] = [
-  {
-    name: "https://glyph.so",
-    url: "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Glyph_QR-jPjQUqTP5VN05X9jLsv0PZWX7TAgeA.png",
-  },
-  {
-    name: "Spiral",
-    url: "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Spiral-L4I9BVYlhyozp4BpQnw8xUT2JmGLVw.png",
-  },
-  {
-    name: "2x2 Checkered Box",
-    url: "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Checkered_2x2-3NgtTA8ypxh8y0lRmCKtbOmsFc7lds.png",
-  },
-  {
-    name: "4x4 Checkered Box",
-    url: "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Checkered_4x4-w7j0zRNh2MPgtzQYbSHjYeyagtFLbS.png",
-  },
-];
+import { ExampleImage, exampleImages } from "@/data/presets";
 
 interface ImageSelectorProps extends PopoverProps {
   file: File | null;

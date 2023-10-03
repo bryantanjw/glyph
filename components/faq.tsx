@@ -11,22 +11,22 @@ import { Row } from "./ui/row";
 
 export default function FAQ() {
   return (
-    <div className="text-center lg:text-left">
-      <div className="flex grid items-center lg:grid-cols-2">
+    <div className="text-left">
+      <div className="mx-4 flex grid items-center lg:grid-cols-2">
         <div className="mb-12 lg:mb-0">
           <div className="block rounded-lg bg-[hsla(0,0%,100%,0.55)] px-6 py-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-[hsla(0,0%,5%,0.55)] dark:shadow-black/20 md:px-12 lg:-mr-14 backdrop-blur-[30px]">
             <h3 className="mb-3 font-semibold text-blue-500 tracking-wider">
               Frequently asked questions
             </h3>
             <Balancer>
-              <h5 className="pr-8 text-5xl font-bold text-primary dark:text-primary-400 mb-10">
+              <h5 className="pr-8 text-3xl md:text-5xl font-bold text-primary dark:text-primary-400 mb-10">
                 Everything you need to know
               </h5>
             </Balancer>
 
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
-                <AccordionTrigger className="text-md">
+                <AccordionTrigger className="md:text-md text-left">
                   What kind of images can I generate?
                 </AccordionTrigger>
                 <AccordionContent className="mb-6 text-gray-500 dark:text-neutral-300">
@@ -51,7 +51,7 @@ export default function FAQ() {
               <Row className="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
 
               <AccordionItem value="item-2">
-                <AccordionTrigger className="text-md">
+                <AccordionTrigger className="md:text-md text-left">
                   How to improve the recognition rate of QR codes?
                 </AccordionTrigger>
                 <AccordionContent className="mb-6 text-gray-500 dark:text-neutral-300">
