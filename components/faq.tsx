@@ -17,11 +17,9 @@ export default function FAQ() {
           <h3 className="mb-3 font-semibold text-blue-500 tracking-wider">
             Frequently asked questions
           </h3>
-          <Balancer>
-            <h5 className="pr-8 text-3xl md:text-5xl font-bold text-primary dark:text-primary-400 mb-10">
-              Everything you need to know
-            </h5>
-          </Balancer>
+          <h5 className="pr-8 text-3xl md:text-5xl font-bold text-primary dark:text-primary-400 mb-10">
+            <Balancer>Everything you need to know</Balancer>
+          </h5>
 
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
@@ -71,7 +69,7 @@ export default function FAQ() {
       </div>
       <div>
         <Image
-          src="https://cdn.sanity.io/images/s3mrlbj8/production/fbe2b8c5ee6832d523ec745536977b0c13f731a7-768x768.png"
+          src="https://cdn.sanity.io/images/s3mrlbj8/production/18784cb9061c7739a5387f73b4c20e87ff23e183-1024x1024.png"
           className="rounded-lg shadow-lg dark:shadow-black/20"
           alt=""
           width={768}
