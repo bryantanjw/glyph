@@ -33,7 +33,10 @@ export interface Preset {
   strength?: number;
   controlnetConditioning?: number;
   seed?: number;
-  image?: string;
+  image?: {
+    name: string;
+    url: string;
+  };
   exampleOutput?: string;
 }
 
@@ -48,7 +51,7 @@ const border = 1;
 
 export const presets: Preset[] = [
   {
-    image: exampleImages[0].name,
+    image: exampleImages[0],
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     category: "QR",
@@ -63,7 +66,7 @@ export const presets: Preset[] = [
       "https://cdn.sanity.io/images/s3mrlbj8/production/293603ea3467f1656330b721d498aacd56d409ee-768x768.png",
   },
   {
-    image: exampleImages[3].name,
+    image: exampleImages[3],
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     category: "QR",
@@ -79,7 +82,7 @@ export const presets: Preset[] = [
       "https://cdn.sanity.io/images/s3mrlbj8/production/fcac945b61f9b3c5eabc8f22c6919adbb46903a9-768x768.png",
   },
   {
-    image: exampleImages[0].name,
+    image: exampleImages[0],
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     category: "QR",
@@ -96,7 +99,7 @@ export const presets: Preset[] = [
       "https://cdn.sanity.io/images/s3mrlbj8/production/f686c0af6278698995fe912fee1ef9279c993ee1-768x768.png",
   },
   {
-    image: exampleImages[2].name,
+    image: exampleImages[2],
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     category: "Subliminal",
@@ -138,7 +141,7 @@ export const presets: Preset[] = [
     seed,
   },
   {
-    image: exampleImages[0].name,
+    image: exampleImages[0],
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     category: "QR",
@@ -184,7 +187,7 @@ export const presets: Preset[] = [
       "https://cdn.sanity.io/images/s3mrlbj8/production/4197c26893fb2d7f99fe77931d4275809336a4f3-768x768.png",
   },
   {
-    image: exampleImages[0].name,
+    image: exampleImages[0],
     modelVersion:
       "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
     category: "QR",

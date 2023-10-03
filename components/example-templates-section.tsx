@@ -17,6 +17,7 @@ import { usePlaygroundForm } from "@/hooks/use-playground-form";
 type SeeExampleOutputDialogProps = {
   form: ReturnType<typeof usePlaygroundForm>;
   item: any;
+  setSelectedImage: (image: any) => void;
   setOpen: (state: boolean) => void;
 };
 
@@ -43,12 +44,13 @@ function Item({ item, onSelectExample }: ItemProps) {
 const SeeExampleOutputDialog = ({
   form,
   item,
+  setSelectedImage,
   setOpen,
 }: SeeExampleOutputDialogProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const onSubmit = () => {
-    form.setValue("image", item.image);
+    setSelectedImage(item.image);
     form.setValue("prompt", item.prompt);
     form.setValue("modelVersion", item.modelVersion);
     form.setValue("negativePrompt", item.negativePrompt);
@@ -78,6 +80,14 @@ const SeeExampleOutputDialog = ({
                       key !== "exampleOutput" &&
                       key !== "category"
                     ) {
+                      if (key === "image") {
+                        return (
+                          <p key={key} className="text-sm">
+                            <span className="font-semibold">{key}:</span>{" "}
+                            {item[key].name}
+                          </p>
+                        );
+                      }
                       return (
                         <p key={key} className="text-sm">
                           <span className="font-semibold">{key}:</span>{" "}
@@ -122,7 +132,7 @@ const SeeExampleOutputDialog = ({
   );
 };
 
-export default function ExampleTemplatesSection({ form }) {
+export default function ExampleTemplatesSection({ form, setSelectedImage }) {
   const [selectedExample, setSelectedExample] = React.useState<Preset | null>(
     null
   );
@@ -132,6 +142,7 @@ export default function ExampleTemplatesSection({ form }) {
       <SeeExampleOutputDialog
         form={form}
         item={selectedExample}
+        setSelectedImage={setSelectedImage}
         setOpen={() => setSelectedExample(null)}
       />
       <Column className="gap-2 w-full max-w-[90vw]">

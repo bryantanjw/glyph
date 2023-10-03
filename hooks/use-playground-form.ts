@@ -11,8 +11,7 @@ export function usePlaygroundForm() {
         "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
       prompt: "",
       url: "https://glyph.so",
-      image:
-        "https://1hhwy54cedxlm3yh.public.blob.vercel-storage.com/Glyph_QR-jPjQUqTP5VN05X9jLsv0PZWX7TAgeA.png",
+      image: "",
       negativePrompt: "ugly, disfigured, low quality, blurry, nsfw",
       inferenceStep: 20,
       guidance: 9.5,

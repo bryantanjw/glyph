@@ -51,6 +51,7 @@ import { usePlaygroundForm } from "@/hooks/use-playground-form";
 import { Row } from "./ui/row";
 import { Column } from "./ui/column";
 import ExampleTemplatesSection from "./example-templates-section";
+import { Input } from "./ui/input";
 
 export default function Playground({ user, userDetails, subscription }) {
   console.log("userDetaials", userDetails);
@@ -209,7 +210,7 @@ export default function Playground({ user, userDetails, subscription }) {
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
             description:
-              "You have no credits left. You can continue to use Glyph for free, but you won't be able to upload your own image.",
+              "You have no credits left. You can continue to use Glyph for free at a limited capacity, but you won't be able to upload your own image.",
             action: (
               <ToastAction
                 altText="Add credits"
@@ -422,16 +423,27 @@ export default function Playground({ user, userDetails, subscription }) {
                         />
                       </div>
 
-                      <ImageSelector
-                        file={file}
-                        setFile={setFile}
-                        selectedImage={selectedImage}
-                        setSelectedImage={setSelectedImage}
-                        onSelect={(image) => {
-                          setSelectedImage(image);
-                          form.setValue("image", image.url);
-                        }}
-                        userDetails={userDetails}
+                      <FormField
+                        control={form.control}
+                        name="image"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <ImageSelector
+                                file={file}
+                                setFile={setFile}
+                                selectedImage={selectedImage}
+                                setSelectedImage={setSelectedImage}
+                                onSelect={(image) => {
+                                  setSelectedImage(image);
+                                  form.setValue("image", image.url);
+                                }}
+                                userDetails={userDetails}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
 
                       <div className="flex flex-row items-center space-x-2">
@@ -589,7 +601,10 @@ export default function Playground({ user, userDetails, subscription }) {
             Try out one of the prompts below.
           </p>
         </Column>
-        <ExampleTemplatesSection form={form} />
+        <ExampleTemplatesSection
+          form={form}
+          setSelectedImage={setSelectedImage}
+        />
       </Column>
     </>
   );
