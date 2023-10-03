@@ -54,7 +54,6 @@ import ExampleTemplatesSection from "./example-templates-section";
 import { Input } from "./ui/input";
 
 export default function Playground({ user, userDetails, subscription }) {
-  console.log("userDetaials", userDetails);
   const router = useRouter();
   const form = usePlaygroundForm();
   const { toast } = useToast();
@@ -397,7 +396,7 @@ export default function Playground({ user, userDetails, subscription }) {
                             form.setValue("strength", preset.strength);
                             form.setValue(
                               "controlnetConditioning",
-                              preset.controlnetConditioning
+                              preset.controlWeight
                             );
                             form.setValue("seed", preset.seed);
                           }}

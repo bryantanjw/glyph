@@ -31,7 +31,7 @@ export interface Preset {
   inferenceStep: number;
   guidance?: number;
   strength?: number;
-  controlnetConditioning?: number;
+  controlWeight?: number;
   seed?: number;
   image?: {
     name: string;
@@ -42,7 +42,7 @@ export interface Preset {
 
 const negativePrompt = "ugly, disfigured, low quality, blurry, nsfw";
 const seed = -1;
-const controlnetConditioning = 2.1;
+const controlWeight = 2.1;
 const guidance = 9.5;
 const height = 768;
 const width = 768;
@@ -60,7 +60,7 @@ export const presets: Preset[] = [
     negativePrompt,
     inferenceStep: 55,
     guidance: 13,
-    controlnetConditioning: 2.2,
+    controlWeight: 2.2,
     seed,
     exampleOutput:
       "https://cdn.sanity.io/images/s3mrlbj8/production/293603ea3467f1656330b721d498aacd56d409ee-768x768.png",
@@ -76,7 +76,7 @@ export const presets: Preset[] = [
     negativePrompt,
     inferenceStep: 50,
     guidance: 7.5,
-    controlnetConditioning: 1.0,
+    controlWeight: 1.0,
     seed,
     exampleOutput:
       "https://cdn.sanity.io/images/s3mrlbj8/production/fcac945b61f9b3c5eabc8f22c6919adbb46903a9-768x768.png",
@@ -93,7 +93,7 @@ export const presets: Preset[] = [
       "(worst quality, poor details:1.4), lowres, (artist name, signature, watermark:1.4), bad-artist-anime, bad_prompt_version2,  bad-hands-5, ng_deepnegative_v1_75t",
     inferenceStep: 40,
     guidance: 11.5,
-    controlnetConditioning: 2.3,
+    controlWeight: 2.3,
     seed,
     exampleOutput:
       "https://cdn.sanity.io/images/s3mrlbj8/production/f686c0af6278698995fe912fee1ef9279c993ee1-768x768.png",
@@ -110,7 +110,7 @@ export const presets: Preset[] = [
       "(worst quality, poor details:1.4), lowres, (artist name, signature, watermark:1.4), bad-artist-anime, bad_prompt_version2,  bad-hands-5, ng_deepnegative_v1_75t",
     inferenceStep: 20,
     guidance: 7.5,
-    controlnetConditioning: 1.5,
+    controlWeight: 1.5,
     seed: 2145122936,
     exampleOutput:
       "https://cdn.sanity.io/images/s3mrlbj8/production/708531aadd0e4bba0608ae8d74aa3703603c84ea-768x768.png",
@@ -126,7 +126,7 @@ export const presets: Preset[] = [
     inferenceStep: 40,
     seed,
     guidance: 12,
-    controlnetConditioning: 2.2,
+    controlWeight: 2.2,
   },
   {
     modelVersion:
@@ -136,7 +136,7 @@ export const presets: Preset[] = [
     prompt: "a townhouse inspired by aztec architecture on a sunny day",
     negativePrompt,
     guidance,
-    controlnetConditioning,
+    controlWeight,
     inferenceStep: 30,
     seed,
   },
@@ -150,7 +150,7 @@ export const presets: Preset[] = [
       "forestpunk, green pastures, lush environment, vivid colors, animation by studio ghibli",
     negativePrompt,
     guidance,
-    controlnetConditioning,
+    controlWeight,
     inferenceStep: 30,
     seed,
     exampleOutput:
@@ -167,7 +167,7 @@ export const presets: Preset[] = [
     inferenceStep: 80,
     guidance: 12,
     strength: 0.85,
-    controlnetConditioning: 1.4,
+    controlWeight: 1.4,
     seed,
     exampleOutput:
       "https://cdn.sanity.io/images/s3mrlbj8/production/d7316dd8f258780e011b5ccc292d78f2cbaa44cb-1024x1024.png",
@@ -181,7 +181,7 @@ export const presets: Preset[] = [
     negativePrompt,
     inferenceStep: 40,
     guidance: 7.5,
-    controlnetConditioning: 2.2,
+    controlWeight: 2.2,
     seed,
     exampleOutput:
       "https://cdn.sanity.io/images/s3mrlbj8/production/4197c26893fb2d7f99fe77931d4275809336a4f3-768x768.png",
@@ -195,7 +195,7 @@ export const presets: Preset[] = [
     prompt: "Japanese painting, mountains",
     negativePrompt,
     guidance,
-    controlnetConditioning: 1.2,
+    controlWeight: 1.2,
     inferenceStep: 30,
     seed,
     exampleOutput:
