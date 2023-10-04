@@ -155,6 +155,7 @@ export default function Playground({ user, userDetails, subscription }) {
     // Upload image to Vercel Blob Storage
     let blob;
     if (file) {
+      console.log("file", file);
       try {
         const blobResponse = await fetch(
           `/api/blob/upload?filename=${file.name}`,
@@ -422,16 +423,29 @@ export default function Playground({ user, userDetails, subscription }) {
                         />
                       </div>
 
-                      <ImageSelector
-                        file={file}
-                        setFile={setFile}
-                        selectedImage={selectedImage}
-                        setSelectedImage={setSelectedImage}
-                        onSelect={(image) => {
-                          setSelectedImage(image);
-                          form.setValue("image", image.url);
-                        }}
-                        userDetails={userDetails}
+                      <FormField
+                        control={form.control}
+                        name="image"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <ImageSelector
+                                file={file}
+                                setFile={setFile}
+                                selectedImage={selectedImage}
+                                setSelectedImage={setSelectedImage}
+                                onSelect={(image) => {
+                                  setSelectedImage(image);
+                                  form.setValue("image", image.url);
+                                }}
+                                form={form}
+                                userDetails={userDetails}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
 
                       <div className="flex flex-row items-center space-x-2">

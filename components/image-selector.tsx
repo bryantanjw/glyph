@@ -36,6 +36,7 @@ interface ImageSelectorProps extends PopoverProps {
   selectedImage: ExampleImage | null;
   setSelectedImage: (image: ExampleImage) => void;
   userDetails?: any;
+  form: any;
 }
 
 export function ImageSelector({
@@ -44,6 +45,7 @@ export function ImageSelector({
   selectedImage,
   setSelectedImage,
   userDetails,
+  form,
   ...props
 }: ImageSelectorProps) {
   const [open, setOpen] = React.useState(false);
@@ -83,6 +85,8 @@ export function ImageSelector({
                         onChange={(event) => {
                           setFile(event.target.files[0]);
                           setSelectedImage(null);
+                          // Update form value for "image" field
+                          form.setValue("image", event.target.files[0].name);
                         }}
                       />
                       <Button
