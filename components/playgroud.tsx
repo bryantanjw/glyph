@@ -422,27 +422,16 @@ export default function Playground({ user, userDetails, subscription }) {
                         />
                       </div>
 
-                      <FormField
-                        control={form.control}
-                        name="image"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <ImageSelector
-                                file={file}
-                                setFile={setFile}
-                                selectedImage={selectedImage}
-                                setSelectedImage={setSelectedImage}
-                                onSelect={(image) => {
-                                  setSelectedImage(image);
-                                  form.setValue("image", image.url);
-                                }}
-                                userDetails={userDetails}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                      <ImageSelector
+                        file={file}
+                        setFile={setFile}
+                        selectedImage={selectedImage}
+                        setSelectedImage={setSelectedImage}
+                        onSelect={(image) => {
+                          setSelectedImage(image);
+                          form.setValue("image", image.url);
+                        }}
+                        userDetails={userDetails}
                       />
 
                       <div className="flex flex-row items-center space-x-2">
