@@ -185,21 +185,18 @@ export default function Playground({ user, userDetails, subscription }) {
 
     if (blob || values.image) {
       // Make initial request to Lambda function to create a prediction
-      const res = await fetch(
-        "https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...values,
-            userId: user.id,
-            image: blob ? blob.url : values.image,
-            subscription_tier: subscription?.price_id,
-          }),
-        }
-      );
+      const res = await fetch("https://api.glyph.so/predictions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...values,
+          userId: user.id,
+          image: blob ? blob.url : values.image,
+          subscription_tier: subscription?.price_id,
+        }),
+      });
 
       const response = await res.json();
       console.log("response", response);
@@ -240,7 +237,7 @@ export default function Playground({ user, userDetails, subscription }) {
       let predictions = null;
       while (!predictions && predictionId) {
         let pollRes = await fetch(
-          `https://7vr3ybhge5.execute-api.us-east-1.amazonaws.com/prod/predictions/${predictionId}`,
+          `https://api.glyph.so/predictions/${predictionId}`,
           {
             method: "GET",
             headers: {
@@ -526,7 +523,7 @@ export default function Playground({ user, userDetails, subscription }) {
                     {prediction && prediction.output ? (
                       <Dialog>
                         <DialogTrigger>
-                          <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto">
+                          <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] ">
                             <Image
                               alt="Glyph image output"
                               src={
