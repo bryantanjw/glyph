@@ -140,9 +140,9 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
         <div className="h-full flex flex-col justify-between">
           <div className="flex items-start justify-between space-x-4">
             <div className="text-lg md:text-xl font-semibold tracking-tigh">
-              {userDetails?.full_name.length > 35
-                ? `${userDetails?.full_name.slice(0, 35)}...`
-                : userDetails?.full_name.toUpperCase() ?? "GLYPH"}
+              {userDetails?.full_name?.length > 35
+                ? `${userDetails?.full_name?.slice(0, 35)}...`
+                : userDetails?.full_name?.toUpperCase() ?? "GLYPH"}
             </div>
 
             <div className="inline-flex flex-col items-center justify-center">
