@@ -144,7 +144,8 @@ export default function Pricing({
               You have{" "}
               <span className="font-semibold">
                 {session ? userDetails?.credits : 0} credits.
-              </span>{" "}
+              </span>
+              <br />
               Choose to upgrade to a plan or pay as you go.
             </Balancer>
           </p>

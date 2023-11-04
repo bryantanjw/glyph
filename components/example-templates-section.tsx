@@ -57,9 +57,8 @@ const SeeExampleOutputDialog = ({
     form.setValue("inferenceStep", item.inferenceStep);
     form.setValue("guidance", item.guidance);
     form.setValue("strength", item.strength);
-    form.setValue("controlnetConditioning", item.controlnetConditioning);
+    form.setValue("controlnetConditioning", item.controlWeight);
     form.setValue("seed", item.seed);
-    console.log("after", form.getValues()); // Log the form values after setting
 
     setOpen(false);
   };

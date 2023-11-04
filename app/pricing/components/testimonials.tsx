@@ -9,21 +9,21 @@ export function Testimonials() {
         </h2>
         <div className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           <Image
-            className="col-span-2 max-h-12 w-full object-contain lg:col-span-1 grayscale hover:grayscale-0 transition-all duration-300"
+            className="col-span-2 max-h-16 w-full object-contain lg:col-span-1 grayscale hover:grayscale-0 transition-all duration-300"
             src="/aws-logo.png"
             alt="AWS"
             width={158}
             height={48}
           />
           <Image
-            className="col-span-2 max-h-12 w-full object-contain lg:col-span-1 grayscale hover:grayscale-0 transition-all duration-300"
+            className="col-span-2 max-h-16 w-full object-contain lg:col-span-1 grayscale hover:grayscale-0 transition-all duration-300"
             src="/google-dev-logo.png"
             alt="Google Developers"
             width={158}
             height={48}
           />
           <Image
-            className="col-span-2 max-h-12 w-full object-contain lg:col-span-1 grayscale hover:grayscale-0 transition-all duration-300"
+            className="col-span-2 max-h-16 w-full object-contain lg:col-span-1 grayscale hover:grayscale-0 transition-all duration-300"
             src="/hugging-face-logo.png"
             alt="Hugging Face"
             width={158}

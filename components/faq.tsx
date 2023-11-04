@@ -11,7 +11,7 @@ import { Row } from "./ui/row";
 
 export default function FAQ() {
   return (
-    <div className="mx-8 md:mx-0 flex grid items-center lg:grid-cols-2">
+    <div className="mx-8 md:mx-0 grid items-center lg:grid-cols-2">
       <div className="mb-12 lg:mb-0">
         <div className="block rounded-lg bg-[hsla(0,0%,100%,0.55)] px-6 py-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-[hsla(0,0%,5%,0.55)] dark:shadow-black/20 md:px-12 lg:-mr-14 backdrop-blur-[30px]">
           <h3 className="mb-3 font-semibold text-blue-500 tracking-wider">
@@ -70,6 +70,20 @@ export default function FAQ() {
                   <br />
                   <br />
                   In addition, trying different seeds can also be helpful.
+                </Balancer>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="md:text-md text-left">
+                <Balancer>
+                  How to blend the QR code more seamlessly into the output
+                  image?
+                </Balancer>
+              </AccordionTrigger>
+              <AccordionContent className="mb-6 text-gray-500 dark:text-neutral-300">
+                <Balancer>
+                  QR codes with gray or black blackgrounds tend to blend in more
+                  with the prompt. Adding padding to the QR code can also help.
                 </Balancer>
               </AccordionContent>
             </AccordionItem>

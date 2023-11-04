@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { PutBlobResult } from "@vercel/blob";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Cross2Icon,
+  DownloadIcon,
   ExternalLinkIcon,
   LockClosedIcon,
   LockOpen1Icon,
@@ -51,7 +52,7 @@ import { usePlaygroundForm } from "@/hooks/use-playground-form";
 import { Row } from "./ui/row";
 import { Column } from "./ui/column";
 import ExampleTemplatesSection from "./example-templates-section";
-import { Input } from "./ui/input";
+import { Icons } from "./ui/icons";
 
 export default function Playground({ user, userDetails, subscription }) {
   const router = useRouter();
@@ -73,6 +74,7 @@ export default function Playground({ user, userDetails, subscription }) {
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const slideInFromRight = {
     hidden: {
@@ -148,6 +150,7 @@ export default function Playground({ user, userDetails, subscription }) {
 
   async function onSubmit(values: z.infer<typeof playgroundFormSchema>) {
     setStatus("Starting...");
+    setImageLoaded(false);
     setProgress(0);
     setPrediction(null);
     setSubmitting(true);
@@ -523,7 +526,7 @@ export default function Playground({ user, userDetails, subscription }) {
                     {prediction && prediction.output ? (
                       <Dialog>
                         <DialogTrigger>
-                          <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] ">
+                          <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] flex justify-center items-center">
                             <Image
                               alt="Glyph image output"
                               src={
@@ -532,6 +535,7 @@ export default function Playground({ user, userDetails, subscription }) {
                               width={768}
                               height={768}
                               quality={100}
+                              onLoad={() => setImageLoaded(true)}
                             />
                           </div>
                         </DialogTrigger>
@@ -547,6 +551,18 @@ export default function Playground({ user, userDetails, subscription }) {
                               quality={100}
                             />
                           </figure>
+                          <Link
+                            href={
+                              prediction.output[prediction.output.length - 1]
+                            }
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute right-20 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                          >
+                            <DownloadIcon className="h-4 w-4" />
+                            <span className="sr-only">Download image</span>
+                          </Link>
                           <Link
                             href={
                               prediction.output[prediction.output.length - 1]
