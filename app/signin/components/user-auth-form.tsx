@@ -285,7 +285,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                           <Input
                             className="shadow-sm pr-10"
                             id="password"
-                            placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+                            placeholder="**********"
                             type={passwordShown ? "text" : "password"}
                             disabled={isLoading}
                             {...field}

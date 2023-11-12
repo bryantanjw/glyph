@@ -8,7 +8,7 @@ export function usePlaygroundForm() {
     resolver: zodResolver(playgroundFormSchema),
     defaultValues: {
       modelVersion:
-        "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b",
+        "3c64e669051f9b358e748c8e2fb8a06e64122a9ece762ef133252e2c99da77c1",
       prompt: "",
       url: "https://glyph.so",
       image: "",
@@ -16,7 +16,7 @@ export function usePlaygroundForm() {
       inferenceStep: 20,
       guidance: 9.5,
       strength: 0.85,
-      controlnetConditioning: 1.0,
+      controlnetConditioning: 1.2,
       seed: -1,
     },
   });

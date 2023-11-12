@@ -6,6 +6,7 @@ import Image from "next/image";
 import type { PutBlobResult } from "@vercel/blob";
 import { useState, useEffect, Suspense } from "react";
 import {
+  CopyIcon,
   Cross2Icon,
   DownloadIcon,
   ExternalLinkIcon,
@@ -52,7 +53,6 @@ import { usePlaygroundForm } from "@/hooks/use-playground-form";
 import { Row } from "./ui/row";
 import { Column } from "./ui/column";
 import ExampleTemplatesSection from "./example-templates-section";
-import { Icons } from "./ui/icons";
 
 export default function Playground({ user, userDetails, subscription }) {
   const router = useRouter();
@@ -555,18 +555,6 @@ export default function Playground({ user, userDetails, subscription }) {
                             href={
                               prediction.output[prediction.output.length - 1]
                             }
-                            download
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="absolute right-20 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-                          >
-                            <DownloadIcon className="h-4 w-4" />
-                            <span className="sr-only">Download image</span>
-                          </Link>
-                          <Link
-                            href={
-                              prediction.output[prediction.output.length - 1]
-                            }
                             target="_blank"
                             rel="noopener noreferrer"
                             className="absolute right-12 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
@@ -589,10 +577,14 @@ export default function Playground({ user, userDetails, subscription }) {
                             </div>
                           </div>
                         )}
-                        {!isSubmitting && selectedImage && (
+                        {!isSubmitting && (selectedImage || file) && (
                           <Image
                             alt="Selected image"
-                            src={selectedImage.url}
+                            src={
+                              file
+                                ? URL.createObjectURL(file)
+                                : selectedImage.url
+                            }
                             width={768}
                             height={768}
                             quality={100}

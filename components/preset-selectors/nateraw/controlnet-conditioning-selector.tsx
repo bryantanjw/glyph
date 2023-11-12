@@ -53,7 +53,7 @@ export function ControlNetConditioningSelector({
           </div>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-[260px] text-sm">
-          Adjust the how readable you want the QR code to be. (minimum: 1;
+          Adjust how readable you want the QR code or image to be. (minimum: 1;
           maximum: 4)
         </HoverCardContent>
       </HoverCard>

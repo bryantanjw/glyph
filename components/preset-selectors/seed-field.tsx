@@ -62,11 +62,6 @@ export function SeedField({ form }: SeedFieldProps) {
         <HoverCardContent align="start" className="w-[260px] text-sm">
           A parameter that introduces a degree of randomness or entropy into the
           model&apos;s output. Set to -1 to randomize the seed.
-          <br />
-          <br />
-          This ensures a diverse range of outputs from the model, preventing it
-          from consistently generating similar themes. It serves as a mechanism
-          to control the unpredictability of the model&apos;s output.
         </HoverCardContent>
       </HoverCard>
     </div>

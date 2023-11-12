@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     },
     body: JSON.stringify({
       version:
-        "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4",
+        "3c64e669051f9b358e748c8e2fb8a06e64122a9ece762ef133252e2c99da77c1",
       input: {
         prompt,
         qr_code_content: url,
