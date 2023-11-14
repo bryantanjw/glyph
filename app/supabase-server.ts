@@ -78,8 +78,6 @@ export async function getGenerationCount() {
       console.error("Supabase error:", error);
     }
 
-    console.log("Generation data:", generation);
-
     return generation ? generation.count : null;
   } catch (error) {
     console.error("Error:", error);

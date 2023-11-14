@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { PersonIcon } from "@radix-ui/react-icons";
+import { PersonIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -119,14 +119,14 @@ export function UserNav({ user, userDetails }: Props) {
               className="text-muted-foreground cursor-pointer"
             >
               Log out
-              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>
           </div>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <div className="mx-2">
           <Link href={"/pricing"}>
-            <Button className="w-full flex items-center mb-2">
+            <Button className="w-full flex items-center mb-2 gap-2">
+              <PlusCircledIcon />
               Add credits
             </Button>
           </Link>

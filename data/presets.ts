@@ -42,7 +42,7 @@ export interface Preset {
 
 const negativePrompt = "ugly, disfigured, low quality, blurry, nsfw";
 const seed = -1;
-const controlWeight = 2.1;
+const controlWeight = 1.2;
 const guidance = 9.5;
 const height = 768;
 const width = 768;

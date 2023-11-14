@@ -524,46 +524,24 @@ export default function Playground({ user, userDetails, subscription }) {
                     </div>
 
                     {prediction && prediction.output ? (
-                      <Dialog>
-                        <DialogTrigger>
-                          <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] flex justify-center items-center">
-                            <Image
-                              alt="Glyph image output"
-                              src={
-                                prediction.output[prediction.output.length - 1]
-                              }
-                              width={768}
-                              height={768}
-                              quality={100}
-                              onLoad={() => setImageLoaded(true)}
-                            />
-                          </div>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
-                          <figure className={"aspect-square"}>
-                            <Image
-                              fill={true}
-                              loading={"eager"}
-                              alt="Glyph image output"
-                              src={
-                                prediction.output[prediction.output.length - 1]
-                              }
-                              quality={100}
-                            />
-                          </figure>
-                          <Link
-                            href={
+                      <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] flex justify-center items-center">
+                        <Link
+                          href={prediction.output[prediction.output.length - 1]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Image
+                            alt="Glyph image output"
+                            src={
                               prediction.output[prediction.output.length - 1]
                             }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="absolute right-12 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-                          >
-                            <ExternalLinkIcon className="h-4 w-4" />
-                            <span className="sr-only">External Link</span>
-                          </Link>
-                        </DialogContent>
-                      </Dialog>
+                            width={768}
+                            height={768}
+                            quality={100}
+                            onLoad={() => setImageLoaded(true)}
+                          />
+                        </Link>
+                      </div>
                     ) : (
                       <div className="min-h-[300px] min-w-[320px] md:min-h-[420px] md:min-w-[420px] rounded-md border bg-muted relative mx-auto">
                         {isSubmitting && (

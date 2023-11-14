@@ -195,7 +195,7 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
                     </div>
                   ) : (
                     <NavigationMenuItem>
-                      <NavigationMenuLink
+                      <Link
                         href="/signin"
                         className={cn(
                           navigationMenuTriggerStyle(),
@@ -221,7 +221,7 @@ export default function Navbar({ page, user, userDetails }: NavbarProps) {
                         >
                           <polyline points="9 18 15 12 9 6" />
                         </svg>
-                      </NavigationMenuLink>
+                      </Link>
                     </NavigationMenuItem>
                   )}
                 </NavigationMenuList>
