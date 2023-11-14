@@ -1,7 +1,6 @@
 import { ThemeProvider } from "../components/providers/theme-provider";
 import { Balancer } from "react-wrap-balancer";
 
-import { Badge } from "@/components/ui/badge";
 import { Row } from "@/components/ui/row";
 import { Column } from "@/components/ui/column";
 import Navbar from "@/components/navbar";
@@ -10,14 +9,22 @@ import CTA from "@/components/cta";
 import Footer from "@/components/footer";
 import FAQ from "@/components/faq";
 
-import { getSession, getSubscription, getUserDetails } from "./supabase-server";
+import {
+  getGenerationCount,
+  getSession,
+  getSubscription,
+  getUserDetails,
+} from "./supabase-server";
+import { formatCount } from "@/lib/utils";
 
 export default async function PlaygroundPage() {
-  const [session, userDetails, subscription] = await Promise.all([
-    getSession(),
-    getUserDetails(),
-    getSubscription(),
-  ]);
+  const [session, userDetails, subscription, generationCount] =
+    await Promise.all([
+      getSession(),
+      getUserDetails(),
+      getSubscription(),
+      getGenerationCount(),
+    ]);
 
   const user = session?.user;
 
@@ -30,15 +37,14 @@ export default async function PlaygroundPage() {
             <Balancer className="text-center">
               <div className="relative">
                 <h1 className="text-4xl font-bold">Glyph</h1>
-                <Badge className="absolute top-0 right-6 bg-blue-600 border-0">
-                  Beta
-                </Badge>
               </div>
               <p className="text-lg text-muted-foreground mt-3">
-                Create, captivate, connect. <br />
-                Elevate your brand with Glyph.
+                Create, captivate, connect. Elevate your brand with Glyph.
               </p>
             </Balancer>
+            <div className="relative rounded-full mt-3 px-3 py-1 text-sm text-indigo-500 dark:text-indigo-400 leading-6 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:ring-gray-100/40">
+              {formatCount(generationCount)} photos generated and counting!
+            </div>
 
             <Row className="my-16 w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent" />
 

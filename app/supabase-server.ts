@@ -65,3 +65,24 @@ export const getActiveProductsWithPrices = async () => {
   }
   return data ?? [];
 };
+
+export async function getGenerationCount() {
+  const supabase = createServerSupabaseClient();
+  try {
+    const { data: generation, error } = await supabase
+      .from("generations")
+      .select("count")
+      .single();
+
+    if (error) {
+      console.error("Supabase error:", error);
+    }
+
+    console.log("Generation data:", generation);
+
+    return generation ? generation.count : null;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+}

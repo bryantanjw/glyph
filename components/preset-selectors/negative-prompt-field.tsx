@@ -39,6 +39,7 @@ export function NegativePromptField({ form }: NegativePromptFieldProps) {
               </Label>
             </div>
             <Textarea
+              className="md:min-h-[150px]"
               {...form.register("negativePrompt")}
               onChange={handleNegativePromptChange}
               value={negativePrompt}

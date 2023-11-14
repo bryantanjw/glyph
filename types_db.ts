@@ -26,10 +26,23 @@ export interface Database {
           {
             foreignKeyName: "customers_id_fkey";
             columns: ["id"];
+            isOneToOne: true;
             referencedRelation: "users";
             referencedColumns: ["id"];
           }
         ];
+      };
+      generations: {
+        Row: {
+          count: number;
+        };
+        Insert: {
+          count: number;
+        };
+        Update: {
+          count?: number;
+        };
+        Relationships: [];
       };
       prices: {
         Row: {
@@ -79,6 +92,7 @@ export interface Database {
           {
             foreignKeyName: "prices_product_id_fkey";
             columns: ["product_id"];
+            isOneToOne: false;
             referencedRelation: "products";
             referencedColumns: ["id"];
           }
@@ -167,12 +181,14 @@ export interface Database {
           {
             foreignKeyName: "subscriptions_price_id_fkey";
             columns: ["price_id"];
+            isOneToOne: false;
             referencedRelation: "prices";
             referencedColumns: ["id"];
           },
           {
             foreignKeyName: "subscriptions_user_id_fkey";
             columns: ["user_id"];
+            isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
           }
@@ -207,6 +223,7 @@ export interface Database {
           {
             foreignKeyName: "users_id_fkey";
             columns: ["id"];
+            isOneToOne: true;
             referencedRelation: "users";
             referencedColumns: ["id"];
           }

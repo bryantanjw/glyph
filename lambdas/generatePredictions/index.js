@@ -6,17 +6,19 @@
  *
  * Input:
  * - event.body: Contains parameters for the prediction process.
- *   {
- *     prompt,
- *     url,
- *    image,
- *     negativePrompt,
- *     inferenceStep,
- *     guidance,
- *     strength,
- *     controlnetConditioning,
- *     seed
- *   }
+ *   {
+ *     prompt,
+ *     url,
+ *     image,
+ *     negativePrompt,
+ *     inferenceStep,
+ *     guidance,
+ *     strength,
+ *     controlnetConditioning,
+ *     seed,
+ *     width,
+ *     height
+ *   }
  *
  * Output:
  * - Success: Returns a status 'polling' with a URL to poll for the result.
@@ -39,10 +41,6 @@ import { Ratelimit } from "@upstash/ratelimit";
 import redis from "./utils/redis.js";
 
 const REPLICATE_API_URL = "https://api.replicate.com/v1/predictions";
-const MODEL_VERSION_1 =
-  "75d51a73fce3c00de31ed9ab4358c73e8fc0f627dc8ce975818e653317cb919b";
-const MODEL_VERSION_2 =
-  "9cdabf8f8a991351960c7ce2105de2909514b40bd27ac202dba57935b07d29d4";
 
 // Initialize Supabase admin client
 const supabaseAdmin = createClient(
@@ -123,12 +121,12 @@ export const handler = async (event) => {
       inferenceStep,
       controlnetConditioning,
       guidance,
-      strength,
       seed,
       userId,
       subscription_tier,
-    } = req; // Get the user's current credits
+    } = req;
 
+    // Get the user's current credits
     const { data: user, error: getUserError } = await supabaseAdmin
       .from("users")
       .select("credits")
@@ -138,8 +136,9 @@ export const handler = async (event) => {
     if (getUserError) {
       console.error("Error getting user:", getUserError);
       throw new Error("Error getting user");
-    } // Check if the user has sufficient credits
+    }
 
+    // Check if the user has sufficient credits
     if (user.credits <= 0) {
       return {
         statusCode: 400,
@@ -149,8 +148,9 @@ export const handler = async (event) => {
           message: "You have insufficient credits.",
         }),
       };
-    } // Use a constant string to limit all requests with a single ratelimit // Or use a userID, apiKey or ip address for individual limits.
+    }
 
+    // Use a constant string to limit all requests with a single ratelimit // Or use a userID, apiKey or ip address for individual limits.
     const identifier = subscription_tier ? "ip address" : userId; // Select the appropriate rate limiter based on the subscription tier
     const ratelimiter =
       ratelimits[subscriptionTierToRateLimitKey[subscription_tier]] ||
@@ -168,8 +168,9 @@ export const handler = async (event) => {
           message: "You've exceeded your tier limit. Please try again later.",
         }),
       };
-    } // POST request to Replicate to start the image restoration generation process
+    }
 
+    // POST request to Replicate to start the image restoration generation process
     let startResponse = null;
     const input = {
       prompt,
@@ -187,21 +188,16 @@ export const handler = async (event) => {
       height: 768,
     };
 
-    if (modelVersion === MODEL_VERSION_1) {
-      startResponse = await makeRequest(modelVersion, input);
-    } else if (modelVersion === MODEL_VERSION_2) {
-      input.strength = strength;
-      input.batch_size = 1;
-      startResponse = await makeRequest(modelVersion, input);
-    }
+    startResponse = await makeRequest(modelVersion, input);
 
     if (!startResponse.ok) {
       throw new Error(`HTTP error! status: ${startResponse.statusText}`);
     }
 
     let jsonStartResponse = await startResponse.json();
-    let endpointUrl = jsonStartResponse.urls.get; // Return immediately with a "polling" status and the URL to poll for the result
+    let endpointUrl = jsonStartResponse.urls.get;
 
+    // Return immediately with a "polling" status and the URL to poll for the result
     if (endpointUrl) {
       // Deduct one credit from the user
       const newCredits = (user.credits || 0) - 1;
@@ -213,6 +209,30 @@ export const handler = async (event) => {
       if (updateUserError) {
         console.error("Error deducting user credits:", updateUserError);
         throw new Error("Error deducting user credits");
+      }
+
+      // Fetch the current count from the "generations" table
+      const { data: generation, error: getGenerationError } =
+        await supabaseAdmin.from("generations").select("count").single();
+
+      if (getGenerationError) {
+        console.error("Error getting generation count:", getGenerationError);
+        throw new Error("Error getting generation count");
+      }
+
+      // Increment the count and update the "generations" table
+      const newCount = (generation.count || 0) + 1;
+      const { error: updateGenerationError } = await supabaseAdmin
+        .from("generations")
+        .update({ count: newCount })
+        .match({ count: generation.count });
+
+      if (updateGenerationError) {
+        console.error(
+          "Error updating generation count:",
+          updateGenerationError
+        );
+        throw new Error("Error updating generation count");
       }
 
       return {
