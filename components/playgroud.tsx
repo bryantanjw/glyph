@@ -4,12 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { PutBlobResult } from "@vercel/blob";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import {
-  CopyIcon,
   Cross2Icon,
-  DownloadIcon,
-  ExternalLinkIcon,
   LockClosedIcon,
   LockOpen1Icon,
   MixerHorizontalIcon,
@@ -17,6 +14,7 @@ import {
   ReloadIcon,
 } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
+import promptmaker from "promptmaker";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -32,8 +30,9 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { SuccessIcon } from "./success-icon";
 import { useToast } from "@/components/ui/use-toast";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { ToastAction } from "@/components/ui/toast";
+import { Row } from "./ui/row";
+import { Column } from "./ui/column";
 import { Toggle } from "./ui/toggle";
 
 import { ImageSelector } from "./image-selector";
@@ -46,12 +45,10 @@ import { ControlNetConditioningSelector } from "@/components/preset-selectors/na
 import { NegativePromptField } from "@/components/preset-selectors/negative-prompt-field";
 
 import { playgroundFormSchema } from "@/schemas/formSchemas";
-import { Model, models, types } from "@/data/models";
+import { Model, models } from "@/data/models";
 import { Preset } from "@/data/presets";
 import { extractProgress } from "@/utils/helpers";
 import { usePlaygroundForm } from "@/hooks/use-playground-form";
-import { Row } from "./ui/row";
-import { Column } from "./ui/column";
 import ExampleTemplatesSection from "./example-templates-section";
 
 export default function Playground({ user, userDetails, subscription }) {
@@ -60,6 +57,7 @@ export default function Playground({ user, userDetails, subscription }) {
   const { toast } = useToast();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
+  const [prompt, setPrompt] = useState(() => promptmaker());
   const [file, setFile] = useState<File | null>(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedPreset, setSelectedPreset] = useState<Preset>();
@@ -342,12 +340,12 @@ export default function Playground({ user, userDetails, subscription }) {
                   <span className="sr-only">Close</span>
                 </div>
                 <div className="mb-2">
-                  <ModelSelector
+                  {/* <ModelSelector
                     types={types}
                     models={models}
                     onModelChange={setSelectedModel}
                     form={form}
-                  />
+                  /> */}
                   <div className="space-y-2 mb-2">
                     <NegativePromptField form={form} />
                     <InferenceStepSelector form={form} />
@@ -373,7 +371,7 @@ export default function Playground({ user, userDetails, subscription }) {
                 variants={gridVariants}
               >
                 <div className="md:flex md:flex-col space-y-4 mx-auto">
-                  <div className="grid h-full gap-5 lg:grid-cols-[1fr_420px]">
+                  <div className="grid h-full gap-5 lg:grid-cols-[1fr_500px]">
                     <div className="flex flex-col space-y-4">
                       <div className="flex flex-col space-y-2">
                         <div>
@@ -409,14 +407,42 @@ export default function Playground({ user, userDetails, subscription }) {
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <Textarea
-                                  placeholder={
-                                    "a cubism painting of a town with a lot of houses in the snow with a sky background, Andreas Rocha, matte painting concept art, a detailed matte painting"
-                                  }
-                                  className="flex-1 min-h-[150px] lg:min-h-[200px]"
-                                  {...field}
-                                />
+                                <div className="textarea-container relative">
+                                  <Textarea
+                                    placeholder={prompt}
+                                    className="flex-1 min-h-[150px] lg:min-h-[200px] transition duration-200 focus:ring-2 focus:ring-blue-500"
+                                    onKeyDown={(event) => {
+                                      if (event.key === "Tab") {
+                                        event.preventDefault(); // Prevent focus from moving to the next element
+                                        field.onChange(
+                                          event.currentTarget.placeholder
+                                        );
+                                      } else if (
+                                        event.key === "]" &&
+                                        event.metaKey
+                                      ) {
+                                        event.preventDefault();
+                                        setPrompt(promptmaker()); // Generate a new prompt
+                                      }
+                                    }}
+                                    {...field}
+                                  />
+                                  <div className="kbd-div absolute right-5 bottom-3 text-xs text-gray-600">
+                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                      Tab
+                                    </kbd>{" "}
+                                    Autcomplete
+                                    <kbd className="mr-1 ml-4 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                      ⌘
+                                    </kbd>
+                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                      ]
+                                    </kbd>{" "}
+                                    Next
+                                  </div>
+                                </div>
                               </FormControl>
+
                               <FormMessage />
                             </FormItem>
                           )}
@@ -543,7 +569,7 @@ export default function Playground({ user, userDetails, subscription }) {
                         </Link>
                       </div>
                     ) : (
-                      <div className="min-h-[300px] min-w-[320px] md:min-h-[420px] md:min-w-[420px] rounded-md border bg-muted relative mx-auto">
+                      <div className="min-h-[300px] min-w-[320px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
                         {isSubmitting && (
                           <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
                             <Label className="text-muted-foreground font-normal">
@@ -555,14 +581,10 @@ export default function Playground({ user, userDetails, subscription }) {
                             </div>
                           </div>
                         )}
-                        {!isSubmitting && (selectedImage || file) && (
+                        {!isSubmitting && selectedImage && (
                           <Image
                             alt="Selected image"
-                            src={
-                              file
-                                ? URL.createObjectURL(file)
-                                : selectedImage.url
-                            }
+                            src={selectedImage.url}
                             width={768}
                             height={768}
                             quality={100}

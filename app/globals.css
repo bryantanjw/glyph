@@ -116,6 +116,18 @@
   width: var(--radix-popover-trigger-width);
 }
 
+.kbd-div {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
+}
+
+.textarea-container:focus-within .kbd-div {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
+}
+
 .examples-container {
   -webkit-mask-image: linear-gradient(
     90deg,
