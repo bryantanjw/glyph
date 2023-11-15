@@ -110,7 +110,7 @@ export function ImageSelector({
       <Label htmlFor="input">Image / QR code</Label>
       {file ? (
         <div className="w-full py-2 gap-2 flex flex-col justify-start items-center max-h-52 overflow-auto">
-          <div className="flex flex-row justify-between items-center border dark:border-neutral-700 rounded-lg px-2 py-1 w-full group">
+          <div className="flex flex-row justify-between items-center border dark:border-neutral-700 rounded-md shadow-sm px-2 py-1 w-full group">
             <div className="flex flex-row justify-start items-center gap-2">
               <div>
                 {isLoading ? (
@@ -148,7 +148,7 @@ export function ImageSelector({
             </div>
             <div className="flex flex-row justify-end items-center gap-2">
               <button
-                className="text-neutral-400 hidden group-hover:flex flex-row justify-end bg-neutral-100 dark:bg-neutral-300 p-2 mr-1 rounded-lg hover:text-black transition-all hover:cursor-pointer"
+                className="text-neutral-400 hidden group-hover:flex flex-row justify-end bg-neutral-100 dark:bg-neutral-300 p-2 mr-1 rounded-md hover:text-black transition-all hover:cursor-pointer"
                 onClick={() => handleDelete(file.name)}
               >
                 <TrashIcon className="h-4 w-4" />
