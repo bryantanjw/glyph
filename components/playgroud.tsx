@@ -422,20 +422,25 @@ export default function Playground({ user, userDetails, subscription }) {
                                         event.metaKey
                                       ) {
                                         event.preventDefault();
-                                        setPrompt(promptmaker()); // Generate a new prompt
+                                        if (field.value.trim() !== "") {
+                                          setPrompt(promptmaker()); // Generate a new prompt
+                                          field.onChange(promptmaker());
+                                        } else {
+                                          setPrompt(promptmaker());
+                                        }
                                       }
                                     }}
                                     {...field}
                                   />
-                                  <div className="kbd-div absolute right-5 bottom-3 text-xs text-gray-600">
-                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                  <div className="kbd-div absolute right-5 bottom-3 text-xs text-gray-600 dark:text-gray-200">
+                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
                                       Tab
                                     </kbd>{" "}
-                                    Autcomplete
-                                    <kbd className="mr-1 ml-4 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                    Autocomplete
+                                    <kbd className="mr-1 ml-4 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
                                       ⌘
                                     </kbd>
-                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
                                       ]
                                     </kbd>{" "}
                                     Next

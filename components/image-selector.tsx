@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   CaretSortIcon,
   CheckIcon,
+  Cross2Icon,
   TrashIcon,
   UploadIcon,
 } from "@radix-ui/react-icons";
@@ -148,10 +149,10 @@ export function ImageSelector({
             </div>
             <div className="flex flex-row justify-end items-center gap-2">
               <button
-                className="text-neutral-400 hidden group-hover:flex flex-row justify-end bg-neutral-100 dark:bg-neutral-300 p-2 mr-1 rounded-md hover:text-black transition-all hover:cursor-pointer"
+                className="flex flex-row justify-end p-2 mr-1 rounded-md opacity-40 hover:opacity-70 transition-all hover:cursor-pointer"
                 onClick={() => handleDelete(file.name)}
               >
-                <TrashIcon className="h-4 w-4" />
+                <Cross2Icon className="h-4 w-4" />
               </button>
             </div>
           </div>

@@ -33,8 +33,8 @@ export default async function PlaygroundPage() {
       <Navbar user={user} userDetails={userDetails} />
       <div className="max-w-7xl w-full mx-auto flex flex-col items-center">
         <Column className="w-full items-center min-h-screen">
-          <Column className="items-center pt-32 pb-10 max-w-3xl lg:max-w-5xl">
-            <Balancer className="text-center">
+          <Column className="items-center pt-32 pb-10 max-w-3xl lg:max-w-6xl">
+            <Balancer className="text-center tracking-wide">
               <div className="relative">
                 <h1 className="text-4xl font-bold">Glyph</h1>
               </div>
@@ -42,7 +42,7 @@ export default async function PlaygroundPage() {
                 Create, captivate, connect. Elevate your brand with Glyph.
               </p>
             </Balancer>
-            <div className="relative rounded-full mt-3 px-3 py-1 text-sm text-indigo-500 dark:text-indigo-400 leading-6 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:ring-gray-100/40">
+            <div className="thirteen relative mt-3 px-4 py-1.5 text-sm font-light tracking-wide">
               {formatCount(generationCount)} photos generated and counting!
             </div>
 
