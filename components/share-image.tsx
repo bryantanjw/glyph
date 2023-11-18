@@ -1,5 +1,5 @@
-import { useCallback, useRef } from "react";
-import { CopyIcon } from "@radix-ui/react-icons";
+import { useCallback, useRef, useState } from "react";
+import { CopyIcon, CheckIcon } from "@radix-ui/react-icons";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -7,14 +7,20 @@ import { Label } from "./ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export function ShareImage({ image }: { image: string }) {
+  const [isCopied, setIsCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleCopy = useCallback(async () => {
+  const handleCopy = useCallback(async (event) => {
+    event.stopPropagation();
+    event.preventDefault();
     if (inputRef.current) {
       await navigator.clipboard.writeText(inputRef.current.value);
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1500);
     }
   }, []);
-
   return (
     <Popover>
       <PopoverTrigger asChild className="absolute top-4 right-4">
@@ -45,8 +51,12 @@ export function ShareImage({ image }: { image: string }) {
           </div>
           <Button type="button" size="sm" className="px-3" onClick={handleCopy}>
             <span className="sr-only">Copy</span>
-            <CopyIcon className="h-4 w-4" />
-          </Button>{" "}
+            {isCopied ? (
+              <CheckIcon className="h-4 w-4" />
+            ) : (
+              <CopyIcon className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </PopoverContent>
     </Popover>
