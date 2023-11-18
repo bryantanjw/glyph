@@ -52,6 +52,7 @@ import { Preset } from "@/data/presets";
 import { extractProgress } from "@/utils/helpers";
 import { usePlaygroundForm } from "@/hooks/use-playground-form";
 import ExampleTemplatesSection from "./example-templates-section";
+import { ShareImage } from "./share-image";
 
 interface PlaygroundProps {
   user: User | null | undefined;
@@ -527,7 +528,7 @@ export default function Playground({
                       <div className="flex flex-row items-center space-x-2">
                         {isSuccess ? (
                           <Button
-                            className="w-full lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                            className="w-full text-white lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
                             style={{
                               boxShadow:
                                 "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
@@ -610,7 +611,7 @@ export default function Playground({
                           </div>
                         </div>
                       ) : prediction?.output || data ? (
-                        <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] flex justify-center items-center">
+                        <div className="relative md:min-h-[420px] md:min-w-[420px] flex bg-muted rounded-md overflow-hidden group">
                           <Link
                             href={prediction?.output[0] || data?.output[0]}
                             target="_blank"
@@ -623,8 +624,16 @@ export default function Playground({
                               height={768}
                               quality={100}
                               onLoad={() => setImageLoaded(true)}
+                              className="object-cover transition-all hover:scale-105"
                             />
                           </Link>
+                          <div className="absolute top-0 right-0 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                            <ShareImage
+                              image={`https://glyph.so/t/${
+                                prediction?.id ?? data?.id
+                              }`}
+                            />
+                          </div>
                         </div>
                       ) : selectedImage ? (
                         <div className="min-h-[300px] min-w-[320px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">

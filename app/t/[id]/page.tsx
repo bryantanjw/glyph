@@ -17,7 +17,7 @@ export async function generateMetadata({
     id: string;
   };
 }): Promise<Metadata | undefined> {
-  const title = `Generated using glyph.so`;
+  const title = `Glyph`;
   // const description = `A photo generated from the prompt: ${data.prompt}`;
 
   return {
