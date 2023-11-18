@@ -12,15 +12,20 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-import { playgroundFormSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/utils/formSchemas";
 import { useSliderChange } from "@/hooks/use-slider-change";
 
-interface StrengthSelectorProps {
+interface ControlNetConditioningSelectorProps {
   form: UseFormReturn<z.infer<typeof playgroundFormSchema>>;
 }
 
-export function StrengthSelector({ form }: StrengthSelectorProps) {
-  const { value, handleSliderChange } = useSliderChange(form, "strength");
+export function ControlNetConditioningSelector({
+  form,
+}: ControlNetConditioningSelectorProps) {
+  const { value, handleSliderChange } = useSliderChange(
+    form,
+    "controlnetConditioning"
+  );
 
   return (
     <div className="grid gap-2 pt-2">
@@ -28,27 +33,28 @@ export function StrengthSelector({ form }: StrengthSelectorProps) {
         <HoverCardTrigger asChild>
           <div className="grid gap-3">
             <div className="flex items-center justify-between">
-              <Label htmlFor="Strength" className="leading-[1.5]">
-                Strength
+              <Label htmlFor="ControlNetConditioning" className="leading-[1.5]">
+                Control Weight
               </Label>
               <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
                 {value}
               </span>
             </div>
             <Slider
-              id="strength"
-              max={30}
+              id="ControlNetConditioning"
+              max={4}
+              min={0.1}
               value={[value]}
-              step={0.2}
+              step={0.05}
               onValueChange={handleSliderChange}
               className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
-              aria-label="Strength"
+              aria-label="ControlNet Conditioning"
             />
           </div>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-[260px] text-sm">
-          Indicator for how much to transform the masked portion of the
-          reference `image`. Must be between 0 and 1. (maximum: 1)
+          Adjust how readable you want the QR code or image to be. (minimum: 1;
+          maximum: 4)
         </HoverCardContent>
       </HoverCard>
     </div>

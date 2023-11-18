@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/popover";
 
 import { Model, ModelType } from "@/data/models";
-import { playgroundFormSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/utils/formSchemas";
 
 interface ModelSelectorProps extends PopoverProps {
   types: readonly ModelType[];

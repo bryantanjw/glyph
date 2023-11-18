@@ -12,7 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-import { playgroundFormSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/utils/formSchemas";
 import { useSliderChange } from "@/hooks/use-slider-change";
 
 interface GuidanceSelectorProps {
@@ -48,7 +48,7 @@ export function GuidanceSelector({ form }: GuidanceSelectorProps) {
           </div>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-[260px] text-sm">
-          Adjust how much the output should follow your prompt (minimum: 0.5;
+          Adjust how much the output should follow your prompt. (minimum: 0.5;
           maximum: 30).
         </HoverCardContent>
       </HoverCard>

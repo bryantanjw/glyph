@@ -111,7 +111,7 @@ export function ImageSelector({
       <Label htmlFor="input">Image / QR code</Label>
       {file ? (
         <div className="w-full py-2 gap-2 flex flex-col justify-start items-center max-h-52 overflow-auto">
-          <div className="flex flex-row justify-between items-center border dark:border-neutral-700 rounded-md shadow-sm px-2 py-1 w-full group">
+          <div className="flex flex-row justify-between items-center border dark:border-neutral-700 rounded-md shadow-sm p-2 w-full group">
             <div className="flex flex-row justify-start items-center gap-2">
               <div>
                 {isLoading ? (
@@ -149,7 +149,7 @@ export function ImageSelector({
             </div>
             <div className="flex flex-row justify-end items-center gap-2">
               <button
-                className="flex flex-row justify-end p-2 mr-1 rounded-md opacity-40 hover:opacity-70 transition-all hover:cursor-pointer"
+                className="flex flex-row justify-end p-2 rounded-md opacity-40 hover:opacity-70 transition-all hover:cursor-pointer"
                 onClick={() => handleDelete(file.name)}
               >
                 <Cross2Icon className="h-4 w-4" />

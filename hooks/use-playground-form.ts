@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { playgroundFormSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/utils/formSchemas";
 
 export function usePlaygroundForm() {
   const form = useForm<z.infer<typeof playgroundFormSchema>>({
@@ -13,10 +13,10 @@ export function usePlaygroundForm() {
       url: "https://glyph.so",
       image: "",
       negativePrompt: "ugly, disfigured, low quality, blurry, nsfw",
-      inferenceStep: 20,
-      guidance: 9.5,
+      inferenceStep: 40,
+      guidance: 7.5,
       strength: 0.85,
-      controlnetConditioning: 1.2,
+      controlnetConditioning: 1,
       seed: -1,
     },
   });

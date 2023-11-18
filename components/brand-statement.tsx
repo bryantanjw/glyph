@@ -13,14 +13,14 @@ const images = [
       "https://cdn.sanity.io/images/s3mrlbj8/production/ffcaac7dc8f17e2e300dc12f6951b66a9bb9e470-768x768.png",
   },
   {
-    prompt: "Darthouven Fish Men",
-    image:
-      "https://cdn.sanity.io/images/s3mrlbj8/production/fca5a377252afeecfc2c1c281d4a0aa45579e9f0-768x768.png",
-  },
-  {
     prompt: "Japanese painting, mountains",
     image:
       "https://cdn.sanity.io/images/s3mrlbj8/production/5be6c4ddbebdc7dfa14b2d0ecc1e61b0f8ea7452-768x768.png",
+  },
+  {
+    prompt: "Darthouven Fish Men",
+    image:
+      "https://cdn.sanity.io/images/s3mrlbj8/production/fca5a377252afeecfc2c1c281d4a0aa45579e9f0-768x768.png",
   },
   {
     prompt: "A cyberpunk alleyway, realism, tokyo 2050",

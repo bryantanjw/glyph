@@ -12,7 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
-import { playgroundFormSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/utils/formSchemas";
 import { useSliderChange } from "@/hooks/use-slider-change";
 
 interface InferenceStepSelectorProps {

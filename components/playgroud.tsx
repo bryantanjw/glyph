@@ -12,9 +12,11 @@ import {
   MixerHorizontalIcon,
   PlusCircledIcon,
   ReloadIcon,
+  UpdateIcon,
 } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import promptmaker from "promptmaker";
+import { User } from "@supabase/supabase-js";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -41,17 +43,29 @@ import { ModelSelector } from "@/components/preset-selectors/model-selector";
 import { InferenceStepSelector } from "@/components/preset-selectors/inference-step-selector";
 import { SeedField } from "@/components/preset-selectors/seed-field";
 import { GuidanceSelector } from "@/components/preset-selectors/guidance-selector";
-import { ControlNetConditioningSelector } from "@/components/preset-selectors/nateraw/controlnet-conditioning-selector";
+import { ControlNetConditioningSelector } from "@/components/preset-selectors/controlnet-conditioning-selector";
 import { NegativePromptField } from "@/components/preset-selectors/negative-prompt-field";
 
-import { playgroundFormSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/utils/formSchemas";
 import { Model, models } from "@/data/models";
 import { Preset } from "@/data/presets";
 import { extractProgress } from "@/utils/helpers";
 import { usePlaygroundForm } from "@/hooks/use-playground-form";
 import ExampleTemplatesSection from "./example-templates-section";
 
-export default function Playground({ user, userDetails, subscription }) {
+interface PlaygroundProps {
+  user: User | null | undefined;
+  userDetails?: any;
+  subscription?: any;
+  data?: any;
+}
+
+export default function Playground({
+  user,
+  userDetails,
+  subscription,
+  data,
+}: PlaygroundProps) {
   const router = useRouter();
   const form = usePlaygroundForm();
   const { toast } = useToast();
@@ -65,9 +79,9 @@ export default function Playground({ user, userDetails, subscription }) {
   const [selectedModel, setSelectedModel] = useState<Model | null>(models[0]);
 
   // State management for Replicate prediction
-  const [prediction, setPrediction] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("Starting...");
+  const [prediction, setPrediction] = useState(null);
 
   // Form states
   const [isSuccess, setIsSuccess] = useState(false);
@@ -105,6 +119,20 @@ export default function Playground({ user, userDetails, subscription }) {
   };
 
   useEffect(() => {
+    if (data) {
+      form.setValue("prompt", data.input.prompt);
+      form.setValue("negativePrompt", data.input.negative_prompt);
+      form.setValue("inferenceStep", data.input.num_inference_steps);
+      form.setValue("guidance", data.input.guidance_scale);
+      form.setValue(
+        "controlnetConditioning",
+        data.input.controlnet_conditioning_scale
+      );
+      form.setValue("seed", data.input.seed);
+    }
+  }, [data, form]);
+
+  useEffect(() => {
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth <= 768);
     };
@@ -116,8 +144,8 @@ export default function Playground({ user, userDetails, subscription }) {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  /* UMCONMMENT to List blob objects from Vercel Blob Storage and delete them */
   // useEffect(() => {
-  //   // List blob objects from Vercel Blob Storage
   //   const getBlobs = async () => {
   //     const res = await fetch("/api/blob/get-blobs");
   //     const data = await res.json();
@@ -145,6 +173,22 @@ export default function Playground({ user, userDetails, subscription }) {
   //   };
   //   deleteBlob();
   // }, []);
+
+  async function handleDeleteBlob(blobUrl: string) {
+    try {
+      const delBlobResponse = await fetch(`/api/blob/delete?url=${blobUrl}`, {
+        method: "DELETE",
+      });
+
+      if (!delBlobResponse.ok) {
+        throw new Error("Failed to delete file");
+      }
+      console.log("delBlobResponse", delBlobResponse);
+    } catch (error) {
+      console.error("delBlobResponse", error);
+      setSubmitting(false);
+    }
+  }
 
   async function onSubmit(values: z.infer<typeof playgroundFormSchema>) {
     setStatus("Starting...");
@@ -290,22 +334,7 @@ export default function Playground({ user, userDetails, subscription }) {
 
       // Delete blob object from Vercel Blob Storage after generation
       if (blob) {
-        try {
-          const delBlobResponse = await fetch(
-            `/api/blob/delete?url=${blob.url}`,
-            {
-              method: "DELETE",
-            }
-          );
-
-          if (!delBlobResponse.ok) {
-            throw new Error("Failed to delete file");
-          }
-          console.log("delBlobResponse", delBlobResponse);
-        } catch (error) {
-          console.error("delBlobResponse", error);
-          setSubmitting(false);
-        }
+        await handleDeleteBlob(blob.url);
       }
     }
     // After 2 seconds of image generation success, restore button to default state
@@ -432,18 +461,34 @@ export default function Playground({ user, userDetails, subscription }) {
                                     }}
                                     {...field}
                                   />
-                                  <div className="kbd-div absolute right-5 bottom-3 text-xs text-gray-600 dark:text-gray-200">
-                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
-                                      Tab
-                                    </kbd>{" "}
-                                    Autocomplete
-                                    <kbd className="mr-1 ml-4 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
-                                      ⌘
-                                    </kbd>
-                                    <kbd className="mr-1 h-5 inline-flex justify-center items-center py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
-                                      ]
-                                    </kbd>{" "}
-                                    Next
+                                  <Button
+                                    className="absolute right-3 bottom-3 md:hidden"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={(event) => {
+                                      event.preventDefault();
+                                      setPrompt(promptmaker());
+                                      field.onChange(promptmaker());
+                                    }}
+                                  >
+                                    <UpdateIcon />
+                                  </Button>
+                                  <div className="kbd-div hidden md:block absolute right-5 bottom-5 space-y-4 text-xs text-gray-600 dark:text-gray-200 justify-start">
+                                    <div>
+                                      <kbd className="mr-1 h-5 py-0.5 px-1.5 bg-white border border-gray-200 font-mono text-sm text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                        ⌘
+                                      </kbd>
+                                      <kbd className="mr-1 h-5 py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                        ]
+                                      </kbd>{" "}
+                                      Next
+                                    </div>
+                                    <div>
+                                      <kbd className="mr-1 h-5 py-1 px-1.5 bg-white border border-gray-200 font-mono text-xs text-gray-500 rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)]">
+                                        Tab
+                                      </kbd>{" "}
+                                      Autocomplete
+                                    </div>
                                   </div>
                                 </div>
                               </FormControl>
@@ -553,40 +598,36 @@ export default function Playground({ user, userDetails, subscription }) {
                         </Toggle>
                       </div>
                     </div>
-
-                    {prediction && prediction.output ? (
-                      <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] flex justify-center items-center">
-                        <Link
-                          href={prediction.output[prediction.output.length - 1]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Image
-                            alt="Glyph image output"
-                            src={
-                              prediction.output[prediction.output.length - 1]
-                            }
-                            width={768}
-                            height={768}
-                            quality={100}
-                            onLoad={() => setImageLoaded(true)}
-                          />
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="min-h-[300px] min-w-[320px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
-                        {isSubmitting && (
-                          <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
-                            <Label className="text-muted-foreground font-normal">
-                              {status}
-                            </Label>
-                            <Progress className="w-1/2" value={progress} />
-                            <div className="absolute bottom-4 w-full text-center text-slate-500 text-xs">
-                              Takes 8-20 seconds to generate.
-                            </div>
+                    <div className="min-h-[300px] min-w-[320px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
+                      {isSubmitting ? (
+                        <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
+                          <Label className="text-muted-foreground font-normal">
+                            {status}
+                          </Label>
+                          <Progress className="w-1/2" value={progress} />
+                          <div className="absolute bottom-4 w-full text-center text-slate-500 text-xs">
+                            Takes 8-20 seconds to generate.
                           </div>
-                        )}
-                        {!isSubmitting && selectedImage && (
+                        </div>
+                      ) : prediction?.output || data ? (
+                        <div className="bg-muted rounded-md hover:opacity-90 duration-500 ease-in-out mx-auto md:min-h-[420px] md:min-w-[420px] flex justify-center items-center">
+                          <Link
+                            href={prediction?.output[0] || data?.output[0]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Image
+                              alt="Glyph image output"
+                              src={prediction?.output[0] || data?.output[0]}
+                              width={768}
+                              height={768}
+                              quality={100}
+                              onLoad={() => setImageLoaded(true)}
+                            />
+                          </Link>
+                        </div>
+                      ) : selectedImage ? (
+                        <div className="min-h-[300px] min-w-[320px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
                           <Image
                             alt="Selected image"
                             src={selectedImage.url}
@@ -594,9 +635,9 @@ export default function Playground({ user, userDetails, subscription }) {
                             height={768}
                             quality={100}
                           />
-                        )}
-                      </div>
-                    )}
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </motion.div>

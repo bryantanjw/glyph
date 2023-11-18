@@ -23,7 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
 import { useSupabase } from "@/components/providers/supabase-provider";
-import { forgotPasswordFormSchema } from "@/schemas/formSchemas";
+import { forgotPasswordFormSchema } from "@/utils/formSchemas";
 
 interface ForgotPasswordFormProps
   extends React.HTMLAttributes<HTMLDivElement> {}

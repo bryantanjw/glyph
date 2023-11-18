@@ -14,7 +14,7 @@ export default async function SettingsBillingPage() {
   ]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-[800px]">
       <div>
         <h3 className="text-lg font-medium">Billing</h3>
         <p className="text-sm text-muted-foreground">

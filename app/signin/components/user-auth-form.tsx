@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useSupabase } from "@/components/providers/supabase-provider";
-import { signInFormSchema } from "@/schemas/formSchemas";
+import { signInFormSchema } from "@/utils/formSchemas";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Balancer } from "react-wrap-balancer";
 
@@ -346,7 +346,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               Already have an account?{" "}
               <span
                 onClick={setIsSignUp.bind(null, false)}
-                className="underline underline-offset-2 hover:text-muted-foreground text-black cursor-pointer"
+                className="underline underline-offset-2 hover:text-foreground cursor-pointer"
               >
                 Sign in
               </span>
@@ -358,7 +358,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               Don&apos;t have an account?{" "}
               <span
                 onClick={setIsSignUp.bind(null, true)}
-                className="underline underline-offset-2 hover:text-muted-foreground text-black cursor-pointer"
+                className="underline underline-offset-2 hover:text-foreground cursor-pointer"
               >
                 Sign up now
               </span>

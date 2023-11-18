@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { FormControl, FormItem, FormMessage } from "@/components/ui/form";
 
-import { playgroundFormSchema } from "@/schemas/formSchemas";
+import { playgroundFormSchema } from "@/utils/formSchemas";
 
 interface SeedFieldProps {
   form: UseFormReturn<z.infer<typeof playgroundFormSchema>>;
