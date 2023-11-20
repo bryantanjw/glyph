@@ -621,7 +621,7 @@ export default function Playground({
                               className="object-cover transition-all md:hover:scale-105"
                             />
                           </Link>
-                          <div className="absolute top-0 right-0 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="absolute top-0 right-0">
                             <ShareImage
                               image={`https://glyph.so/t/${
                                 prediction?.id ?? data?.id

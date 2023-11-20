@@ -21,9 +21,7 @@ export default async function DynamicOG({
       <div
         tw="flex flex-col w-full h-full items-center justify-center bg-red-500 p-16"
         style={{
-          backgroundImage: `url(${
-            prediction.output[0] || "https://glyph.so/opengraph-image.png"
-          })`,
+          backgroundImage: `url(${"https://glyph.so/opengraph-image.png"})`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
