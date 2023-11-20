@@ -17,7 +17,7 @@ export default async function HomeLayout({ children, ...data }) {
       <Navbar user={user} userDetails={userDetails} />
       <div className="max-w-7xl w-full mx-auto flex flex-col items-center">
         <Column className="w-full items-center min-h-screen">
-          <Column className="items-center pt-32 pb-10 max-w-3xl lg:max-w-5xl xl:max-w-6xl">
+          <Column className="items-center w-full pt-32 pb-10 max-w-3xl lg:max-w-5xl xl:max-w-6xl">
             <Balancer className="text-center tracking-wide">
               <div className="relative">
                 <h1 className="text-4xl font-bold">Glyph</h1>

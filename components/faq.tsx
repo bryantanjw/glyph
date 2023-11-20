@@ -11,7 +11,7 @@ import { Row } from "./ui/row";
 
 export default function FAQ() {
   return (
-    <div className="mx-8 md:mx-0 grid items-center lg:grid-cols-2">
+    <div className="px-8 md:mx-0 grid items-center lg:grid-cols-2">
       <div className="mb-12 lg:mb-0">
         <div className="block rounded-lg bg-[hsla(0,0%,100%,0.55)] px-6 py-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-[hsla(0,0%,5%,0.55)] dark:shadow-black/20 md:px-12 lg:-mr-14 backdrop-blur-[30px]">
           <h3 className="mb-3 font-semibold text-blue-500 tracking-wider">

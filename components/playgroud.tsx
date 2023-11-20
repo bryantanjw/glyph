@@ -593,7 +593,7 @@ export default function Playground({
                         </Toggle>
                       </div>
                     </div>
-                    <div className="min-h-[380px] min-w-[380px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
+                    <div className="min-h-[320px] min-w-[320px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
                       {isSubmitting ? (
                         <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
                           <Label className="text-muted-foreground font-normal">
