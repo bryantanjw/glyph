@@ -11,7 +11,8 @@ import ProgressBarProvider from "../components/providers/progress-bar-provider";
 
 export const metadata: Metadata = {
   title: "Glyph",
-  description: "Generate stylistic QR codes using AI",
+  description: "Generate beautiful QR and illusion art with one click.",
+  metadataBase: new URL("https://glyph.so"),
 };
 
 export default function RootLayout({

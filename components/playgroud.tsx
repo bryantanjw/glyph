@@ -293,7 +293,6 @@ export default function Playground({
           }
         );
         let pollResponse = await pollRes.json();
-        console.log("pollResponse", pollResponse);
         const { status, logs } = pollResponse;
 
         if (status === "processing") {
@@ -312,7 +311,7 @@ export default function Playground({
           setIsSuccess(true);
           setSubmitting(false);
           toast({
-            title: "QR Code generated!",
+            title: "Image generated!",
           });
         } else if (pollResponse.status === "failed") {
           setSubmitting(false);
@@ -463,7 +462,7 @@ export default function Playground({
                                     {...field}
                                   />
                                   <Button
-                                    className="absolute right-3 bottom-3 md:hidden"
+                                    className="absolute right-2 bottom-2 md:hidden"
                                     variant="ghost"
                                     size="icon"
                                     onClick={(event) => {
@@ -528,7 +527,7 @@ export default function Playground({
                       <div className="flex flex-row items-center space-x-2">
                         {isSuccess ? (
                           <Button
-                            className="w-full text-white lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
+                            className="w-full h-10 md:h-9 text-white lg:w-auto min-w-[140px] duration-150 bg-green-500 hover:bg-green-600 hover:text-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 active:scale-100 active:bg-green-800 active:text-green-100"
                             style={{
                               boxShadow:
                                 "0px 1px 4px rgba(27, 71, 13, 0.17), inset 0px 0px 0px 1px #5fc767, inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1)",
@@ -563,17 +562,12 @@ export default function Playground({
                                 }
                               }
                             }}
-                            className="w-full lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75 disabled:cursor-not-allowed"
+                            className="w-full h-10 md:h-9 lg:w-auto min-w-[140px] duration-150 hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] active:scale-95 scale-100 duration-75 disabled:cursor-not-allowed"
                           >
                             {isSubmitting ? (
                               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
-                              <motion.div
-                                className="flex items-center justify-center gap-x-2"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.25 }}
-                              >
+                              <div className="flex items-center justify-center gap-x-2">
                                 {user ? (
                                   <Image
                                     className="filter invert dark:filter-none lg:-ml-1"
@@ -586,20 +580,20 @@ export default function Playground({
                                   <LockClosedIcon className="h-4 w-4" />
                                 )}
                                 <span>Generate</span>
-                              </motion.div>
+                              </div>
                             )}
                           </Button>
                         )}
                         <Toggle
                           aria-label="Toggle customize"
-                          className="bg-accent"
+                          className="bg-accent h-10 md:h-9"
                           onPressedChange={() => setIsCustom((prev) => !prev)}
                         >
                           <MixerHorizontalIcon />
                         </Toggle>
                       </div>
                     </div>
-                    <div className="min-h-[300px] min-w-[320px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
+                    <div className="min-h-[380px] min-w-[380px] md:min-h-[500px] md:min-w-[500px] rounded-md border bg-muted relative mx-auto">
                       {isSubmitting ? (
                         <div className="flex flex-col items-center justify-center absolute top-0 left-0 w-full h-full gap-3">
                           <Label className="text-muted-foreground font-normal">
@@ -624,7 +618,7 @@ export default function Playground({
                               height={768}
                               quality={100}
                               onLoad={() => setImageLoaded(true)}
-                              className="object-cover transition-all hover:scale-105"
+                              className="object-cover transition-all md:hover:scale-105"
                             />
                           </Link>
                           <div className="absolute top-0 right-0 md:opacity-0 group-hover:opacity-100 transition-opacity">

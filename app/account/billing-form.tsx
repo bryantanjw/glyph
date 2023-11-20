@@ -147,7 +147,7 @@ function CreditCard({ userDetails, redirectToCustomerPortal, isLoading }) {
 
             <div className="inline-flex flex-col items-center justify-center">
               <Image
-                src={"/glyph-logo.svg"}
+                src={"/logo.png"}
                 width={36}
                 height={36}
                 alt="glyph"

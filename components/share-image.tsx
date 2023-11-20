@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { CopyIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CopyIcon, CheckIcon, Share2Icon } from "@radix-ui/react-icons";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -23,12 +23,15 @@ export function ShareImage({ image }: { image: string }) {
   }, []);
   return (
     <Popover>
-      <PopoverTrigger asChild className="absolute top-4 right-4">
-        <Button className="p-3">Share</Button>
+      <PopoverTrigger asChild className="absolute top-4 right-4 rounded-lg">
+        <Button className="p-3 items-center gap-1">
+          <Share2Icon />
+          <span className="hidden md:block">Share</span>
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-[280px] md:w-[450px] backdrop-blur-sm"
+        className="min-w-[350px] md:w-[450px] backdrop-blur-sm"
       >
         <div className="flex flex-col space-y-2 text-left sm:text-left">
           <h3 className="text-lg font-semibold">Share link</h3>
@@ -39,7 +42,7 @@ export function ShareImage({ image }: { image: string }) {
         <div className="flex items-center space-x-2 pt-4">
           <div className="grid flex-1 gap-2">
             <Label htmlFor="link" className="sr-only">
-              Link
+              Share image
             </Label>
             <Input
               id="link"

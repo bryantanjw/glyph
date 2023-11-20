@@ -18,19 +18,19 @@ export async function generateMetadata({
   };
 }): Promise<Metadata | undefined> {
   const title = `Glyph`;
-  // const description = `A photo generated from the prompt: ${data.prompt}`;
+  const description = `A photo created using glyph.so`;
 
   return {
     title,
-    // description,
+    description,
     openGraph: {
       title,
-      // description,
+      description,
     },
     twitter: {
       card: "summary_large_image",
       title,
-      // description,
+      description,
       creator: "@bryantanjw",
     },
   };
@@ -60,7 +60,7 @@ export default async function Results({
     },
   });
   const prediction = await res.json();
-  if (!prediction) {
+  if (!prediction || prediction.status === "error") {
     return notFound();
   }
 
