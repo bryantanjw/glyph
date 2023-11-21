@@ -90,8 +90,7 @@ export const presets: Preset[] = [
     name: "Studio Ghibli anime",
     prompt:
       "cloudy sky background lush landscape illustration concept art anime key visual trending pixiv fanbox by wlop and greg rutkowski and makoto shinkai and studio ghibli",
-    negativePrompt:
-      "(worst quality, poor details:1.4), lowres, (artist name, signature, watermark:1.4), bad-artist-anime, bad_prompt_version2,  bad-hands-5, ng_deepnegative_v1_75t",
+    negativePrompt: "(worst quality, lowres)",
     inferenceStep: 30,
     guidance: 7.5,
     controlWeight: 1.5,
@@ -107,8 +106,7 @@ export const presets: Preset[] = [
     name: "Medieval",
     prompt:
       "Medieval village scene with busy streets and castle in the distance",
-    negativePrompt:
-      "(worst quality, poor details:1.4), lowres, (artist name, signature, watermark:1.4), bad-artist-anime, bad_prompt_version2,  bad-hands-5, ng_deepnegative_v1_75t",
+    negativePrompt: "(worst quality, lowres)",
     inferenceStep: 20,
     guidance: 7.5,
     controlWeight: 1.5,

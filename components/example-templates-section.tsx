@@ -50,7 +50,10 @@ const SeeExampleOutputDialog = ({
   const [isLoading, setIsLoading] = useState(true);
 
   const onSubmit = () => {
+    console.log("item:", item);
+
     setSelectedImage(item.image);
+    form.setValue("image", item.image.url);
     form.setValue("prompt", item.prompt);
     form.setValue("modelVersion", item.modelVersion);
     form.setValue("negativePrompt", item.negativePrompt);
@@ -68,7 +71,7 @@ const SeeExampleOutputDialog = ({
       <DialogContent className="!pt-[42px] max-w-sm md:max-w-4xl md:max-h-4xl">
         <div className="flex flex-col md:flex-row w-full gap-5">
           <div className="w-full  md:w-1/2">
-            <ScrollArea className="aspect-square h-[250px] md:h-full relative shadow-sm border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 w-full rounded-lg">
+            <ScrollArea className="aspect-square h-[170px] md:h-full relative shadow-sm border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 w-full rounded-lg">
               <div className="space-y-2 p-4">
                 {item &&
                   Object.keys(item).map((key) => {

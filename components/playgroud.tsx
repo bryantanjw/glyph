@@ -245,7 +245,6 @@ export default function Playground({
       });
 
       const response = await res.json();
-      console.log("response", response);
 
       if (res.status !== 200 || response.status === "error") {
         if (response.message === "You have insufficient credits.") {
@@ -403,33 +402,8 @@ export default function Playground({
                   <div className="grid h-full gap-5 lg:grid-cols-[1fr_500px]">
                     <div className="flex flex-col space-y-4">
                       <div className="flex flex-col space-y-2">
-                        <div>
-                          <Label htmlFor="input">Input</Label>
-                        </div>
+                        <Label htmlFor="input">Input</Label>
 
-                        <PresetSelector
-                          onSelect={(preset) => {
-                            setSelectedPreset(preset);
-                            form.setValue("prompt", preset.prompt);
-                            form.setValue("modelVersion", preset.modelVersion);
-                            form.setValue(
-                              "negativePrompt",
-                              preset.negativePrompt
-                            );
-                            form.setValue(
-                              "inferenceStep",
-                              preset.inferenceStep
-                            );
-                            form.setValue("guidance", preset.guidance);
-                            form.setValue("strength", preset.strength);
-                            form.setValue(
-                              "controlnetConditioning",
-                              preset.controlWeight
-                            );
-                            form.setValue("seed", preset.seed);
-                          }}
-                          selectedPreset={selectedPreset}
-                        />
                         <FormField
                           control={form.control}
                           name="prompt"

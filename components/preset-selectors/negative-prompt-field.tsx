@@ -29,7 +29,7 @@ export function NegativePromptField({ form }: NegativePromptFieldProps) {
   };
 
   return (
-    <div className="grid gap-2">
+    <div className="grid gap-2 md:-mt-4">
       <HoverCard openDelay={200}>
         <HoverCardTrigger asChild>
           <div className="grid gap-2">
