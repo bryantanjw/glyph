@@ -34,6 +34,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "1hhwy54cedxlm3yh.public.blob.vercel-storage.com",
       },
+      {
+        protocol: "https",
+        hostname: "www.glyph.so",
+      },
     ],
   },
 };

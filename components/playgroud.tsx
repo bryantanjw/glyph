@@ -252,7 +252,7 @@ export default function Playground({
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
             description:
-              "You have no credits left. You can continue to use Glyph for free at a limited capacity, but you won't be able to upload your own image.",
+              "You have no credits left. You can continue to use Glyph, but you won't be able to upload your own image.",
             action: (
               <ToastAction
                 altText="Add credits"

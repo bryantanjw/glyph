@@ -18,7 +18,7 @@ export async function generateMetadata({
   };
 }): Promise<Metadata | undefined> {
   const title = `Glyph`;
-  const description = `A photo created using glyph.so`;
+  const description = `Check out my Glyph!`;
 
   return {
     title,
@@ -60,7 +60,7 @@ export default async function Results({
     },
   });
   const prediction = await res.json();
-  if (!prediction || prediction.status === "error") {
+  if (!prediction?.output || prediction?.status === "error") {
     return notFound();
   }
 

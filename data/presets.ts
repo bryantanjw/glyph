@@ -109,7 +109,7 @@ export const presets: Preset[] = [
     negativePrompt: "(worst quality, lowres)",
     inferenceStep: 20,
     guidance: 7.5,
-    controlWeight: 1.5,
+    controlWeight: 1,
     seed: 2145122936,
     exampleOutput:
       "https://cdn.sanity.io/images/s3mrlbj8/production/708531aadd0e4bba0608ae8d74aa3703603c84ea-768x768.png",
@@ -165,7 +165,6 @@ export const presets: Preset[] = [
     negativePrompt,
     inferenceStep: 80,
     guidance: 12,
-    strength: 0.85,
     controlWeight: 1.4,
     seed,
     exampleOutput:
